@@ -1,0 +1,195 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Vehicle Models
+model Vehicle {
+  id                String          @id @default(uuid())
+  slug              String          @unique
+  name              String
+  category          VehicleCategory
+  description       String          @db.Text
+  shortDescription  String?
+  capacity          Int
+  luggageCapacity   Int?
+  
+  priceStarting     Decimal         @db.Decimal(10, 2)
+  priceNote         String?
+  
+  features          String[]
+  amenities         String[]
+  
+  images            VehicleImage[]
+  thumbnail         String
+  
+  make              String?
+  model             String?
+  year              Int?
+  color             String?
+  licensePlate      String?
+  
+  isActive          Boolean         @default(true)
+  isFeatured        Boolean         @default(false)
+  
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  
+  quotes            Quote[]
+  
+  @@index([category])
+  @@index([isActive])
+  @@index([isFeatured])
+}
+
+model VehicleImage {
+  id          String    @id @default(uuid())
+  vehicleId   String
+  vehicle     Vehicle   @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  url         String
+  alt         String
+  order       Int       @default(0)
+  createdAt   DateTime  @default(now())
+  
+  @@index([vehicleId])
+  @@index([order])
+}
+
+enum VehicleCategory {
+  LIMO
+  PARTY_BUS
+  LUXURY_BUS
+  SPRINTER_VAN
+  SUV
+}
+
+// Quote System
+model Quote {
+  id                String          @id @default(uuid())
+  quoteNumber       String          @unique
+  
+  firstName         String
+  lastName          String
+  email             String
+  phone             String
+  company           String?
+  
+  serviceType       ServiceType
+  vehicleId         String?
+  vehicle           Vehicle?        @relation(fields: [vehicleId], references: [id])
+  alternateVehicle  String?
+  
+  eventDate         DateTime
+  eventType         EventType
+  pickupTime        String
+  pickupLocation    String
+  dropoffLocation   String?
+  numberOfHours     Int?
+  numberOfPassengers Int
+  
+  specialRequests   String?         @db.Text
+  heardAboutUs      String?
+  
+  status            QuoteStatus     @default(PENDING)
+  quotedPrice       Decimal?        @db.Decimal(10, 2)
+  notes             String?         @db.Text
+  
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  respondedAt       DateTime?
+  
+  @@index([status])
+  @@index([eventDate])
+  @@index([createdAt])
+}
+
+enum ServiceType {
+  HOURLY
+  POINT_TO_POINT
+  FULL_DAY
+  MULTI_DAY
+}
+
+enum EventType {
+  WEDDING
+  CORPORATE
+  PROM
+  AIRPORT
+  PARTY
+  CLUB_EVENT
+  BIRTHDAY
+  ANNIVERSARY
+  CONCERT
+  SPORTING_EVENT
+  OTHER
+}
+
+enum QuoteStatus {
+  PENDING
+  REVIEWING
+  QUOTED
+  ACCEPTED
+  DECLINED
+  COMPLETED
+  CANCELLED
+}
+
+// Contact System
+model ContactSubmission {
+  id          String    @id @default(uuid())
+  name        String
+  email       String
+  phone       String?
+  subject     String
+  message     String    @db.Text
+  status      String    @default("NEW")
+  createdAt   DateTime  @default(now())
+  
+  @@index([status])
+  @@index([createdAt])
+}
+
+// Admin System
+model Admin {
+  id              String    @id @default(uuid())
+  email           String    @unique
+  passwordHash    String
+  name            String
+  role            AdminRole @default(ADMIN)
+  isActive        Boolean   @default(true)
+  lastLogin       DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+enum AdminRole {
+  SUPER_ADMIN
+  ADMIN
+  MANAGER
+}
+
+// Testimonials
+model Testimonial {
+  id          String    @id @default(uuid())
+  name        String
+  service     String?
+  rating      Int
+  comment     String    @db.Text
+  date        DateTime  @default(now())
+  isApproved  Boolean   @default(false)
+  isFeatured  Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  
+  @@index([isApproved])
+  @@index([isFeatured])
+}
