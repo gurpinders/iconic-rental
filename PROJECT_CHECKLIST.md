@@ -64,40 +64,40 @@
 - [x] Adjust sizing for Header and Footer
 - [x] Fix header spacing issues
 
-### Day 4: Database Setup
+### Day 4: Database Setup ✓
 - [x] Install PostgreSQL locally OR set up Vercel Postgres
 - [x] Install Prisma
 - [x] Initialize Prisma
 - [x] Create .env.local file
 - [x] Add DATABASE_URL to .env
 - [x] Copy database schema from roadmap
-- [ ] Create Vehicle model
-- [ ] Create VehicleImage model
-- [ ] Create Quote model
-- [ ] Create ContactSubmission model
-- [ ] Create Admin model
-- [ ] Create Testimonial model
-- [ ] Run first migration
-- [ ] Generate Prisma Client
-- [ ] Open Prisma Studio to verify database
-- [ ] Create seed.ts file
-- [ ] Add sample vehicles to seed
-- [ ] Add sample testimonials to seed
-- [ ] Run seed command
-- [ ] Verify seed data in Prisma Studio
+- [x] Create Vehicle model
+- [x] Create VehicleImage model
+- [x] Create Quote model
+- [x] Create ContactSubmission model
+- [x] Create Admin model
+- [x] Create Testimonial model
+- [x] Run first migration
+- [x] Generate Prisma Client
+- [x] Open Prisma Studio to verify database
+- [x] Create seed.ts file
+- [x] Add sample vehicles to seed
+- [x] Add sample testimonials to seed
+- [x] Run seed command
+- [x] Verify seed data in Prisma Studio
 
-### Day 5: First API Route & Data Fetching
-- [ ] Create lib/prisma.ts file
-- [ ] Set up Prisma client singleton
-- [ ] Create app/api/vehicles/route.ts
-- [ ] Build GET endpoint for vehicles
-- [ ] Add error handling to API
-- [ ] Test API at localhost:3000/api/vehicles
-- [ ] Create test page to fetch vehicles
-- [ ] Display vehicles on test page
-- [ ] Verify data displays correctly
-- [ ] Understand Server vs Client Components
-- [ ] Git commit: "Week 1 complete"
+### Day 5: First API Route & Data Fetching ✓
+- [x] Create lib/prisma.ts file
+- [x] Set up Prisma client singleton
+- [x] Create app/api/vehicles/route.ts
+- [x] Build GET endpoint for vehicles
+- [x] Add error handling to API
+- [x] Test API at localhost:3000/api/vehicles
+- [x] Create test page to fetch vehicles
+- [x] Display vehicles on test page
+- [x] Verify data displays correctly
+- [x] Understand Server vs Client Components
+- [x] Git commit: "Week 1 complete"
 
 ---
 
@@ -613,12 +613,26 @@
 - Tailwind v4 (no config file, CSS-based configuration)
 - No neon colors - pure black/white aesthetic
 - Prisma for type-safe database queries
+- Downgraded to Prisma 5.22.0 (Prisma 7 had breaking changes)
+- Using Neon Postgres via Vercel for cloud database
+- Database credentials stored in both .env and .env.local
+- Next.js 14 App Router with Server Components
 
 ### Important Reminders
 - Never show prices on website (quotes only)
 - All bookings require manual approval
 - Deposit required before calendar updates
 - Logo is logo.jpg in public folder
+- Dev server runs on localhost:3000
+- API endpoints are in src/app/api/
+- Prisma Studio opens on localhost:5555
+
+### Actual Fleet (for later admin input)
+- Bus (40-45 seats) x2
+- SUV (7 seats) x1
+- Rolls Royce (2-5 seats) x1
+- Rolls Royce (4-5 seats) x1
+- Sprinter (10-12 seats) x2
 
 ### Resources
 - Project Roadmap: ICONIC_LIMOS_PROJECT_ROADMAP.md
@@ -629,10 +643,10 @@
 
 ## ✅ COMPLETION TRACKING
 
-**Current Status:** Week 1, Day 3 Complete ✓
+**Current Status:** Week 1 Complete! ✓ Starting Week 2
 
 **Progress:**
-- Week 1: ████████░░ 80% (Days 1-3 done)
+- Week 1: ██████████ 100% (All 5 days complete!)
 - Week 2: ░░░░░░░░░░ 0%
 - Week 3: ░░░░░░░░░░ 0%
 - Week 4: ░░░░░░░░░░ 0%
@@ -641,9 +655,9 @@
 - Week 7: ░░░░░░░░░░ 0%
 - Week 8: ░░░░░░░░░░ 0%
 
-**Overall: 10% Complete**
+**Overall: 16.67% Complete**
 
 ---
 
-**Last Updated:** December 9, 2024  
-**Next Up:** Week 1, Day 4 - Database Setup
+**Last Updated:** December 11, 2024  
+**Next Up:** Week 2, Day 1 - Hero Section
