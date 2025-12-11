@@ -65,12 +65,12 @@
 - [x] Fix header spacing issues
 
 ### Day 4: Database Setup
-- [ ] Install PostgreSQL locally OR set up Vercel Postgres
-- [ ] Install Prisma
-- [ ] Initialize Prisma
-- [ ] Create .env.local file
-- [ ] Add DATABASE_URL to .env
-- [ ] Copy database schema from roadmap
+- [x] Install PostgreSQL locally OR set up Vercel Postgres
+- [x] Install Prisma
+- [x] Initialize Prisma
+- [x] Create .env.local file
+- [x] Add DATABASE_URL to .env
+- [x] Copy database schema from roadmap
 - [ ] Create Vehicle model
 - [ ] Create VehicleImage model
 - [ ] Create Quote model
