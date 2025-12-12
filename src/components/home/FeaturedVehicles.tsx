@@ -76,7 +76,7 @@ export default async function FeaturedVehicles() {
                 </div>
 
                 {/* CTA */}
-                <Button variant="outline" className="w-full">
+                <Button variant="outline">
                   Request Quote
                 </Button>
               </div>
