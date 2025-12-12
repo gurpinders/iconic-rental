@@ -8,7 +8,7 @@ export default function Hero() {
       
       <div className="relative z-20 text-center px-8 max-w-5xl mx-auto">
         <Image 
-        src="/logo.jpg" 
+        src="/logo_no_bg.png" 
         alt="Iconic Limos Logo" 
         width={300}
         height={120}

@@ -6,10 +6,10 @@ export default function Header() {
     <header className="fixed top-0 left-0 right-0 bg-black/95 border-b border-white/10 z-50">
       <nav className="max-w-7xl mx-auto px-8 py-6 flex justify-between items-center">
         <Image 
-        src="/small_logo.jpeg" 
+        src="/logo.jpg" 
         alt="Iconic Limos Logo" 
-        width={80} 
-        height={80}
+        width={180} 
+        height={60}
         className="object-contain"
         />
         
