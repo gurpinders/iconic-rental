@@ -103,30 +103,35 @@
 
 ## ✅ WEEK 2: HOMEPAGE
 
-### Day 1: Hero Section
-- [ ] Create components/home folder
-- [ ] Create Hero.tsx component
-- [ ] Add full-screen background image
-- [ ] Add dark overlay to image
-- [ ] Add headline text (centered)
-- [ ] Add subheadline text
-- [ ] Add CTA buttons (Request Quote, View Fleet)
-- [ ] Style with Tailwind
-- [ ] Make responsive for mobile
-- [ ] Add scroll indicator animation
-- [ ] Test on different screen sizes
+### Day 1: Hero Section ✓
+- [x] Create components/home folder
+- [x] Create Hero.tsx component
+- [x] Add full-screen background image
+- [x] Add dark overlay to image
+- [x] Add headline text (centered)
+- [x] Add subheadline text
+- [x] Add CTA buttons (Request Quote, View Fleet)
+- [x] Style with Tailwind
+- [x] Make responsive for mobile
+- [x] Add scroll indicator animation
+- [x] Test on different screen sizes
+- [x] Add main logo to hero
+- [x] Update header with small logo
+- [x] Add transparent-to-black navbar scroll effect
 
-### Day 2: Vehicle Categories Section
-- [ ] Create VehicleCategories.tsx component
-- [ ] Create section container
-- [ ] Add section heading
-- [ ] Create 4 category cards (Limos, Party Buses, Luxury Buses, SUVs)
-- [ ] Add placeholder images
-- [ ] Add overlay gradients
-- [ ] Add category titles and descriptions
-- [ ] Add hover effects (scale, border)
-- [ ] Make responsive (1 col mobile, 2 tablet, 4 desktop)
-- [ ] Test hover interactions
+### Day 2: Vehicle Categories Section ✓
+- [x] Create VehicleCategories.tsx component
+- [x] Create section container
+- [x] Add section heading
+- [x] Create 4 category cards (Limos, Party Buses, Luxury Buses, SUVs)
+- [x] Add vehicle images to public folder
+- [x] Add background images to cards
+- [x] Add overlay gradients
+- [x] Add category titles and descriptions
+- [x] Add elegant luxury hover effects (lift, zoom, glow)
+- [x] Make responsive (1 col mobile, 2 tablet, 4 desktop)
+- [x] Test hover interactions
+- [x] Integrate into homepage
 
 ### Day 3: Featured Vehicles Carousel
 - [ ] Install Swiper or build custom carousel
@@ -617,15 +622,21 @@
 - Using Neon Postgres via Vercel for cloud database
 - Database credentials stored in both .env and .env.local
 - Next.js 14 App Router with Server Components
+- Client Components ('use client') for interactive features (scroll effects, state management)
+- Elegant luxury design with white accents and glow effects
 
 ### Important Reminders
 - Never show prices on website (quotes only)
 - All bookings require manual approval
 - Deposit required before calendar updates
-- Logo is logo.jpg in public folder
+- Logo files: logo.jpg (main), small_logo.jpeg (header)
+- Hero background: hero-bg.jpg
+- Category images: limo.jpg, party.jpg, luxury_bus.jpg, suv.jpg
 - Dev server runs on localhost:3000
 - API endpoints are in src/app/api/
 - Prisma Studio opens on localhost:5555
+- Header has transparent-to-black scroll effect
+- All components use consistent black/white luxury aesthetic
 
 ### Actual Fleet (for later admin input)
 - Bus (40-45 seats) x2
@@ -643,11 +654,11 @@
 
 ## ✅ COMPLETION TRACKING
 
-**Current Status:** Week 1 Complete! ✓ Starting Week 2
+**Current Status:** Week 2, Day 2 Complete! ✓ Starting Day 3
 
 **Progress:**
 - Week 1: ██████████ 100% (All 5 days complete!)
-- Week 2: ░░░░░░░░░░ 0%
+- Week 2: ████░░░░░░ 40% (Days 1-2 done)
 - Week 3: ░░░░░░░░░░ 0%
 - Week 4: ░░░░░░░░░░ 0%
 - Week 5: ░░░░░░░░░░ 0%
@@ -655,9 +666,9 @@
 - Week 7: ░░░░░░░░░░ 0%
 - Week 8: ░░░░░░░░░░ 0%
 
-**Overall: 16.67% Complete**
+**Overall: 21.25% Complete**
 
 ---
 
 **Last Updated:** December 11, 2024  
-**Next Up:** Week 2, Day 1 - Hero Section
+**Next Up:** Week 2, Day 3 - Featured Vehicles Carousel

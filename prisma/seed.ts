@@ -32,7 +32,7 @@ async function main() {
         'USB charging ports',
         'WiFi available'
       ],
-      thumbnail: '/vehicles/limo1.jpg',
+      thumbnail: '/limo_ad.jpeg',
       make: 'Lincoln',
       model: 'Town Car Stretch',
       year: 2023,
@@ -69,7 +69,7 @@ async function main() {
         'Bathroom',
         'Climate control'
       ],
-      thumbnail: '/vehicles/partybus1.jpg',
+      thumbnail: '/party_bus.jpg',
       make: 'Custom',
       model: 'Party Bus',
       year: 2022,
@@ -106,7 +106,7 @@ async function main() {
         'Luggage storage',
         'Reading lights'
       ],
-      thumbnail: '/vehicles/sprinter1.jpg',
+      thumbnail: '/merc_sprinter.jpg',
       make: 'Mercedes-Benz',
       model: 'Sprinter',
       year: 2024,
