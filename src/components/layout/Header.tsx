@@ -32,11 +32,11 @@ export default function Header() {
         />
         
         <ul className="flex gap-12 items-center">
-          <li><a href="#home" className="text-base text-gray-300 hover:text-white transition-colors">Home</a></li>
-          <li><a href="#fleet" className="text-base text-gray-300 hover:text-white transition-colors">Fleet</a></li>
-          <li><a href="#services" className="text-base text-gray-300 hover:text-white transition-colors">Services</a></li>
-          <li><a href="#about" className="text-base text-gray-300 hover:text-white transition-colors">About</a></li>
-          <li><a href="#contact" className="text-base text-gray-300 hover:text-white transition-colors">Contact</a></li>
+          <li><a href="/home" className="text-base text-gray-300 hover:text-white transition-colors">Home</a></li>
+          <li><a href="/fleet" className="text-base text-gray-300 hover:text-white transition-colors">Fleet</a></li>
+          <li><a href="/services" className="text-base text-gray-300 hover:text-white transition-colors">Services</a></li>
+          <li><a href="/about" className="text-base text-gray-300 hover:text-white transition-colors">About</a></li>
+          <li><a href="/contact" className="text-base text-gray-300 hover:text-white transition-colors">Contact</a></li>
           <li><Button variant="primary">Reserve Now</Button></li>
         </ul>
       </nav>

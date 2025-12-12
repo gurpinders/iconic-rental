@@ -16,6 +16,25 @@ async function getVehicle(slug: string) {
   return vehicle
 }
 
+async function getRelatedVehicles(currentSlug: string) {
+  const vehicles = await prisma.vehicle.findMany({
+    where: {
+      slug: { not: currentSlug },
+      isActive: true
+    },
+    include: {
+      images: {
+        orderBy: { order: 'asc' },
+        take: 1
+      }
+    },
+    take: 3,
+    orderBy: { createdAt: 'desc' }
+  })
+  
+  return vehicles
+}
+
 export default async function VehicleDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
   const vehicle = await getVehicle(slug)
@@ -23,6 +42,8 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
   if (!vehicle || !vehicle.isActive) {
     notFound()
   }
+
+  const relatedVehicles = await getRelatedVehicles(vehicle.slug)
 
   return (
     <main className="min-h-screen bg-black pt-32 pb-20">
@@ -136,6 +157,35 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
                   </svg>
                   <p className="text-sm">{amenity}</p>
                 </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Related Vehicles Section */}
+        {relatedVehicles.length > 0 && (
+          <div className="mb-16">
+            <h2 className="text-3xl font-bold mb-8 tracking-wide">Other Vehicles You May Like</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {relatedVehicles.map((relatedVehicle) => (
+                <a 
+                  key={relatedVehicle.id}
+                  href={`/fleet/${relatedVehicle.slug}`}
+                  className="group bg-zinc-900 rounded-lg border border-white/20 overflow-hidden hover:border-white/50 hover:shadow-[0_0_40px_rgba(255,255,255,0.3)] transition-all duration-500"
+                >
+                  <div className="relative h-48 overflow-hidden">
+                    <Image
+                      src={relatedVehicle.thumbnail}
+                      alt={relatedVehicle.name}
+                      fill
+                      className="object-cover group-hover:scale-110 transition-transform duration-700"
+                    />
+                  </div>
+                  <div className="p-4">
+                    <h3 className="text-xl font-bold mb-2">{relatedVehicle.name}</h3>
+                    <p className="text-sm text-gray-400">{relatedVehicle.capacity} Passengers</p>
+                  </div>
+                </a>
               ))}
             </div>
           </div>
