@@ -5,6 +5,8 @@ import VehicleCategories from '@/components/home/VehicleCategories'
 import FeaturedVehicles from '@/components/home/FeaturedVehicles'
 import Services from '@/components/home/Services'
 import WhyChooseUs from '@/components/home/WhyChooseUs'
+import Testimonials from '@/components/home/Testimonials'
+import CTASection from '@/components/home/CTASection'
 
 export default function Home() {
   return (
@@ -15,6 +17,8 @@ export default function Home() {
       <FeaturedVehicles />
       <Services />
       <WhyChooseUs />
+      <Testimonials />
+      <CTASection />
       <Footer />
     </>
   )

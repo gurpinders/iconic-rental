@@ -116,8 +116,42 @@ async function main() {
     }
   })
 
+  // Create sample testimonials
+  const testimonial1 = await prisma.testimonial.create({
+    data: {
+      name: 'Sarah & Michael Thompson',
+      service: 'Wedding Transportation',
+      rating: 5,
+      comment: 'Iconic Limos made our wedding day absolutely perfect! The limousine was pristine, the driver was professional and punctual, and the entire experience was seamless. Highly recommend for any special occasion!',
+      isApproved: true,
+      isFeatured: true,
+    }
+  })
+
+  const testimonial2 = await prisma.testimonial.create({
+    data: {
+      name: 'David Chen',
+      service: 'Corporate Event',
+      rating: 5,
+      comment: 'We use Iconic Limos for all our corporate events and client transportation. Their professionalism and attention to detail is unmatched. The fleet is always immaculate and the service is consistently excellent.',
+      isApproved: true,
+      isFeatured: true,
+    }
+  })
+
+  const testimonial3 = await prisma.testimonial.create({
+    data: {
+      name: 'Emily Rodriguez',
+      service: 'Prom Night',
+      rating: 5,
+      comment: 'Best prom ever! The party bus was amazing with all the lights and sound system. Our parents felt confident knowing we were in safe hands. Thank you for making our night so special!',
+      isApproved: true,
+      isFeatured: true,
+    }
+  })
+
   console.log('Seed completed successfully!')
-  console.log({ limo, partyBus, sprinter })
+  console.log({ limo, partyBus, sprinter, testimonial1, testimonial2, testimonial3 })
 }
 
 main()
