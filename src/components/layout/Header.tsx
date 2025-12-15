@@ -22,18 +22,19 @@ export default function Header() {
         ? 'bg-black/95 border-white/10' 
         : 'bg-transparent border-transparent'
     }`}>
-      <nav className="max-w-7xl mx-auto px-8 py-6 flex justify-between items-center">
+      <nav className="max-w-7xl mx-auto px-4 md:px-8 py-4 md:py-6 flex justify-between items-center">
         <Link href="/">
           <Image 
             src="/logo_no_bg_simple.png" 
             alt="Iconic Limos Logo" 
-            width={140}
-            height={80}
-            className="object-contain cursor-pointer"
+            width={120}
+            height={60}
+            className="object-contain cursor-pointer md:w-[140px] md:h-[80px]"
           />
         </Link>
         
-        <ul className="flex gap-12 items-center">
+        {/* Desktop Navigation - Hidden on mobile */}
+        <ul className="hidden lg:flex gap-8 xl:gap-12 items-center">
           <li>
             <Link href="/" className="text-base text-gray-300 hover:text-white transition-colors">
               Home
@@ -68,6 +69,16 @@ export default function Header() {
             </Link>
           </li>
         </ul>
+
+        {/* Mobile CTA Button - Only show Reserve Now on mobile */}
+        <div className="lg:hidden">
+          <Link 
+            href="/quote"
+            className="px-4 py-2 text-sm bg-white text-black hover:bg-gray-200 transition-all duration-300 font-semibold tracking-wide"
+          >
+            Reserve Now
+          </Link>
+        </div>
       </nav>
     </header>
   )

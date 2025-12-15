@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Button from '@/components/ui/Button'
+import VehicleSkeleton from '@/components/ui/VehicleSkeleton';
 
 type Vehicle = {
   id: string
@@ -59,10 +60,20 @@ export default function FleetPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-black">
-        <p className="text-2xl text-gray-400">Loading fleet...</p>
+      <div className="min-h-screen bg-black text-white pt-32 px-8 pb-20">
+        <div className="max-w-7xl mx-auto">
+          <h1 className="text-5xl font-bold tracking-wide mb-4">Our Fleet</h1>
+          <p className="text-xl text-gray-400 mb-12">Loading our luxury vehicles...</p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {/* Show 6 skeleton cards */}
+            {[...Array(6)].map((_, i) => (
+              <VehicleSkeleton key={i} />
+            ))}
+          </div>
+        </div>
       </div>
-    )
+    );
   }
 
   return (
