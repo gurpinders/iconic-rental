@@ -18,7 +18,7 @@ export default function Footer(){
                             />
                         </Link>
                         <p className="text-gray-400 text-base">
-                            Providing luxury transportation services across the Greater Toronto Area.
+                            From Iconic Vehicles to Infinite Experiences
                         </p>
                     </div>
 
