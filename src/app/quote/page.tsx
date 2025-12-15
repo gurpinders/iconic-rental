@@ -185,25 +185,26 @@ export default function QuotePage() {
               <div>
                 <label className="block text-sm font-semibold mb-2">Event Date *</label>
                 <input
-                  type="date"
-                  name="eventDate"
-                  value={formData.eventDate}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-4 py-3 bg-black border border-white/20 rounded-lg focus:border-white/50 transition-all"
+                    type="date"
+                    name="eventDate"
+                    value={formData.eventDate}
+                    onChange={handleChange}
+                    required
+                    min={new Date().toISOString().split('T')[0]}
+                    className="w-full px-4 py-3 bg-black border border-white/20 rounded-lg focus:border-white/50 transition-all cursor-pointer [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-100 [&::-webkit-calendar-picker-indicator]:invert"
                 />
-              </div>
-              <div>
+                </div>
+                <div>
                 <label className="block text-sm font-semibold mb-2">Pickup Time *</label>
                 <input
-                  type="time"
-                  name="eventTime"
-                  value={formData.eventTime}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-4 py-3 bg-black border border-white/20 rounded-lg focus:border-white/50 transition-all"
+                    type="time"
+                    name="eventTime"
+                    value={formData.eventTime}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3 bg-black border border-white/20 rounded-lg focus:border-white/50 transition-all cursor-pointer [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-100 [&::-webkit-calendar-picker-indicator]:invert"
                 />
-              </div>
+                </div>
             </div>
           </div>
 
