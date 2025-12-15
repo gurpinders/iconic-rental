@@ -32,6 +32,8 @@ export default function QuotePage() {
 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
+  const [error, setError] = useState('')
+  const [quoteNumber, setQuoteNumber] = useState('')
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setFormData({
@@ -43,12 +45,30 @@ export default function QuotePage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
+    setError('')
     
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500))
-    
-    setIsSubmitting(false)
-    setSubmitted(true)
+    try {
+        const response = await fetch('/api/quotes', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+        })
+
+        const data = await response.json()
+
+        if (!response.ok) {
+        throw new Error(data.error || 'Failed to submit quote')
+        }
+
+        setQuoteNumber(data.quoteNumber)
+        setSubmitted(true)
+    } catch (err) {
+        setError(err instanceof Error ? err.message : 'An error occurred')
+    } finally {
+        setIsSubmitting(false)
+    }
   }
 
   if (submitted) {
@@ -64,7 +84,7 @@ export default function QuotePage() {
               Thank you for your quote request. Our team will review your details and get back to you within 24 hours.
             </p>
             <p className="text-lg text-gray-400 mb-8">
-              Quote Reference: <span className="text-white font-bold">#{Math.floor(Math.random() * 10000)}</span>
+              Quote Reference: <span className="text-white font-bold">#{quoteNumber}</span>
             </p>
             <div className="flex gap-4 justify-center">
               <a href="/">
@@ -308,7 +328,12 @@ export default function QuotePage() {
               />
             </div>
           </div>
-
+            {/* Error Message */}
+            {error && (
+            <div className="p-4 bg-red-900/20 border border-red-500/50 rounded-lg">
+                <p className="text-red-400">{error}</p>
+            </div>
+            )}
           {/* Submit Button */}
           <div className="text-center">
             <Button 
