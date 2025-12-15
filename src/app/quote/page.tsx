@@ -18,10 +18,11 @@ export default function QuotePage() {
     eventTime: '',
     
     // Trip Details
+    pickupTime: '',
     pickupLocation: '',
     dropoffLocation: '',
     duration: '',
-    passengers: '',
+    numberOfPassengers: '',
     
     // Vehicle Preference
     vehicleCategory: '',
@@ -215,15 +216,17 @@ export default function QuotePage() {
                 />
                 </div>
                 <div>
-                <label className="block text-sm font-semibold mb-2">Pickup Time *</label>
-                <input
+                  <label className="block text-sm font-medium mb-2">
+                    Pickup Time
+                  </label>
+                  <input
                     type="time"
-                    name="eventTime"
-                    value={formData.eventTime}
+                    name="pickupTime"
+                    value={formData.pickupTime}
                     onChange={handleChange}
-                    required
-                    className="w-full px-4 py-3 bg-black border border-white/20 rounded-lg focus:border-white/50 transition-all cursor-pointer [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-100 [&::-webkit-calendar-picker-indicator]:invert"
-                />
+                    className="w-full px-4 py-3 bg-zinc-900 border border-white/20 rounded focus:outline-none focus:border-white/50"
+                  />
+                  <p className="text-sm text-gray-500 mt-1">When should we pick you up?</p>
                 </div>
             </div>
           </div>
@@ -280,8 +283,8 @@ export default function QuotePage() {
                   <label className="block text-sm font-semibold mb-2">Number of Passengers *</label>
                   <input
                     type="number"
-                    name="passengers"
-                    value={formData.passengers}
+                    name="numberOfPassengers"
+                    value={formData.numberOfPassengers}
                     onChange={handleChange}
                     required
                     min="1"

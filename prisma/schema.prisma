@@ -91,7 +91,7 @@ model Quote {
   
   eventDate         DateTime
   eventType         EventType
-  pickupTime        String
+  pickupTime        String?
   pickupLocation    String
   dropoffLocation   String?
   numberOfHours     Int?
