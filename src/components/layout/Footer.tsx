@@ -24,36 +24,40 @@ export default function Footer(){
 
                     {/* Company Links */}
                     <div>
-                        <h3 className="text-base font-semibold uppercase mb-4">Company</h3>
-                        <ul className="space-y-2 text-base text-gray-400">
-                            <li>
-                                <Link href="/about" className="hover:text-white transition-colors">
-                                    About Us
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="/fleet" className="hover:text-white transition-colors">
-                                    Our Fleet
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="/services" className="hover:text-white transition-colors">
-                                    Services
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="/contact" className="hover:text-white transition-colors">
-                                    Contact
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="/quote" className="hover:text-white transition-colors">
-                                    Request Quote
-                                </Link>
-                            </li>
-                        </ul>
+                    <h3 className="text-base font-semibold uppercase mb-4">Company</h3>
+                    <ul className="space-y-2 text-base text-gray-400">
+                        <li>
+                        <Link href="/about" className="hover:text-white transition-colors">
+                            About Us
+                        </Link>
+                        </li>
+                        <li>
+                        <Link href="/fleet" className="hover:text-white transition-colors">
+                            Our Fleet
+                        </Link>
+                        </li>
+                        <li>
+                        <Link href="/services" className="hover:text-white transition-colors">
+                            Services
+                        </Link>
+                        </li>
+                        <li>
+                        <Link href="/faq" className="hover:text-white transition-colors">
+                            FAQ
+                        </Link>
+                        </li>
+                        <li>
+                        <Link href="/contact" className="hover:text-white transition-colors">
+                            Contact
+                        </Link>
+                        </li>
+                        <li>
+                        <Link href="/quote" className="hover:text-white transition-colors">
+                            Request Quote
+                        </Link>
+                        </li>
+                    </ul>
                     </div>
-
                     {/* Services Links */}
                     <div>
                         <h3 className="text-base font-semibold uppercase mb-4">Services</h3>
@@ -107,8 +111,25 @@ export default function Footer(){
                 </div>
 
                 {/* Copyright */}
-                <div className="border-t border-white/10 mt-12 pt-8 text-center text-base text-gray-500">
-                    <p>&copy; 2024 Iconic Limos & Rentals. All rights reserved.</p>
+                <div className="border-t border-white/10 mt-12 pt-8 text-center">
+                    <div className="flex justify-center gap-6 mb-4">
+                        <Link 
+                        href="/terms" 
+                        className="text-sm text-gray-500 hover:text-white transition-colors"
+                        >
+                        Terms & Conditions
+                        </Link>
+                        <span className="text-gray-700">|</span>
+                        <Link 
+                        href="/privacy" 
+                        className="text-sm text-gray-500 hover:text-white transition-colors"
+                        >
+                        Privacy Policy
+                        </Link>
+                    </div>
+                    <p className="text-base text-gray-500">
+                        &copy; 2024 Iconic Limos & Rentals. All rights reserved.
+                    </p>
                 </div>
             </div>
         </footer>

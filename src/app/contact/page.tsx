@@ -189,7 +189,7 @@ export default function ContactPage() {
             Check out our frequently asked questions or reach out directly for personalized assistance.
           </p>
           <Link
-            href="/services"
+            href="/faq"
             className="inline-block px-8 py-4 border-2 border-white text-white hover:bg-white hover:text-black transition-all duration-300 text-lg font-semibold tracking-wide"
           >
             VIEW FAQ
