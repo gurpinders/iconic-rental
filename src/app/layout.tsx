@@ -26,7 +26,6 @@ export const metadata: Metadata = {
       google: 'hCOgbVYc_swzIgALMLQZX36bvX9BD2pbU6PL39ZY9fI', 
     },
     
-    // ... rest of your metadata
 }
 
 export default async function RootLayout({
