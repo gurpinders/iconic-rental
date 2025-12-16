@@ -114,7 +114,7 @@ export default function QuoteActions({ quote }: { quote: Quote }) {
               Mark as Quoted
             </button>
             <button
-              onClick={() => updateStatus('REJECTED')}
+              onClick={() => updateStatus('DECLINED')}
               disabled={isUpdating}
               className="w-full px-4 py-3 bg-red-600 hover:bg-red-700 text-white font-medium rounded transition-colors disabled:opacity-50"
             >
@@ -133,7 +133,7 @@ export default function QuoteActions({ quote }: { quote: Quote }) {
               Mark as Accepted
             </button>
             <button
-              onClick={() => updateStatus('REJECTED')}
+              onClick={() => updateStatus('DECLINED')}
               disabled={isUpdating}
               className="w-full px-4 py-3 bg-red-600 hover:bg-red-700 text-white font-medium rounded transition-colors disabled:opacity-50"
             >

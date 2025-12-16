@@ -175,14 +175,14 @@ export default async function AllQuotesPage({
                   Completed ({countMap.COMPLETED || 0})
                 </Link>
                 <Link
-                  href="/admin/quotes?status=REJECTED"
+                  href="/admin/quotes?status=DECLINED"
                   className={`px-4 py-2 rounded text-sm font-medium transition-colors ${
-                    statusFilter === 'REJECTED'
+                    statusFilter === 'DECLINED'
                       ? 'bg-red-500 text-white'
                       : 'bg-zinc-800 text-gray-400 hover:bg-zinc-700'
                   }`}
                 >
-                  Rejected ({countMap.REJECTED || 0})
+                  DECLINED ({countMap.DECLINED || 0})
                 </Link>
               </div>
             </div>
@@ -224,7 +224,7 @@ export default async function AllQuotesPage({
                     statusFilter === 'QUOTED' ? 'bg-purple-900/50 text-purple-300' :
                     statusFilter === 'ACCEPTED' ? 'bg-green-900/50 text-green-300' :
                     statusFilter === 'COMPLETED' ? 'bg-green-700/50 text-green-200' :
-                    statusFilter === 'REJECTED' ? 'bg-red-900/50 text-red-300' :
+                    statusFilter === 'DECLINED' ? 'bg-red-900/50 text-red-300' :
                     'bg-gray-900/50 text-gray-300'
                   }`}>
                     {statusFilter}
@@ -308,7 +308,7 @@ export default async function AllQuotesPage({
                           quote.status === 'REVIEWING' ? 'bg-blue-900/50 text-blue-300' :
                           quote.status === 'QUOTED' ? 'bg-purple-900/50 text-purple-300' :
                           quote.status === 'ACCEPTED' ? 'bg-green-900/50 text-green-300' :
-                          quote.status === 'REJECTED' ? 'bg-red-900/50 text-red-300' :
+                          quote.status === 'DECLINED' ? 'bg-red-900/50 text-red-300' :
                           quote.status === 'COMPLETED' ? 'bg-green-700/50 text-green-200' :
                           'bg-gray-900/50 text-gray-300'
                         }`}>
