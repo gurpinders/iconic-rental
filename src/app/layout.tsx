@@ -3,6 +3,7 @@ import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { headers } from "next/headers";
+import { Analytics } from '@vercel/analytics/react';
 
 export const metadata: Metadata = {
   title: "Iconic Limos & Rentals",
@@ -28,6 +29,7 @@ export default async function RootLayout({
         {!isAdminPage && <Header />}
         {children}
         {!isAdminPage && <Footer />}
+        <Analytics />
       </body>
     </html>
   );
