@@ -270,7 +270,7 @@ export default async function AllQuotesPage({
                     <td colSpan={7} className="px-8 py-12 text-center text-gray-500 text-base">
                       {searchQuery || statusFilter
                         ? 'No quotes match your search criteria.'
-                        : 'No quotes yet. They'll appear here when customers submit quote requests.'}
+                        : "No quotes yet. They'll appear here when customers submit quote requests."}
                     </td>
                   </tr>
                 ) : (

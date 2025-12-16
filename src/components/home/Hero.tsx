@@ -34,13 +34,13 @@ export default function Hero() {
         <div className="flex flex-col sm:flex-row gap-6 justify-center">
           <Link
             href="/quote"
-            className="px-8 py-4 bg-white text-black hover:bg-gray-200 transition-all duration-300 text-lg font-semibold tracking-wide"
+            className="btn-primary inline-block"
           >
             REQUEST A QUOTE
           </Link>
           <Link
             href="/fleet"
-            className="px-8 py-4 border-2 border-white text-white hover:bg-white hover:text-black transition-all duration-300 text-lg font-semibold tracking-wide"
+            className="btn-secondary inline-block"
           >
             VIEW OUR FLEET
           </Link>

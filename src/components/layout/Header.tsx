@@ -1,26 +1,25 @@
-'use client'
+'use client';
 
-import { useState, useEffect } from 'react'
-import Image from 'next/image'
-import Link from 'next/link'
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Header() {
-  const [scrolled, setScrolled] = useState(false)
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 50)
-    }
-
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+      setScrolled(window.scrollY > 50);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
     <header className={`fixed top-0 left-0 right-0 border-b z-50 transition-all duration-300 ${
       scrolled 
-        ? 'bg-black/95 border-white/10' 
-        : 'bg-transparent border-transparent'
+        ? 'bg-black/95 backdrop-blur-sm border-white/20 shadow-lg' 
+        : 'bg-black/50 backdrop-blur-sm border-white/10'
     }`}>
       <nav className="max-w-7xl mx-auto px-4 md:px-8 py-4 md:py-6 flex justify-between items-center">
         <Link href="/">
@@ -36,41 +35,41 @@ export default function Header() {
         {/* Desktop Navigation - Hidden on mobile */}
         <ul className="hidden lg:flex gap-8 xl:gap-12 items-center">
           <li>
-            <Link href="/" className="text-base text-gray-300 hover:text-white transition-colors">
+            <Link href="/" className="text-base text-white hover:text-gray-300 transition-colors font-medium">
               Home
             </Link>
           </li>
           <li>
-            <Link href="/fleet" className="text-base text-gray-300 hover:text-white transition-colors">
+            <Link href="/fleet" className="text-base text-white hover:text-gray-300 transition-colors font-medium">
               Fleet
             </Link>
           </li>
           <li>
-            <Link href="/services" className="text-base text-gray-300 hover:text-white transition-colors">
+            <Link href="/services" className="text-base text-white hover:text-gray-300 transition-colors font-medium">
               Services
             </Link>
           </li>
           <li>
-            <Link href="/about" className="text-base text-gray-300 hover:text-white transition-colors">
+            <Link href="/about" className="text-base text-white hover:text-gray-300 transition-colors font-medium">
               About
             </Link>
           </li>
           <li>
-            <Link href="/faq" className="text-base text-gray-300 hover:text-white transition-colors">
+            <Link href="/faq" className="text-base text-white hover:text-gray-300 transition-colors font-medium">
               FAQ
             </Link>
           </li>
           <li>
-            <Link href="/contact" className="text-base text-gray-300 hover:text-white transition-colors">
+            <Link href="/contact" className="text-base text-white hover:text-gray-300 transition-colors font-medium">
               Contact
             </Link>
           </li>
           <li>
             <Link 
               href="/quote"
-              className="px-6 py-3 bg-white text-black hover:bg-gray-200 transition-all duration-300 font-semibold tracking-wide"
+              className="btn-primary inline-block text-lg"
             >
-              Reserve Now
+              RESERVE NOW
             </Link>
           </li>
         </ul>
@@ -79,12 +78,12 @@ export default function Header() {
         <div className="lg:hidden">
           <Link 
             href="/quote"
-            className="px-4 py-2 text-sm bg-white text-black hover:bg-gray-200 transition-all duration-300 font-semibold tracking-wide"
+            className="btn-primary inline-block text-lg"
           >
-            Reserve Now
+            RESERVE NOW
           </Link>
         </div>
       </nav>
     </header>
-  )
+  );
 }

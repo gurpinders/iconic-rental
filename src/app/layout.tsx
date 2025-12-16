@@ -1,36 +1,52 @@
-import type { Metadata } from "next";
-import "./globals.css";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
-import { headers } from "next/headers";
-import { Analytics } from '@vercel/analytics/react';
+import type { Metadata } from 'next'
+import { Montserrat } from 'next/font/google'
+import './globals.css'
+import Header from '@/components/layout/Header'
+import Footer from '@/components/layout/Footer'
+import { headers } from 'next/headers'
+import StructuredData from '@/components/StructuredData'
+import GoogleTagManager from '@/components/analytics/GoogleTagManager' // NEW
+
+const montserrat = Montserrat({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700'],
+  variable: '--font-montserrat',
+})
 
 export const metadata: Metadata = {
-  title: "Iconic Limos & Rentals",
-  description: "Luxury transportation in the Greater Toronto Area",
-};
+  // ... your existing metadata
+}
 
 export default async function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  // Get the current pathname
-  const headersList = await headers();
-  const pathname = headersList.get('x-pathname') || '';
-  
-  // Check if we're on an admin page
-  const isAdminPage = pathname.startsWith('/admin');
+}: {
+  children: React.ReactNode
+}) {
+  const headersList = await headers()
+  const pathname = headersList.get('x-pathname') || ''
+  const isAdminRoute = pathname.startsWith('/admin')
 
   return (
     <html lang="en">
-      <body className="antialiased">
-        {/* Only show Header and Footer on non-admin pages */}
-        {!isAdminPage && <Header />}
+      <body className={`${montserrat.variable} font-sans antialiased bg-black text-white`}>
+        {/* Google Tag Manager */}
+        <GoogleTagManager />
+        
+        {/* Google Tag Manager (noscript) */}
+        <noscript>
+          <iframe
+            src={`https://www.googletagmanager.com/ns.html?id=${process.env.NEXT_PUBLIC_GTM_ID}`}
+            height="0"
+            width="0"
+            style={{ display: 'none', visibility: 'hidden' }}
+          />
+        </noscript>
+
+        <StructuredData />
+        {!isAdminRoute && <Header />}
         {children}
-        {!isAdminPage && <Footer />}
-        <Analytics />
+        {!isAdminRoute && <Footer />}
       </body>
     </html>
-  );
+  )
 }
