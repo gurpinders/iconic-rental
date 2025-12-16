@@ -14,7 +14,19 @@ const montserrat = Montserrat({
 })
 
 export const metadata: Metadata = {
-  // ... your existing metadata
+    metadataBase: new URL('https://your-site.vercel.app'),
+    title: {
+      default: 'Iconic Limos & Rentals | Luxury Transportation in GTA',
+      template: '%s | Iconic Limos & Rentals'
+    },
+    description: 'Premium limousine and bus rental services...',
+    keywords: ['limousine rental', 'bus rental'],
+    
+    verification: {
+      google: 'hCOgbVYc_swzIgALMLQZX36bvX9BD2pbU6PL39ZY9fI', 
+    },
+    
+    // ... rest of your metadata
 }
 
 export default async function RootLayout({
