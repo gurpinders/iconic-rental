@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { sendCustomerConfirmation, sendBusinessNotification } from '@/lib/email';
+import { sendQuoteNotificationSMS } from '@/lib/sms';
 
 // Generate unique quote number
 function generateQuoteNumber(): string {
@@ -112,12 +113,39 @@ export async function POST(request: Request) {
       console.error('Error sending business email:', error);
     }
 
-    // Return success response (even if emails failed)
+    // Send SMS notification (NEW!)
+    console.log('🔍 Twilio Config Check:', {
+      hasSID: !!process.env.TWILIO_ACCOUNT_SID,
+      hasToken: !!process.env.TWILIO_AUTH_TOKEN,
+      hasFromNumber: !!process.env.TWILIO_PHONE_NUMBER,
+      hasToNumber: !!process.env.ADMIN_PHONE_NUMBER,
+      fromNumber: process.env.TWILIO_PHONE_NUMBER,
+      toNumber: process.env.ADMIN_PHONE_NUMBER,
+    });
+
+    let smsResult = false;
+    try {
+      await sendQuoteNotificationSMS({
+        quoteName: `${quote.firstName} ${quote.lastName}`,
+        quoteNumber: quote.quoteNumber,
+        serviceType: quote.serviceType,
+        eventDate: quote.eventDate.toDateString(),
+        numberOfPassengers: quote.numberOfPassengers,
+        quoteUrl: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/admin/quotes/${quote.id}`
+      });
+      smsResult = true;
+      console.log('✅ SMS sent successfully!');
+    } catch (smsError) {
+      console.error('❌ SMS Error:', smsError);
+    }
+
+    // Return success response (even if emails/SMS failed)
     return NextResponse.json({
       success: true,
       quoteNumber: quote.quoteNumber,
       message: 'Quote request received successfully',
       emailStatus: emailResults,
+      smsStatus: smsResult,
     });
 
   } catch (error) {
