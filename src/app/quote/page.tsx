@@ -65,6 +65,14 @@ export default function QuotePage() {
 
         setQuoteNumber(data.quoteNumber)
         setSubmitted(true)
+        // Track conversion in GTM
+      if (typeof window !== 'undefined' && (window as any).dataLayer) {
+        (window as any).dataLayer.push({
+          event: 'quote_submitted',
+          quote_value: formData.serviceType,
+          quote_passengers: formData.numberOfPassengers,
+        })
+      }
     } catch (err) {
         setError(err instanceof Error ? err.message : 'An error occurred')
     } finally {
