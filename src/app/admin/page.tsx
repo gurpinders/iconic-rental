@@ -175,7 +175,7 @@ export default async function AdminDashboardPage() {
                           quote.status === 'REVIEWING' ? 'bg-blue-900/50 text-blue-300' :
                           quote.status === 'QUOTED' ? 'bg-purple-900/50 text-purple-300' :
                           quote.status === 'ACCEPTED' ? 'bg-green-900/50 text-green-300' :
-                          quote.status === 'REJECTED' ? 'bg-red-900/50 text-red-300' :
+                          quote.status === 'DECLINED' ? 'bg-red-900/50 text-red-300' :
                           'bg-gray-900/50 text-gray-300'
                         }`}>
                           {quote.status}
