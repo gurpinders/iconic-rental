@@ -11,6 +11,7 @@ const CUSTOMER_TOKEN_NAME = 'customer-auth-token';
 export interface CustomerTokenPayload {
   customerId: string;
   email: string;
+  [key: string]: unknown; // Add index signature for JWT compatibility
 }
 
 // Hash password
@@ -28,7 +29,7 @@ export async function verifyPassword(
 
 // Create JWT token
 export async function createCustomerToken(
-  payload: CustomerTokenPayload
+  payload: { customerId: string; email: string }
 ): Promise<string> {
   return new SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256' })
