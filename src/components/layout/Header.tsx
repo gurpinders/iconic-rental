@@ -87,7 +87,7 @@ export default function Header() {
             href="/quote"
             className="btn-primary inline-block text-lg"
           >
-            RESERVE NOW
+            RESERVE NOW!
           </Link>
         </div>
       </nav>
