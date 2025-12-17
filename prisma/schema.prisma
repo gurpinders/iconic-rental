@@ -107,6 +107,7 @@ model Quote {
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @updatedAt
   respondedAt       DateTime?
+  reminderSentAt    DateTime?
   
   @@index([status])
   @@index([eventDate])
