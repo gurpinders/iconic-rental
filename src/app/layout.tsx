@@ -35,15 +35,18 @@ export default async function RootLayout({
 }) {
   const headersList = await headers()
   const pathname = headersList.get('x-pathname') || ''
+  
+  // Hide header/footer on admin pages AND all customer pages
   const isAdminRoute = pathname.startsWith('/admin')
+  const isCustomerRoute = pathname.startsWith('/customer')
+  
+  const hideHeaderFooter = isAdminRoute || isCustomerRoute
 
   return (
     <html lang="en">
       <body className={`${montserrat.variable} font-sans antialiased bg-black text-white`}>
-        {/* Google Tag Manager */}
         <GoogleTagManager />
         
-        {/* Google Tag Manager (noscript) */}
         <noscript>
           <iframe
             src={`https://www.googletagmanager.com/ns.html?id=${process.env.NEXT_PUBLIC_GTM_ID}`}
@@ -54,9 +57,9 @@ export default async function RootLayout({
         </noscript>
 
         <StructuredData />
-        {!isAdminRoute && <Header />}
+        {!hideHeaderFooter && <Header />}
         {children}
-        {!isAdminRoute && <Footer />}
+        {!hideHeaderFooter && <Footer />}
       </body>
     </html>
   )
