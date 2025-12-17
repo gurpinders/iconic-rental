@@ -6,11 +6,18 @@ import Image from 'next/image';
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
+    
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
     };
+    
+    // Set initial state
+    handleScroll();
+    
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -18,7 +25,7 @@ export default function Header() {
   return (
     <header className={`fixed top-0 left-0 right-0 border-b z-50 transition-all duration-300 ${
       scrolled 
-        ? 'bg-black/95 backdrop-blur-sm border-white/20 shadow-lg' 
+        ? 'bg-black/95 backdrop-blur-md border-white/20 shadow-lg' 
         : 'bg-black/50 backdrop-blur-sm border-white/10'
     }`}>
       <nav className="max-w-7xl mx-auto px-4 md:px-8 py-4 md:py-6 flex justify-between items-center">

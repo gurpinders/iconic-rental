@@ -84,7 +84,7 @@ export async function GET(request: Request) {
 
     console.log('✅ Cron job completed:', results);
 
-0    return NextResponse.json({
+    return NextResponse.json({
       success: true,
       message: 'Reminder check completed',
       results
