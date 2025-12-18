@@ -250,6 +250,11 @@ model Booking {
   vehicleId         String?
   vehicle           Vehicle?      @relation(fields: [vehicleId], references: [id])
   
+  // NEW: Add driver fields
+  driverId          String?
+  driver            Driver?       @relation(fields: [driverId], references: [id])
+  driverAssignedAt  DateTime?
+  
   eventDate         DateTime
   eventType         EventType
   pickupTime        String
@@ -366,4 +371,58 @@ model PromoCode {
 enum DiscountType {
   PERCENTAGE
   FIXED_AMOUNT
+}
+
+// Driver Management System
+model Driver {
+  id                String    @id @default(uuid())
+  
+  // Personal Info
+  firstName         String
+  lastName          String
+  email             String    @unique
+  phone             String
+  
+  // License Info
+  licenseNumber     String?
+  licenseExpiry     DateTime?
+  licenseClass      String?
+  
+  // Employment
+  employeeNumber    String?   @unique
+  hireDate          DateTime?
+  
+  // Status
+  isActive          Boolean   @default(true)
+  notes             String?   @db.Text
+  
+  // Photo (optional)
+  photoUrl          String?
+  
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  
+  // Relations
+  bookings          Booking[]
+  unavailableDates  DriverUnavailability[]
+  
+  @@index([isActive])
+  @@index([email])
+}
+
+// Driver Unavailability (days off, vacation, etc.)
+model DriverUnavailability {
+  id                String    @id @default(uuid())
+  
+  driverId          String
+  driver            Driver    @relation(fields: [driverId], references: [id], onDelete: Cascade)
+  
+  startDate         DateTime
+  endDate           DateTime
+  reason            String?
+  
+  createdAt         DateTime  @default(now())
+  
+  @@index([driverId])
+  @@index([startDate, endDate])
 }
