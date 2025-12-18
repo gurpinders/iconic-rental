@@ -47,7 +47,7 @@ export async function verifyToken(token: string): Promise<{ email: string } | nu
 // Get current user from cookies
 export async function getCurrentUser(): Promise<{ email: string } | null> {
   const cookieStore = await cookies();
-  const token = cookieStore.get('admin-token')?.value;
+  const token = cookieStore.get('admin-auth-token')?.value; // FIXED
 
   if (!token) {
     return null;
@@ -59,7 +59,7 @@ export async function getCurrentUser(): Promise<{ email: string } | null> {
 // Set auth cookie
 export async function setAuthCookie(token: string) {
   const cookieStore = await cookies();
-  cookieStore.set('admin-token', token, {
+  cookieStore.set('admin-auth-token', token, { // FIXED
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
@@ -71,5 +71,5 @@ export async function setAuthCookie(token: string) {
 // Clear auth cookie
 export async function clearAuthCookie() {
   const cookieStore = await cookies();
-  cookieStore.delete('admin-token');
+  cookieStore.delete('admin-auth-token'); // FIXED
 }
