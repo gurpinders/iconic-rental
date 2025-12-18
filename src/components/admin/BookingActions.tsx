@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import CreateInvoiceModal from './CreateInvoiceModal';
+import AssignDriverModal from './AssignDriverModal';
 
 interface BookingActionsProps {
   booking: {
@@ -11,12 +12,16 @@ interface BookingActionsProps {
     status: string;
     totalPrice: number;
     hasInvoice: boolean;
+    eventDate: string;
+    driverId?: string | null;
+    vehicleId?: string | null;
   };
 }
 
 export default function BookingActions({ booking }: BookingActionsProps) {
   const router = useRouter();
   const [showInvoiceModal, setShowInvoiceModal] = useState(false);
+  const [showAssignModal, setShowAssignModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -56,6 +61,15 @@ export default function BookingActions({ booking }: BookingActionsProps) {
         )}
 
         <div className="space-y-3">
+          {/* Assign Driver/Vehicle Button */}
+          <button
+            onClick={() => setShowAssignModal(true)}
+            disabled={loading}
+            className="w-full px-4 py-3 bg-blue-900/50 hover:bg-blue-900/70 border border-blue-500/50 rounded font-semibold transition-colors disabled:opacity-50"
+          >
+            {booking.driverId || booking.vehicleId ? '✏️ Update Assignment' : '👤 Assign Driver/Vehicle'}
+          </button>
+
           {/* Create Invoice Button */}
           {!booking.hasInvoice && (
             <button
@@ -111,6 +125,21 @@ export default function BookingActions({ booking }: BookingActionsProps) {
             router.refresh();
           }}
           onClose={() => setShowInvoiceModal(false)}
+        />
+      )}
+
+      {/* Assign Driver Modal */}
+      {showAssignModal && (
+        <AssignDriverModal
+          bookingId={booking.id}
+          eventDate={booking.eventDate}
+          currentDriverId={booking.driverId}
+          currentVehicleId={booking.vehicleId}
+          onSuccess={() => {
+            setShowAssignModal(false);
+            router.refresh();
+          }}
+          onClose={() => setShowAssignModal(false)}
         />
       )}
     </>

@@ -310,6 +310,9 @@ export default async function AdminBookingDetailPage({
               status: booking.status,
               totalPrice: Number(booking.totalPrice),
               hasInvoice: booking.invoices.length > 0,
+              eventDate: booking.eventDate.toISOString(),
+              driverId: booking.driverId,
+              vehicleId: booking.vehicleId,
             }}
           />
 
