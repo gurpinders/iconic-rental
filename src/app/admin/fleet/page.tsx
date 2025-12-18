@@ -183,11 +183,12 @@ export default async function FleetDashboardPage() {
                   {vehicle.name}
                 </h3>
 
-                {/* Capacity */}
-                <div className="flex items-center gap-2 text-sm text-gray-400 mb-4">
-                  <span>👥</span>
-                  <span>Seats: {vehicle.passengerCapacity}</span>
-                </div>
+                {/* Description */}
+                {vehicle.description && (
+                <p className="text-sm text-gray-400 mb-4 line-clamp-2">
+                    {vehicle.description}
+                </p>
+                )}
 
                 {/* Total Bookings */}
                 <div className="mb-4 p-3 bg-black/50 rounded-lg">
