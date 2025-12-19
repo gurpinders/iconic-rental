@@ -1,205 +1,259 @@
-import { prisma } from '@/lib/prisma'
-import { notFound } from 'next/navigation'
-import Image from 'next/image'
-import Button from '@/components/ui/Button'
+import { notFound } from 'next/navigation';
+import Image from 'next/image';
+import Link from 'next/link';
+import prisma from '@/lib/prisma';
 
-async function getVehicle(slug: string) {
+async function getVehicle(id: string) {
   const vehicle = await prisma.vehicle.findUnique({
-    where: { slug },
+    where: { id },
     include: {
       images: {
         orderBy: { order: 'asc' }
       }
     }
-  })
+  });
   
-  return vehicle
+  return vehicle;
 }
 
-async function getRelatedVehicles(currentSlug: string) {
-  const vehicles = await prisma.vehicle.findMany({
-    where: {
-      slug: { not: currentSlug },
-      isActive: true
-    },
-    include: {
-      images: {
-        orderBy: { order: 'asc' },
-        take: 1
-      }
-    },
-    take: 3,
-    orderBy: { createdAt: 'desc' }
-  })
-  
-  return vehicles
-}
-
-export default async function VehicleDetailPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params
-  const vehicle = await getVehicle(slug)
+export default async function VehicleDetailPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  // slug is actually the vehicle ID now
+  const vehicle = await getVehicle(slug);
 
   if (!vehicle || !vehicle.isActive) {
-    notFound()
+    notFound();
   }
 
-  const relatedVehicles = await getRelatedVehicles(vehicle.slug)
+  // Parse features into an array
+  const featuresArray = vehicle.features 
+    ? vehicle.features.split(',').map(f => f.trim()).filter(Boolean)
+    : [];
 
   return (
-    <main className="min-h-screen bg-black pt-32 pb-20">
-      <div className="max-w-7xl mx-auto px-8">
-        {/* Breadcrumb */}
-        <div className="mb-8 text-sm text-gray-400">
-          <a href="/" className="hover:text-white transition-colors">Home</a>
-          <span className="mx-3">/</span>
-          <a href="/fleet" className="hover:text-white transition-colors">Fleet</a>
-          <span className="mx-3">/</span>
-          <span className="text-white">{vehicle.name}</span>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
-          {/* Left Column - Image */}
-          <div>
-            <div className="relative h-96 lg:h-[600px] rounded-lg overflow-hidden border border-white/20">
-              <Image
-                src={vehicle.thumbnail}
-                alt={vehicle.name}
-                fill
-                className="object-cover"
-                priority
-              />
+    <main className="min-h-screen bg-black text-white">
+      {/* Hero Section */}
+      <section className="relative h-[60vh] min-h-[500px]">
+        {vehicle.imageUrl ? (
+          <Image
+            src={vehicle.imageUrl}
+            alt={vehicle.name}
+            fill
+            className="object-cover"
+            priority
+          />
+        ) : (
+          <div className="w-full h-full bg-zinc-900 flex items-center justify-center">
+            <div className="text-center">
+              <div className="text-9xl mb-4">🚗</div>
+              <p className="text-gray-400">No image available</p>
             </div>
           </div>
-
-          {/* Right Column - Info */}
-          <div>
-            <div className="mb-6">
-              <span className="inline-block px-4 py-2 text-sm font-semibold tracking-wide border border-white/30 rounded-full mb-4">
-                {vehicle.category.replace('_', ' ')}
-              </span>
-              <h1 className="text-5xl font-bold mb-4 tracking-wide">{vehicle.name}</h1>
-              <p className="text-xl text-gray-400 leading-relaxed">{vehicle.description}</p>
-            </div>
-
-            {/* Key Specs */}
-            <div className="grid grid-cols-2 gap-6 mb-8 p-6 bg-zinc-900 rounded-lg border border-white/10">
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+        
+        {/* Content Overlay */}
+        <div className="absolute bottom-0 left-0 right-0 p-8 md:p-16">
+          <div className="max-w-7xl mx-auto">
+            <Link 
+              href="/fleet"
+              className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-6 transition-colors"
+            >
+              <span>←</span>
+              <span>Back to Fleet</span>
+            </Link>
+            
+            <div className="flex items-end justify-between gap-8">
               <div>
-                <p className="text-sm text-gray-400 mb-1">CAPACITY</p>
-                <p className="text-2xl font-bold">{vehicle.capacity} Passengers</p>
+                <p className="text-white/60 mb-2 uppercase tracking-wider text-sm">
+                  {vehicle.category}
+                </p>
+                <h1 className="text-5xl md:text-7xl font-bold mb-4">
+                  {vehicle.name}
+                </h1>
               </div>
-              {vehicle.luggageCapacity && (
-                <div>
-                  <p className="text-sm text-gray-400 mb-1">LUGGAGE</p>
-                  <p className="text-2xl font-bold">{vehicle.luggageCapacity} Bags</p>
+              
+              {(vehicle.basePrice || vehicle.hourlyRate) && (
+                <div className="text-right hidden md:block">
+                  {vehicle.hourlyRate && (
+                    <div className="mb-2">
+                      <span className="text-4xl font-bold">
+                        ${vehicle.hourlyRate.toString()}
+                      </span>
+                      <span className="text-white/60 ml-2">/hour</span>
+                    </div>
+                  )}
+                  {vehicle.basePrice && (
+                    <p className="text-white/60 text-sm">
+                      Base: ${vehicle.basePrice.toString()}
+                    </p>
+                  )}
                 </div>
               )}
-              {vehicle.make && (
-                <div>
-                  <p className="text-sm text-gray-400 mb-1">MAKE</p>
-                  <p className="text-2xl font-bold">{vehicle.make}</p>
-                </div>
-              )}
-              {vehicle.year && (
-                <div>
-                  <p className="text-sm text-gray-400 mb-1">YEAR</p>
-                  <p className="text-2xl font-bold">{vehicle.year}</p>
-                </div>
-              )}
-            </div>
-
-            {/* CTA Button */}
-            <div className="mb-8">
-              <a href="/quote">
-                <Button variant="primary">Request a Quote</Button>
-              </a>
-              <p className="text-sm text-gray-400 mt-3">Get a personalized quote for your event</p>
-            </div>
-
-            {/* Contact Info */}
-            <div className="p-6 bg-zinc-900 rounded-lg border border-white/10">
-              <p className="text-gray-400 mb-2">Need help deciding?</p>
-              <a href="tel:+14161234567" className="text-2xl font-bold hover:text-gray-300 transition-colors">
-                (416) 123-4567
-              </a>
             </div>
           </div>
         </div>
+      </section>
 
-        {/* Features Section */}
-        {vehicle.features.length > 0 && (
-          <div className="mb-16">
-            <h2 className="text-3xl font-bold mb-8 tracking-wide">Features</h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {vehicle.features.map((feature, index) => (
-                <div 
-                  key={index}
-                  className="p-4 bg-zinc-900 rounded-lg border border-white/10 text-center"
-                >
-                  <p className="text-sm">{feature}</p>
+      {/* Main Content */}
+      <section className="py-16 md:py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+            {/* Left Column - Details */}
+            <div className="lg:col-span-2 space-y-12">
+              {/* Description */}
+              {vehicle.description && (
+                <div>
+                  <h2 className="text-3xl font-bold mb-6">Overview</h2>
+                  <p className="text-gray-300 text-lg leading-relaxed whitespace-pre-wrap">
+                    {vehicle.description}
+                  </p>
                 </div>
-              ))}
-            </div>
-          </div>
-        )}
+              )}
 
-        {/* Amenities Section */}
-        {vehicle.amenities.length > 0 && (
-          <div className="mb-16">
-            <h2 className="text-3xl font-bold mb-8 tracking-wide">Amenities</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {vehicle.amenities.map((amenity, index) => (
-                <div 
-                  key={index}
-                  className="flex items-center gap-3 p-4 bg-zinc-900 rounded-lg border border-white/10"
-                >
-                  <svg className="w-5 h-5 text-white flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  <p className="text-sm">{amenity}</p>
+              {/* Features */}
+              {featuresArray.length > 0 && (
+                <div>
+                  <h2 className="text-3xl font-bold mb-6">Features & Amenities</h2>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {featuresArray.map((feature, index) => (
+                      <div
+                        key={index}
+                        className="flex items-start gap-3 p-4 bg-white/5 rounded-lg border border-white/10 hover:border-white/20 transition-colors"
+                      >
+                        <span className="text-2xl">✓</span>
+                        <span className="text-gray-300">{feature}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              ))}
-            </div>
-          </div>
-        )}
+              )}
 
-        {/* Related Vehicles Section */}
-        {relatedVehicles.length > 0 && (
-          <div className="mb-16">
-            <h2 className="text-3xl font-bold mb-8 tracking-wide">Other Vehicles You May Like</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {relatedVehicles.map((relatedVehicle) => (
-                <a 
-                  key={relatedVehicle.id}
-                  href={`/fleet/${relatedVehicle.slug}`}
-                  className="group bg-zinc-900 rounded-lg border border-white/20 overflow-hidden hover:border-white/50 hover:shadow-[0_0_40px_rgba(255,255,255,0.3)] transition-all duration-500"
+              {/* Gallery */}
+              {vehicle.images && vehicle.images.length > 0 && (
+                <div>
+                  <h2 className="text-3xl font-bold mb-6">Gallery</h2>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    {vehicle.images.map((image) => (
+                      <div
+                        key={image.id}
+                        className="relative aspect-video rounded-lg overflow-hidden border border-white/10 hover:border-white/30 transition-colors group"
+                      >
+                        <Image
+                          src={image.url}
+                          alt={image.alt}
+                          fill
+                          className="object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Right Column - Booking Card */}
+            <div className="lg:col-span-1">
+              <div className="sticky top-8 bg-white/5 border-2 border-white/20 rounded-2xl p-8 backdrop-blur-sm">
+                <h3 className="text-2xl font-bold mb-6">Book This Vehicle</h3>
+                
+                {/* Pricing (Mobile) */}
+                {(vehicle.basePrice || vehicle.hourlyRate) && (
+                  <div className="mb-6 pb-6 border-b border-white/10 md:hidden">
+                    {vehicle.hourlyRate && (
+                      <div className="mb-2">
+                        <span className="text-4xl font-bold">
+                          ${vehicle.hourlyRate.toString()}
+                        </span>
+                        <span className="text-white/60 ml-2">/hour</span>
+                      </div>
+                    )}
+                    {vehicle.basePrice && (
+                      <p className="text-white/60 text-sm">
+                        Base: ${vehicle.basePrice.toString()}
+                      </p>
+                    )}
+                  </div>
+                )}
+
+                <div className="space-y-4 mb-6">
+                  <div className="flex items-center gap-3 text-gray-300">
+                    <span className="text-2xl">🚗</span>
+                    <div>
+                      <p className="text-sm text-gray-400">Category</p>
+                      <p className="font-semibold">{vehicle.category}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <Link
+                  href={`/quote?vehicle=${vehicle.id}`}
+                  className="block w-full btn-primary text-center py-4 text-lg font-bold"
                 >
-                  <div className="relative h-48 overflow-hidden">
-                    <Image
-                      src={relatedVehicle.thumbnail}
-                      alt={relatedVehicle.name}
-                      fill
-                      className="object-cover group-hover:scale-110 transition-transform duration-700"
-                    />
-                  </div>
-                  <div className="p-4">
-                    <h3 className="text-xl font-bold mb-2">{relatedVehicle.name}</h3>
-                    <p className="text-sm text-gray-400">{relatedVehicle.capacity} Passengers</p>
-                  </div>
-                </a>
-              ))}
+                  Request a Quote
+                </Link>
+
+                <p className="text-center text-sm text-gray-400 mt-4">
+                  Custom pricing available for extended bookings
+                </p>
+              </div>
             </div>
           </div>
-        )}
-
-        {/* Bottom CTA */}
-        <div className="text-center p-12 bg-zinc-900 rounded-lg border border-white/20">
-          <h2 className="text-4xl font-bold mb-4">Ready to Book This Vehicle?</h2>
-          <p className="text-xl text-gray-400 mb-8">Request a personalized quote for your event</p>
-          <a href="/quote">
-            <Button variant="primary">Request a Quote</Button>
-          </a>
         </div>
-      </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-16 md:py-24 bg-white/5">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6">
+            Ready to Experience Luxury?
+          </h2>
+          <p className="text-xl text-gray-300 mb-8">
+            Book this vehicle for your next special occasion
+          </p>
+          <Link
+            href={`/quote?vehicle=${vehicle.id}`}
+            className="btn-primary inline-block px-12 py-4 text-lg font-bold"
+          >
+            Get Your Custom Quote
+          </Link>
+        </div>
+      </section>
     </main>
-  )
+  );
+}
+
+export async function generateStaticParams() {
+  const vehicles = await prisma.vehicle.findMany({
+    where: { isActive: true },
+    select: { id: true },
+  });
+
+  return vehicles.map((vehicle) => ({
+    slug: vehicle.id, // Use ID as the slug parameter
+  }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const vehicle = await getVehicle(slug);
+
+  if (!vehicle) {
+    return {
+      title: 'Vehicle Not Found',
+    };
+  }
+
+  return {
+    title: `${vehicle.name} - Iconic Limos`,
+    description: vehicle.description || `Book the ${vehicle.name} for your next event`,
+  };
 }
