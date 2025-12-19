@@ -5,7 +5,6 @@ import Image from 'next/image'
 async function getFeaturedVehicles() {
   const vehicles = await prisma.vehicle.findMany({
     where: { 
-      isFeatured: true,
       isActive: true 
     },
     include: {
@@ -44,12 +43,18 @@ export default async function FeaturedVehicles() {
             >
               {/* Vehicle Image */}
               <div className="relative h-64 overflow-hidden">
-                <Image
-                  src={vehicle.thumbnail}
-                  alt={vehicle.name}
-                  fill
-                  className="object-cover group-hover:scale-110 transition-transform duration-700"
-                />
+                {vehicle.imageUrl ? (
+                  <Image
+                    src={vehicle.imageUrl}
+                    alt={vehicle.name}
+                    fill
+                    className="object-cover group-hover:scale-110 transition-transform duration-700"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-zinc-800 flex items-center justify-center">
+                    <span className="text-6xl">🚗</span>
+                  </div>
+                )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
               </div>
 
@@ -57,23 +62,23 @@ export default async function FeaturedVehicles() {
               <div className="p-6">
                 <div className="mb-4">
                   <span className="inline-block px-3 py-1 text-xs font-semibold tracking-wide border border-white/30 rounded-full mb-3">
-                    {vehicle.category.replace('_', ' ')}
+                    {vehicle.category.replace(/_/g, ' ')}
                   </span>
                   <h3 className="text-2xl font-bold mb-2">{vehicle.name}</h3>
                   <p className="text-gray-400 text-sm line-clamp-2">
-                    {vehicle.shortDescription || vehicle.description}
+                    {vehicle.description || 'Luxury transportation at its finest'}
                   </p>
                 </div>
 
-                {/* Specs */}
-                <div className="flex items-center gap-6 mb-6 text-sm text-gray-400">
-                  <div className="flex items-center gap-2">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                    </svg>
-                    <span>{vehicle.capacity} Passengers</span>
+                {/* Pricing */}
+                {vehicle.hourlyRate && (
+                  <div className="mb-6">
+                    <p className="text-gray-400 text-sm">Starting from</p>
+                    <p className="text-2xl font-bold">
+                      ${vehicle.hourlyRate.toString()}<span className="text-sm text-gray-400">/hour</span>
+                    </p>
                   </div>
-                </div>
+                )}
 
                 {/* CTA */}
                 <Button variant="outline">
