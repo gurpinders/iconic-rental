@@ -1,4 +1,4 @@
-import { PrismaClient, VehicleCategory } from '@prisma/client'
+import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
@@ -8,111 +8,53 @@ async function main() {
   // Create sample vehicles
   const limo = await prisma.vehicle.create({
     data: {
-      slug: 'lincoln-stretch-limo',
       name: 'Lincoln Stretch Limousine',
-      category: VehicleCategory.LIMO,
+      category: 'LIMOUSINE',
       description: 'Classic elegance meets modern luxury. Perfect for weddings, proms, and special occasions with premium amenities including leather seating, mood lighting, and champagne bar.',
-      shortDescription: 'Elegant stretch limo for up to 10 passengers',
-      capacity: 10,
-      luggageCapacity: 3,
-      priceStarting: 150,
-      priceNote: 'Starting from per hour',
-      features: [
-        'Leather interior',
-        'Privacy partition',
-        'Mood lighting',
-        'Premium sound system',
-        'Climate control',
-        'Tinted windows'
-      ],
-      amenities: [
-        'Champagne bar',
-        'Crystal glassware',
-        'Bluetooth audio',
-        'USB charging ports',
-        'WiFi available'
-      ],
-      thumbnail: '/limo_ad.jpeg',
-      make: 'Lincoln',
-      model: 'Town Car Stretch',
-      year: 2023,
-      color: 'Black',
+      features: 'Leather interior, Privacy partition, Mood lighting, Premium sound system, Climate control, Tinted windows, Champagne bar, Crystal glassware, Bluetooth audio, USB charging ports',
+      imageUrl: '/limo_ad.jpeg',
+      basePrice: 150.00,
+      hourlyRate: 150.00,
       isActive: true,
-      isFeatured: true,
     }
   })
 
   const partyBus = await prisma.vehicle.create({
     data: {
-      slug: 'party-bus-30-passenger',
       name: '30 Passenger Party Bus',
-      category: VehicleCategory.PARTY_BUS,
+      category: 'BUS',
       description: 'The ultimate party experience on wheels. Dance floor, premium sound system, LED lighting, and full bar setup for an unforgettable night.',
-      shortDescription: 'Luxury party bus with dance floor',
-      capacity: 30,
-      luggageCapacity: 10,
-      priceStarting: 250,
-      priceNote: 'Starting from per hour',
-      features: [
-        'Dance floor',
-        'Pole dancing pole',
-        'LED light show',
-        'Premium sound system',
-        'Multiple TVs',
-        'Laser lights'
-      ],
-      amenities: [
-        'Full bar setup',
-        'Ice coolers',
-        'Bluetooth/AUX',
-        'Charging stations',
-        'Bathroom',
-        'Climate control'
-      ],
-      thumbnail: '/party_bus.jpg',
-      make: 'Custom',
-      model: 'Party Bus',
-      year: 2022,
-      color: 'Black with LED',
+      features: 'Dance floor, Pole dancing pole, LED light show, Premium sound system, Multiple TVs, Laser lights, Full bar setup, Ice coolers, Bluetooth/AUX, Charging stations, Bathroom, Climate control',
+      imageUrl: '/party_bus.jpg',
+      basePrice: 250.00,
+      hourlyRate: 250.00,
       isActive: true,
-      isFeatured: true,
     }
   })
 
   const sprinter = await prisma.vehicle.create({
     data: {
-      slug: 'mercedes-sprinter-van',
       name: 'Mercedes Sprinter Van',
-      category: VehicleCategory.SPRINTER_VAN,
+      category: 'SPRINTER',
       description: 'Executive luxury transport with leather seating, climate control, and premium entertainment systems. Perfect for corporate events and airport transfers.',
-      shortDescription: 'Luxury executive transport',
-      capacity: 14,
-      luggageCapacity: 8,
-      priceStarting: 180,
-      priceNote: 'Starting from per hour',
-      features: [
-        'Leather captain chairs',
-        'Executive seating',
-        'Privacy curtains',
-        'Premium sound',
-        'Ambient lighting',
-        'Tinted windows'
-      ],
-      amenities: [
-        'WiFi',
-        'USB/Power outlets',
-        'Bluetooth audio',
-        'Climate control',
-        'Luggage storage',
-        'Reading lights'
-      ],
-      thumbnail: '/merc_sprinter.jpg',
-      make: 'Mercedes-Benz',
-      model: 'Sprinter',
-      year: 2024,
-      color: 'Black',
+      features: 'Leather captain chairs, Executive seating, Privacy curtains, Premium sound, Ambient lighting, Tinted windows, WiFi, USB/Power outlets, Bluetooth audio, Climate control, Luggage storage, Reading lights',
+      imageUrl: '/merc_sprinter.jpg',
+      basePrice: 180.00,
+      hourlyRate: 180.00,
       isActive: true,
-      isFeatured: true,
+    }
+  })
+
+  const suv = await prisma.vehicle.create({
+    data: {
+      name: 'Cadillac Escalade SUV',
+      category: 'SUV',
+      description: 'Luxury SUV perfect for executive transport and small group travel. Premium leather interior with advanced climate control.',
+      features: 'Leather seats, Privacy glass, Premium audio, WiFi, USB ports, Climate control, Luggage space',
+      imageUrl: null,
+      basePrice: 120.00,
+      hourlyRate: 120.00,
+      isActive: true,
     }
   })
 
@@ -151,7 +93,7 @@ async function main() {
   })
 
   console.log('Seed completed successfully!')
-  console.log({ limo, partyBus, sprinter, testimonial1, testimonial2, testimonial3 })
+  console.log({ limo, partyBus, sprinter, suv, testimonial1, testimonial2, testimonial3 })
 }
 
 main()
