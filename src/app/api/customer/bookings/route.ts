@@ -23,7 +23,7 @@ export async function GET() {
           select: {
             name: true,
             category: true,
-            thumbnail: true,
+            imageUrl: true,
           },
         },
         quote: {
