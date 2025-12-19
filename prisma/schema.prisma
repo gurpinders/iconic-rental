@@ -13,44 +13,29 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Vehicle Models
 model Vehicle {
-  id                String          @id @default(uuid())
-  slug              String          @unique
+  id                String    @id @default(uuid())
   name              String
-  category          VehicleCategory
-  description       String          @db.Text
-  shortDescription  String?
-  capacity          Int
-  luggageCapacity   Int?
+  category          String
+  description       String?   @db.Text
+  features          String?   @db.Text
+  imageUrl          String?
   
-  priceStarting     Decimal         @db.Decimal(10, 2)
-  priceNote         String?
+  // Pricing fields
+  basePrice         Decimal?  @db.Decimal(10, 2)
+  hourlyRate        Decimal?  @db.Decimal(10, 2)
   
-  features          String[]
-  amenities         String[]
+  isActive          Boolean   @default(true)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
   
-  images            VehicleImage[]
-  thumbnail         String
-  
-  make              String?
-  model             String?
-  year              Int?
-  color             String?
-  licensePlate      String?
-  
-  isActive          Boolean         @default(true)
-  isFeatured        Boolean         @default(false)
-  
-  createdAt         DateTime        @default(now())
-  updatedAt         DateTime        @updatedAt
-  
+  // Relations
   quotes            Quote[]
   bookings          Booking[]
+  images            VehicleImage[]  // ADD THIS LINE
   
   @@index([category])
   @@index([isActive])
-  @@index([isFeatured])
 }
 
 model VehicleImage {
