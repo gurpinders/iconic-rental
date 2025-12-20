@@ -176,19 +176,6 @@ export default function VehicleDetailPage({
                 </div>
               </>
             )}
-
-            {/* Back Button - Positioned on Image */}
-            <div className="absolute top-6 left-6 z-20">
-              <Link 
-                href="/fleet"
-                className="inline-flex items-center gap-2 bg-black/70 hover:bg-black/90 backdrop-blur-sm px-6 py-3 rounded-full transition-all group"
-              >
-                <svg className="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                </svg>
-                <span className="font-semibold">Back to Fleet</span>
-              </Link>
-            </div>
           </>
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-zinc-800">
