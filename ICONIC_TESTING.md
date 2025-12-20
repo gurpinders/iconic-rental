@@ -89,12 +89,12 @@ We'll test in this specific order (each feature depends on previous ones):
 
 **Tests:**
 - [x] All vehicles display
-- [ ] Images load properly (or placeholders show)
+- [x] Images load properly (or placeholders show)
 - [x] Vehicle names and categories correct
 - [x] Pricing displays (if set)
 - [x] "Request Quote" buttons work
-- [ ] Clicking vehicle card goes to detail page
-- [ ] Filter/sort works (if implemented)
+- [x] Clicking vehicle card goes to detail page
+- [x] Filter/sort works (if implemented)
 - [x] Mobile responsive
 
 **Expected Result:** All vehicles visible with correct information
@@ -110,13 +110,13 @@ We'll test in this specific order (each feature depends on previous ones):
 **URL:** Click any vehicle from fleet page
 
 **Tests:**
-- [ ] Page loads with vehicle details
-- [ ] Image displays (or placeholder)
-- [ ] Description shows
-- [ ] Features list displays
-- [ ] Pricing shows
-- [ ] "Request Quote" button pre-fills vehicle
-- [ ] Back button works
+- [x] Page loads with vehicle details
+- [x] Image displays (or placeholder)
+- [x] Description shows
+- [x] Features list displays
+- [x] Pricing shows
+- [x] "Request Quote" button pre-fills vehicle
+- [x] Back button works
 - [ ] Mobile responsive
 
 **Expected Result:** Complete vehicle information displayed

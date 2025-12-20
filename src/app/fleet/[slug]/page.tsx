@@ -1,106 +1,211 @@
+'use client';
+
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import prisma from '@/lib/prisma';
+import { useState, useEffect } from 'react';
 
-async function getVehicle(id: string) {
-  const vehicle = await prisma.vehicle.findUnique({
-    where: { id },
-    include: {
-      images: {
-        orderBy: { order: 'asc' }
-      }
-    }
-  });
-  
-  return vehicle;
+interface VehicleImage {
+  id: string;
+  url: string;
+  alt: string;
+  order: number;
 }
 
-export default async function VehicleDetailPage({
+interface Vehicle {
+  id: string;
+  name: string;
+  description: string | null;
+  features: string | null;
+  imageUrl: string | null;
+  basePrice: number | null;
+  hourlyRate: number | null;
+  isActive: boolean;
+  images: VehicleImage[];
+}
+
+export default function VehicleDetailPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  const { slug } = await params;
-  // slug is actually the vehicle ID now
-  const vehicle = await getVehicle(slug);
+  const [vehicle, setVehicle] = useState<Vehicle | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  if (!vehicle || !vehicle.isActive) {
+  useEffect(() => {
+    params.then(p => {
+      fetchVehicle(p.slug);
+    });
+  }, [params]);
+
+  const fetchVehicle = async (id: string) => {
+    try {
+      const res = await fetch(`/api/vehicles/${id}`);
+      if (!res.ok) {
+        notFound();
+      }
+      const data = await res.json();
+      if (!data.vehicle || !data.vehicle.isActive) {
+        notFound();
+      }
+      setVehicle(data.vehicle);
+      setLoading(false);
+    } catch (error) {
+      console.error('Failed to fetch vehicle:', error);
+      notFound();
+    }
+  };
+
+  const nextImage = () => {
+    if (!vehicle) return;
+    const totalImages = vehicle.images.length || 1;
+    setCurrentImageIndex((prev) => (prev + 1) % totalImages);
+  };
+
+  const prevImage = () => {
+    if (!vehicle) return;
+    const totalImages = vehicle.images.length || 1;
+    setCurrentImageIndex((prev) => (prev - 1 + totalImages) % totalImages);
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-white"></div>
+      </div>
+    );
+  }
+
+  if (!vehicle) {
     notFound();
   }
 
-  // Parse features into an array
+  // Get all images (vehicle.images if exists, otherwise use imageUrl)
+  const allImages = vehicle.images && vehicle.images.length > 0
+    ? vehicle.images.sort((a, b) => a.order - b.order)
+    : vehicle.imageUrl
+    ? [{ id: 'main', url: vehicle.imageUrl, alt: vehicle.name, order: 0 }]
+    : [];
+
+  const hasMultipleImages = allImages.length > 1;
+
+  // Parse features
   const featuresArray = vehicle.features 
     ? vehicle.features.split(',').map(f => f.trim()).filter(Boolean)
     : [];
 
   return (
     <main className="min-h-screen bg-black text-white">
-      {/* Hero Section */}
-      <section className="relative h-[60vh] min-h-[500px]">
-        {vehicle.imageUrl ? (
-          <Image
-            src={vehicle.imageUrl}
-            alt={vehicle.name}
-            fill
-            className="object-cover"
-            priority
-          />
+      {/* Back Button */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-4">
+        <Link 
+          href="/fleet"
+          className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors group"
+        >
+          <svg className="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+          <span className="font-medium">Back to Fleet</span>
+        </Link>
+      </div>
+
+      {/* Hero Image Carousel */}
+      <section className="relative h-[60vh] min-h-[500px] max-h-[700px] bg-zinc-900">
+        {allImages.length > 0 ? (
+          <>
+            <div className="relative w-full h-full">
+              <Image
+                src={allImages[currentImageIndex].url}
+                alt={allImages[currentImageIndex].alt}
+                fill
+                className="object-cover"
+                priority
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
+            </div>
+
+            {/* Carousel Controls */}
+            {hasMultipleImages && (
+              <>
+                {/* Previous Button */}
+                <button
+                  onClick={prevImage}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 backdrop-blur-sm p-3 rounded-full transition-all"
+                  aria-label="Previous image"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+
+                {/* Next Button */}
+                <button
+                  onClick={nextImage}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 backdrop-blur-sm p-3 rounded-full transition-all"
+                  aria-label="Next image"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+
+                {/* Image Indicators */}
+                <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
+                  {allImages.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setCurrentImageIndex(index)}
+                      className={`w-2 h-2 rounded-full transition-all ${
+                        index === currentImageIndex
+                          ? 'bg-white w-8'
+                          : 'bg-white/50 hover:bg-white/75'
+                      }`}
+                      aria-label={`Go to image ${index + 1}`}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
+          </>
         ) : (
-          <div className="w-full h-full bg-zinc-900 flex items-center justify-center">
+          <div className="w-full h-full flex items-center justify-center bg-zinc-800">
             <div className="text-center">
               <div className="text-9xl mb-4">🚗</div>
               <p className="text-gray-400">No image available</p>
             </div>
           </div>
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
-        
-        {/* Content Overlay */}
-        <div className="absolute bottom-0 left-0 right-0 p-8 md:p-16">
+
+        {/* Vehicle Name Overlay */}
+        <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black to-transparent">
           <div className="max-w-7xl mx-auto">
-            <Link 
-              href="/fleet"
-              className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-6 transition-colors"
-            >
-              <span>←</span>
-              <span>Back to Fleet</span>
-            </Link>
-            
-            <div className="flex items-end justify-between gap-8">
-              <div>
-                <p className="text-white/60 mb-2 uppercase tracking-wider text-sm">
-                  {vehicle.category}
-                </p>
-                <h1 className="text-5xl md:text-7xl font-bold mb-4">
-                  {vehicle.name}
-                </h1>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-2">
+              {vehicle.name}
+            </h1>
+            {(vehicle.basePrice || vehicle.hourlyRate) && (
+              <div className="flex items-baseline gap-4">
+                {vehicle.hourlyRate && (
+                  <div>
+                    <span className="text-3xl md:text-4xl font-bold">
+                      ${vehicle.hourlyRate.toString()}
+                    </span>
+                    <span className="text-gray-400 ml-2">/hour</span>
+                  </div>
+                )}
+                {vehicle.basePrice && (
+                  <p className="text-gray-400">
+                    Base: ${vehicle.basePrice.toString()}
+                  </p>
+                )}
               </div>
-              
-              {(vehicle.basePrice || vehicle.hourlyRate) && (
-                <div className="text-right hidden md:block">
-                  {vehicle.hourlyRate && (
-                    <div className="mb-2">
-                      <span className="text-4xl font-bold">
-                        ${vehicle.hourlyRate.toString()}
-                      </span>
-                      <span className="text-white/60 ml-2">/hour</span>
-                    </div>
-                  )}
-                  {vehicle.basePrice && (
-                    <p className="text-white/60 text-sm">
-                      Base: ${vehicle.basePrice.toString()}
-                    </p>
-                  )}
-                </div>
-              )}
-            </div>
+            )}
           </div>
         </div>
       </section>
 
-      {/* Main Content */}
-      <section className="py-16 md:py-24">
+      {/* Content Section */}
+      <section className="py-12 md:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
             {/* Left Column - Details */}
@@ -108,8 +213,10 @@ export default async function VehicleDetailPage({
               {/* Description */}
               {vehicle.description && (
                 <div>
-                  <h2 className="text-3xl font-bold mb-6">Overview</h2>
-                  <p className="text-gray-300 text-lg leading-relaxed whitespace-pre-wrap">
+                  <h2 className="text-3xl font-bold mb-6 border-b border-white/10 pb-4">
+                    Overview
+                  </h2>
+                  <p className="text-lg text-gray-300 leading-relaxed whitespace-pre-wrap">
                     {vehicle.description}
                   </p>
                 </div>
@@ -118,14 +225,18 @@ export default async function VehicleDetailPage({
               {/* Features */}
               {featuresArray.length > 0 && (
                 <div>
-                  <h2 className="text-3xl font-bold mb-6">Features & Amenities</h2>
+                  <h2 className="text-3xl font-bold mb-6 border-b border-white/10 pb-4">
+                    Features & Amenities
+                  </h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {featuresArray.map((feature, index) => (
                       <div
                         key={index}
-                        className="flex items-start gap-3 p-4 bg-white/5 rounded-lg border border-white/10 hover:border-white/20 transition-colors"
+                        className="flex items-start gap-3 p-4 bg-white/5 rounded-lg border border-white/10 hover:border-white/20 hover:bg-white/10 transition-all"
                       >
-                        <span className="text-2xl">✓</span>
+                        <svg className="w-6 h-6 text-green-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
                         <span className="text-gray-300">{feature}</span>
                       </div>
                     ))}
@@ -133,23 +244,30 @@ export default async function VehicleDetailPage({
                 </div>
               )}
 
-              {/* Gallery */}
-              {vehicle.images && vehicle.images.length > 0 && (
+              {/* Thumbnail Gallery */}
+              {hasMultipleImages && (
                 <div>
-                  <h2 className="text-3xl font-bold mb-6">Gallery</h2>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                    {vehicle.images.map((image) => (
-                      <div
+                  <h2 className="text-3xl font-bold mb-6 border-b border-white/10 pb-4">
+                    Gallery
+                  </h2>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {allImages.map((image, index) => (
+                      <button
                         key={image.id}
-                        className="relative aspect-video rounded-lg overflow-hidden border border-white/10 hover:border-white/30 transition-colors group"
+                        onClick={() => setCurrentImageIndex(index)}
+                        className={`relative aspect-video rounded-lg overflow-hidden border-2 transition-all ${
+                          index === currentImageIndex
+                            ? 'border-white'
+                            : 'border-white/20 hover:border-white/50'
+                        }`}
                       >
                         <Image
                           src={image.url}
                           alt={image.alt}
                           fill
-                          className="object-cover group-hover:scale-105 transition-transform duration-300"
+                          className="object-cover"
                         />
-                      </div>
+                      </button>
                     ))}
                   </div>
                 </div>
@@ -158,46 +276,63 @@ export default async function VehicleDetailPage({
 
             {/* Right Column - Booking Card */}
             <div className="lg:col-span-1">
-              <div className="sticky top-8 bg-white/5 border-2 border-white/20 rounded-2xl p-8 backdrop-blur-sm">
+              <div className="sticky top-24 bg-zinc-900 border-2 border-white/20 rounded-2xl p-8 backdrop-blur-sm">
                 <h3 className="text-2xl font-bold mb-6">Book This Vehicle</h3>
                 
-                {/* Pricing (Mobile) */}
+                {/* Pricing Display */}
                 {(vehicle.basePrice || vehicle.hourlyRate) && (
-                  <div className="mb-6 pb-6 border-b border-white/10 md:hidden">
+                  <div className="mb-6 pb-6 border-b border-white/10">
                     {vehicle.hourlyRate && (
-                      <div className="mb-2">
-                        <span className="text-4xl font-bold">
+                      <div className="mb-3">
+                        <p className="text-sm text-gray-400 mb-1">Hourly Rate</p>
+                        <p className="text-4xl font-bold">
                           ${vehicle.hourlyRate.toString()}
-                        </span>
-                        <span className="text-white/60 ml-2">/hour</span>
+                          <span className="text-lg text-gray-400">/hr</span>
+                        </p>
                       </div>
                     )}
                     {vehicle.basePrice && (
-                      <p className="text-white/60 text-sm">
-                        Base: ${vehicle.basePrice.toString()}
-                      </p>
+                      <div>
+                        <p className="text-sm text-gray-400 mb-1">Base Price</p>
+                        <p className="text-2xl font-semibold">
+                          ${vehicle.basePrice.toString()}
+                        </p>
+                      </div>
                     )}
                   </div>
                 )}
 
-                <div className="space-y-4 mb-6">
+                {/* Features Highlights */}
+                <div className="mb-6 space-y-3">
                   <div className="flex items-center gap-3 text-gray-300">
-                    <span className="text-2xl">🚗</span>
-                    <div>
-                      <p className="text-sm text-gray-400">Category</p>
-                      <p className="font-semibold">{vehicle.category}</p>
-                    </div>
+                    <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span className="text-sm">Professional driver included</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-gray-300">
+                    <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span className="text-sm">Fully insured & licensed</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-gray-300">
+                    <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span className="text-sm">Premium service guaranteed</span>
                   </div>
                 </div>
 
+                {/* CTA Button */}
                 <Link
                   href={`/quote?vehicle=${vehicle.id}`}
-                  className="block w-full btn-primary text-center py-4 text-lg font-bold"
+                  className="block w-full bg-white text-black text-center py-4 px-6 rounded-lg font-bold text-lg hover:bg-gray-200 transition-colors mb-4"
                 >
                   Request a Quote
                 </Link>
 
-                <p className="text-center text-sm text-gray-400 mt-4">
+                <p className="text-center text-sm text-gray-400">
                   Custom pricing available for extended bookings
                 </p>
               </div>
@@ -207,53 +342,30 @@ export default async function VehicleDetailPage({
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 md:py-24 bg-white/5">
+      <section className="py-16 md:py-24 bg-gradient-to-b from-transparent to-zinc-900">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
             Ready to Experience Luxury?
           </h2>
           <p className="text-xl text-gray-300 mb-8">
             Book this vehicle for your next special occasion
           </p>
-          <Link
-            href={`/quote?vehicle=${vehicle.id}`}
-            className="btn-primary inline-block px-12 py-4 text-lg font-bold"
-          >
-            Get Your Custom Quote
-          </Link>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              href={`/quote?vehicle=${vehicle.id}`}
+              className="bg-white text-black px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-200 transition-colors inline-block"
+            >
+              Get Your Custom Quote
+            </Link>
+            <Link
+              href="/fleet"
+              className="border-2 border-white/20 text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-white/10 transition-colors inline-block"
+            >
+              View More Vehicles
+            </Link>
+          </div>
         </div>
       </section>
     </main>
   );
-}
-
-export async function generateStaticParams() {
-  const vehicles = await prisma.vehicle.findMany({
-    where: { isActive: true },
-    select: { id: true },
-  });
-
-  return vehicles.map((vehicle) => ({
-    slug: vehicle.id, // Use ID as the slug parameter
-  }));
-}
-
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  const { slug } = await params;
-  const vehicle = await getVehicle(slug);
-
-  if (!vehicle) {
-    return {
-      title: 'Vehicle Not Found',
-    };
-  }
-
-  return {
-    title: `${vehicle.name} - Iconic Limos`,
-    description: vehicle.description || `Book the ${vehicle.name} for your next event`,
-  };
 }
