@@ -123,7 +123,8 @@ We'll test in this specific order (each feature depends on previous ones):
 
 **Notes:**
 ```
-[Add your testing notes here]
+- Need to find proper images for each vehicle and need to find a better way to upload images
+
 ```
 
 ---
@@ -132,15 +133,16 @@ We'll test in this specific order (each feature depends on previous ones):
 **URL:** https://iconic-rental.vercel.app/services
 
 **Tests:**
-- [ ] Page loads
-- [ ] All service types listed
-- [ ] Descriptions accurate
-- [ ] CTA buttons work
-- [ ] Mobile responsive
+- [x] Page loads
+- [x] All service types listed
+- [x] Descriptions accurate
+- [x] CTA buttons work
+- [x] Mobile responsive
 
 **Notes:**
 ```
-[Add your testing notes here]
+- Perfect, just need to touch up description 
+
 ```
 
 ---
@@ -149,15 +151,16 @@ We'll test in this specific order (each feature depends on previous ones):
 **URL:** https://iconic-rental.vercel.app/about
 
 **Tests:**
-- [ ] Page loads
-- [ ] Content displays correctly
-- [ ] Images load
-- [ ] Team info (if any)
-- [ ] Mobile responsive
+- [x] Page loads
+- [x] Content displays correctly
+- [x] Images load
+- [x] Team info (if any)
+- [x] Mobile responsive
 
 **Notes:**
 ```
-[Add your testing notes here]
+- Got rid of emoijis since they are a bit cringy
+
 ```
 
 ---
