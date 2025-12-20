@@ -81,7 +81,7 @@ export default function VehicleDetailPage({
     notFound();
   }
 
-  // Get all images (vehicle.images if exists, otherwise use imageUrl)
+  // Get all images
   const allImages = vehicle.images && vehicle.images.length > 0
     ? vehicle.images.sort((a, b) => a.order - b.order)
     : vehicle.imageUrl
@@ -90,28 +90,36 @@ export default function VehicleDetailPage({
 
   const hasMultipleImages = allImages.length > 1;
 
-  // Parse features
-  const featuresArray = vehicle.features 
-    ? vehicle.features.split(',').map(f => f.trim()).filter(Boolean)
-    : [];
+  // Parse features - handle different formats
+  let featuresArray: string[] = [];
+  
+  if (vehicle.features) {
+    try {
+      // Try to parse as JSON first (in case it's a JSON array)
+      const parsed = JSON.parse(vehicle.features);
+      if (Array.isArray(parsed)) {
+        featuresArray = parsed;
+      } else {
+        // If not an array, treat as comma-separated
+        featuresArray = vehicle.features.split(',').map(f => f.trim()).filter(Boolean);
+      }
+    } catch {
+      // Not JSON, treat as comma-separated string
+      featuresArray = vehicle.features
+        .split(',')
+        .map(f => f.trim())
+        .filter(Boolean)
+        .map(f => {
+          // Clean up any remaining quotes or brackets
+          return f.replace(/^["'\[\{]+|["'\]\}]+$/g, '').trim();
+        });
+    }
+  }
 
   return (
     <main className="min-h-screen bg-black text-white">
-      {/* Back Button */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-4">
-        <Link 
-          href="/fleet"
-          className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors group"
-        >
-          <svg className="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-          <span className="font-medium">Back to Fleet</span>
-        </Link>
-      </div>
-
       {/* Hero Image Carousel */}
-      <section className="relative h-[60vh] min-h-[500px] max-h-[700px] bg-zinc-900">
+      <section className="relative h-[70vh] min-h-[600px] max-h-[800px] bg-zinc-900">
         {allImages.length > 0 ? (
           <>
             <div className="relative w-full h-full">
@@ -119,10 +127,11 @@ export default function VehicleDetailPage({
                 src={allImages[currentImageIndex].url}
                 alt={allImages[currentImageIndex].alt}
                 fill
-                className="object-cover"
+                className="object-contain bg-black"
                 priority
+                sizes="100vw"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/30" />
             </div>
 
             {/* Carousel Controls */}
@@ -131,7 +140,7 @@ export default function VehicleDetailPage({
                 {/* Previous Button */}
                 <button
                   onClick={prevImage}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 backdrop-blur-sm p-3 rounded-full transition-all"
+                  className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 bg-black/70 hover:bg-black/90 backdrop-blur-sm p-4 rounded-full transition-all z-10"
                   aria-label="Previous image"
                 >
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -142,7 +151,7 @@ export default function VehicleDetailPage({
                 {/* Next Button */}
                 <button
                   onClick={nextImage}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 backdrop-blur-sm p-3 rounded-full transition-all"
+                  className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 bg-black/70 hover:bg-black/90 backdrop-blur-sm p-4 rounded-full transition-all z-10"
                   aria-label="Next image"
                 >
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -151,22 +160,35 @@ export default function VehicleDetailPage({
                 </button>
 
                 {/* Image Indicators */}
-                <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
+                <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-10">
                   {allImages.map((_, index) => (
                     <button
                       key={index}
                       onClick={() => setCurrentImageIndex(index)}
-                      className={`w-2 h-2 rounded-full transition-all ${
+                      className={`transition-all ${
                         index === currentImageIndex
-                          ? 'bg-white w-8'
-                          : 'bg-white/50 hover:bg-white/75'
-                      }`}
+                          ? 'bg-white w-8 h-2'
+                          : 'bg-white/50 hover:bg-white/75 w-2 h-2'
+                      } rounded-full`}
                       aria-label={`Go to image ${index + 1}`}
                     />
                   ))}
                 </div>
               </>
             )}
+
+            {/* Back Button - Positioned on Image */}
+            <div className="absolute top-6 left-6 z-20">
+              <Link 
+                href="/fleet"
+                className="inline-flex items-center gap-2 bg-black/70 hover:bg-black/90 backdrop-blur-sm px-6 py-3 rounded-full transition-all group"
+              >
+                <svg className="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+                <span className="font-semibold">Back to Fleet</span>
+              </Link>
+            </div>
           </>
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-zinc-800">
@@ -177,17 +199,17 @@ export default function VehicleDetailPage({
           </div>
         )}
 
-        {/* Vehicle Name Overlay */}
-        <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black to-transparent">
+        {/* Vehicle Name & Pricing - Bottom Overlay */}
+        <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 bg-gradient-to-t from-black to-transparent">
           <div className="max-w-7xl mx-auto">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-2">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-3">
               {vehicle.name}
             </h1>
             {(vehicle.basePrice || vehicle.hourlyRate) && (
-              <div className="flex items-baseline gap-4">
+              <div className="flex items-baseline gap-4 flex-wrap">
                 {vehicle.hourlyRate && (
                   <div>
-                    <span className="text-3xl md:text-4xl font-bold">
+                    <span className="text-2xl md:text-3xl font-bold">
                       ${vehicle.hourlyRate.toString()}
                     </span>
                     <span className="text-gray-400 ml-2">/hour</span>
@@ -257,7 +279,7 @@ export default function VehicleDetailPage({
                         onClick={() => setCurrentImageIndex(index)}
                         className={`relative aspect-video rounded-lg overflow-hidden border-2 transition-all ${
                           index === currentImageIndex
-                            ? 'border-white'
+                            ? 'border-white shadow-lg'
                             : 'border-white/20 hover:border-white/50'
                         }`}
                       >
@@ -266,6 +288,7 @@ export default function VehicleDetailPage({
                           alt={image.alt}
                           fill
                           className="object-cover"
+                          sizes="(max-width: 768px) 50vw, 25vw"
                         />
                       </button>
                     ))}
@@ -276,7 +299,7 @@ export default function VehicleDetailPage({
 
             {/* Right Column - Booking Card */}
             <div className="lg:col-span-1">
-              <div className="sticky top-24 bg-zinc-900 border-2 border-white/20 rounded-2xl p-8 backdrop-blur-sm">
+              <div className="sticky top-24 bg-zinc-900 border-2 border-white/20 rounded-2xl p-8">
                 <h3 className="text-2xl font-bold mb-6">Book This Vehicle</h3>
                 
                 {/* Pricing Display */}
