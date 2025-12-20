@@ -68,18 +68,18 @@ We'll test in this specific order (each feature depends on previous ones):
 - [x] Logo displays correctly
 - [x] Navigation menu works (all links)
 - [x] Hero section displays
-- [ ] Featured vehicles show (if any exist)
+- [x] Featured vehicles show (if any exist)
 - [x] Testimonials display
 - [x] Footer links work
 - [x] Contact info correct (phone, email, address)
 - [x] "Request Quote" buttons work
-- [ ] Mobile menu works (test on phone/responsive view)
+- [x] Mobile menu works (test on phone/responsive view)
 
 **Expected Result:** Clean, professional homepage with no console errors
 
 **Notes:**
 ```
-[Add your testing notes here]
+- Images for featured vehicles gets updated from Admin portal, for now it will show car emoji
 ```
 
 ---
@@ -88,14 +88,14 @@ We'll test in this specific order (each feature depends on previous ones):
 **URL:** https://iconic-rental.vercel.app/fleet
 
 **Tests:**
-- [ ] All vehicles display
+- [x] All vehicles display
 - [ ] Images load properly (or placeholders show)
-- [ ] Vehicle names and categories correct
-- [ ] Pricing displays (if set)
-- [ ] "Request Quote" buttons work
+- [x] Vehicle names and categories correct
+- [x] Pricing displays (if set)
+- [x] "Request Quote" buttons work
 - [ ] Clicking vehicle card goes to detail page
 - [ ] Filter/sort works (if implemented)
-- [ ] Mobile responsive
+- [x] Mobile responsive
 
 **Expected Result:** All vehicles visible with correct information
 
