@@ -65,6 +65,8 @@ export default function QuotePage() {
 
         setQuoteNumber(data.quoteNumber)
         setSubmitted(true)
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+        
         // Track conversion in GTM
       if (typeof window !== 'undefined' && (window as any).dataLayer) {
         (window as any).dataLayer.push({

@@ -173,13 +173,14 @@ We'll test in this specific order (each feature depends on previous ones):
 - [x] Contact form displays
 - [x] All fields work
 - [x] Submit button works
-- [ ] Success/error messages show
+- [x] Success/error messages show
 - [x] Contact info correct (phone, email, address)
 - [x] Mobile responsive
 
 **Notes:**
 ```
-[Add your testing notes here]
+- Success message showing properly, just need to see what the error message looks like
+
 ```
 
 ---
@@ -204,17 +205,18 @@ We'll test in this specific order (each feature depends on previous ones):
 2. Click "Submit Quote Request"
 
 **Expected Result:**
-- [ ] Form submits successfully
-- [ ] Success message appears
-- [ ] Quote number displayed
-- [ ] No console errors
-- [ ] Page redirects or shows confirmation
+- [x] Form submits successfully
+- [x] Success message appears
+- [x] Quote number displayed
+- [x] No console errors
+- [x] Page redirects or shows confirmation
 
 **Notes:**
 ```
-Quote Number Generated: _______________
-Submission Time: _______________
-Any Errors: _______________
+Quote Number Generated: #IL1766332127236535
+Submission Time: 10:49 AM
+Any Errors: No Errors
+- I want it to go to the top of the page when you are redirected to the new page
 ```
 
 ---
