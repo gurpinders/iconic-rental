@@ -1,17 +1,69 @@
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
-
-export const metadata = {
-  title: 'Contact Us - Get in Touch',
-  description: 'Contact Iconic Limos & Rentals for luxury transportation in Toronto. Call (416) 123-4567 or email info@iconiclimos.com. Available 24/7 for your convenience.',
-  openGraph: {
-    title: 'Contact Us - Iconic Limos & Rentals',
-    description: 'Get in touch for luxury transportation services in Toronto.',
-    images: ['/og-image.jpg'],
-  },
-};
+import { useState } from 'react';
 
 export default function ContactPage() {
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    subject: '',
+    message: '',
+  });
+
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    setSuccess(false);
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to send message');
+      }
+
+      setSuccess(true);
+      setFormData({
+        firstName: '',
+        lastName: '',
+        email: '',
+        phone: '',
+        subject: '',
+        message: '',
+      });
+
+      // Auto-hide success message after 5 seconds
+      setTimeout(() => setSuccess(false), 5000);
+
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to send message');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
   return (
     <div className="min-h-screen bg-black text-white page-transition">
       {/* Hero Section */}
@@ -57,10 +109,10 @@ export default function ContactPage() {
               </div>
               <h3 className="text-2xl font-bold mb-4">Call Us</h3>
               <a 
-                href="tel:+14161234567" 
+                href="tel:+14163461400" 
                 className="text-3xl font-bold text-white hover:text-gray-300 transition-colors block mb-2"
               >
-                (416) 123-4567
+                (416) 346-1400
               </a>
               <p className="text-gray-400 text-sm">Available 24/7</p>
             </div>
@@ -74,10 +126,10 @@ export default function ContactPage() {
               </div>
               <h3 className="text-2xl font-bold mb-4">Email Us</h3>
               <a 
-                href="mailto:info@iconiclimos.com" 
-                className="text-2xl font-bold text-white hover:text-gray-300 transition-colors block mb-2"
+                href="mailto:psandhu0124@gmail.com" 
+                className="text-xl font-bold text-white hover:text-gray-300 transition-colors block mb-2 break-words"
               >
-                info@iconiclimos.com
+                psandhu0124@gmail.com
               </a>
               <p className="text-gray-400 text-sm">Quick Response</p>
             </div>
@@ -118,24 +170,52 @@ export default function ContactPage() {
               Send Us a Message
             </h2>
             <p className="text-xl text-gray-400">
-              Or fill out the form below and we'll get back to you shortly
+              Fill out the form below and we'll get back to you shortly
             </p>
           </div>
 
-          <form className="bg-zinc-900 border border-white/20 rounded-lg p-8 md:p-12">
+          <form onSubmit={handleSubmit} className="bg-zinc-900 border border-white/20 rounded-lg p-8 md:p-12">
+            {/* Success Message */}
+            {success && (
+              <div className="mb-6 p-4 bg-green-900/20 border-2 border-green-500/50 rounded-lg text-green-300 text-center animate-fade-in">
+                <svg className="w-6 h-6 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                Thank you for your message! We'll get back to you shortly.
+              </div>
+            )}
+
+            {/* Error Message */}
+            {error && (
+              <div className="mb-6 p-4 bg-red-900/20 border-2 border-red-500/50 rounded-lg text-red-300 text-center">
+                <svg className="w-6 h-6 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                {error}
+              </div>
+            )}
+
             <div className="grid md:grid-cols-2 gap-6 mb-6">
               <div>
-                <label className="block text-sm font-medium mb-2">First Name</label>
+                <label className="block text-sm font-medium mb-2">First Name *</label>
                 <input
                   type="text"
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                  required
                   className="w-full px-4 py-3 bg-black border border-white/20 rounded focus:outline-none focus:border-white/50 transition-colors"
                   placeholder="John"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-2">Last Name</label>
+                <label className="block text-sm font-medium mb-2">Last Name *</label>
                 <input
                   type="text"
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleChange}
+                  required
                   className="w-full px-4 py-3 bg-black border border-white/20 rounded focus:outline-none focus:border-white/50 transition-colors"
                   placeholder="Doe"
                 />
@@ -144,9 +224,13 @@ export default function ContactPage() {
 
             <div className="grid md:grid-cols-2 gap-6 mb-6">
               <div>
-                <label className="block text-sm font-medium mb-2">Email</label>
+                <label className="block text-sm font-medium mb-2">Email *</label>
                 <input
                   type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
                   className="w-full px-4 py-3 bg-black border border-white/20 rounded focus:outline-none focus:border-white/50 transition-colors"
                   placeholder="john@example.com"
                 />
@@ -155,6 +239,9 @@ export default function ContactPage() {
                 <label className="block text-sm font-medium mb-2">Phone</label>
                 <input
                   type="tel"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
                   className="w-full px-4 py-3 bg-black border border-white/20 rounded focus:outline-none focus:border-white/50 transition-colors"
                   placeholder="(416) 123-4567"
                 />
@@ -162,17 +249,25 @@ export default function ContactPage() {
             </div>
 
             <div className="mb-6">
-              <label className="block text-sm font-medium mb-2">Subject</label>
+              <label className="block text-sm font-medium mb-2">Subject *</label>
               <input
                 type="text"
+                name="subject"
+                value={formData.subject}
+                onChange={handleChange}
+                required
                 className="w-full px-4 py-3 bg-black border border-white/20 rounded focus:outline-none focus:border-white/50 transition-colors"
                 placeholder="How can we help you?"
               />
             </div>
 
             <div className="mb-8">
-              <label className="block text-sm font-medium mb-2">Message</label>
+              <label className="block text-sm font-medium mb-2">Message *</label>
               <textarea
+                name="message"
+                value={formData.message}
+                onChange={handleChange}
+                required
                 rows={6}
                 className="w-full px-4 py-3 bg-black border border-white/20 rounded focus:outline-none focus:border-white/50 transition-colors resize-none"
                 placeholder="Tell us about your transportation needs..."
@@ -181,9 +276,10 @@ export default function ContactPage() {
 
             <button
               type="submit"
-              className="w-full px-8 py-4 bg-gradient-to-r from-white to-gray-100 text-black hover:from-gray-100 hover:to-white transition-all duration-300 font-bold tracking-wide shadow-lg hover:shadow-xl transform hover:scale-105"
+              disabled={loading}
+              className="w-full px-8 py-4 bg-gradient-to-r from-white to-gray-100 text-black hover:from-gray-100 hover:to-white transition-all duration-300 font-bold tracking-wide shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
             >
-              SEND MESSAGE
+              {loading ? 'SENDING...' : 'SEND MESSAGE'}
             </button>
           </form>
         </div>
