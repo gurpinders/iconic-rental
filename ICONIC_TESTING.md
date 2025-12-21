@@ -230,14 +230,15 @@ Any Errors: No Errors
 4. Try past date for event
 
 **Expected Result:**
-- [ ] Validation errors show
-- [ ] Red borders on invalid fields
-- [ ] Helpful error messages
-- [ ] Form doesn't submit until valid
+- [x] Validation errors show
+- [x] Red borders on invalid fields
+- [x] Helpful error messages
+- [x] Form doesn't submit until valid
 
 **Notes:**
 ```
-[Add validation test results here]
+- Just need to do a bit more specific testing but overall its good
+
 ```
 
 ---
@@ -251,12 +252,12 @@ Any Errors: No Errors
    - No "how did you hear"
 
 **Expected Result:**
-- [ ] Form still submits
-- [ ] No errors for missing optional fields
+- [x] Form still submits
+- [x] No errors for missing optional fields
 
 **Notes:**
 ```
-[Add your testing notes here]
+- Just need to do some more testing but overall its good 
 ```
 
 ---
@@ -270,13 +271,13 @@ Any Errors: No Errors
 1. Try logging in with WRONG password
 2. Try logging in with correct credentials:
    - Email: psandhu0124@gmail.com
-   - Password: [your admin password]
+   - Password: Iconic1234
 
 **Expected Result:**
-- [ ] Wrong password shows error
-- [ ] Correct password logs in
-- [ ] Redirects to admin dashboard
-- [ ] No public header/footer in admin area
+- [x] Wrong password shows error
+- [x] Correct password logs in
+- [x] Redirects to admin dashboard
+- [x] No public header/footer in admin area
 
 **Notes:**
 ```
@@ -289,17 +290,17 @@ Any Errors: No Errors
 **URL:** https://iconic-rental.vercel.app/admin
 
 **Tests:**
-- [ ] Dashboard loads
-- [ ] Stats cards show correct numbers
-- [ ] Recent quotes display
+- [x] Dashboard loads
+- [x] Stats cards show correct numbers
+- [x] Recent quotes display
 - [ ] Navigation sidebar works
 - [ ] All menu items clickable
-- [ ] Logout button works
+- [x] Logout button works
 
 **Stats to verify:**
-- Total Quotes: _______________
-- Pending: _______________
-- Active: _______________
+- Total Quotes: 12
+- Pending: 9
+- Active: 0
 
 **Notes:**
 ```
