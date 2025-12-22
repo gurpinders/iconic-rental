@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/response';
+import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { getCurrentCustomer } from '@/lib/customer-auth';
 
