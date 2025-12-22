@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
-import { getCustomerFromRequest } from '@/lib/customer-auth';
+import { getCurrentCustomer } from '@/lib/customer-auth';
 
 export async function GET(request: Request) {
   try {
     // Get authenticated customer
-    const customer = await getCustomerFromRequest(request);
+    const customer = await getCurrentCustomer();
 
     if (!customer) {
       return NextResponse.json(
