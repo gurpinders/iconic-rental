@@ -11,7 +11,7 @@ interface Vehicle {
   category: string;
   thumbnail: string;
   capacity: number;
-  features: string[];
+  features: string[] | string;
 }
 
 interface Invoice {
@@ -241,20 +241,31 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
                   {(() => {
                     // Parse features - handle both JSON array and comma-separated string
                     let featuresArray: string[] = [];
+                    const features = booking.vehicle.features;
                     
-                    if (typeof booking.vehicle.features === 'string') {
+                    if (Array.isArray(features)) {
+                      // Already an array
+                      featuresArray = features;
+                    } else if (typeof features === 'string') {
                       try {
                         // Try parsing as JSON first
-                        featuresArray = JSON.parse(booking.vehicle.features);
+                        const parsed = JSON.parse(features);
+                        if (Array.isArray(parsed)) {
+                          featuresArray = parsed;
+                        } else {
+                          // Single string, split by comma
+                          featuresArray = features
+                            .split(',')
+                            .map(f => f.trim())
+                            .filter(f => f.length > 0);
+                        }
                       } catch {
                         // If not JSON, split by comma
-                        featuresArray = booking.vehicle.features
+                        featuresArray = features
                           .split(',')
                           .map(f => f.trim())
                           .filter(f => f.length > 0);
                       }
-                    } else if (Array.isArray(booking.vehicle.features)) {
-                      featuresArray = booking.vehicle.features;
                     }
                     
                     return featuresArray.slice(0, 3).map((feature, i) => (
