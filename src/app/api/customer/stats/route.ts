@@ -32,12 +32,12 @@ export async function GET(request: Request) {
         where: { customerId },
       }),
       
-      // Upcoming bookings (future dates, status CONFIRMED or PENDING)
+      // Upcoming bookings (future dates, status CONFIRMED or IN_PROGRESS)
       prisma.booking.count({
         where: {
           customerId,
           eventDate: { gte: now },
-          status: { in: ['CONFIRMED', 'PENDING'] },
+          status: { in: ['CONFIRMED', 'IN_PROGRESS'] },
         },
       }),
       
