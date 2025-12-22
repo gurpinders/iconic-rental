@@ -52,10 +52,8 @@ export async function GET(request: Request) {
       // Pending invoices
       prisma.invoice.count({
         where: {
-          booking: {
-            customerId,
-          },
-          status: 'PENDING',
+          customerId,
+          paymentStatus: 'PENDING',
         },
       }),
     ]);
