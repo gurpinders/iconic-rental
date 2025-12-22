@@ -530,7 +530,7 @@ Dashboard Loaded: [x] Yes [ ] No
 
 **Notes:**
 ```
-- Need to fix because action cards are not showing the correct numbers
+- Need to fix because action cards are not showing the correct numbers (CORRECTED)
 ```
 
 ---
@@ -540,19 +540,19 @@ Dashboard Loaded: [x] Yes [ ] No
 **URL:** Click "My Bookings" in navigation
 
 **Expected Result:**
-- [ ] Bookings page loads
-- [ ] Booking from Session 4 appears
-- [ ] Booking card displays correctly
-- [ ] Shows: booking number, date, vehicle, price
-- [ ] Status badge: CONFIRMED (blue)
-- [ ] Can click card to view details
-- [ ] Tabs work: Upcoming, Past, Cancelled
+- [x] Bookings page loads
+- [x] Booking from Session 4 appears
+- [x] Booking card displays correctly
+- [x] Shows: booking number, date, vehicle, price
+- [x] Status badge: CONFIRMED (blue)
+- [x] Can click card to view details
+- [x] Tabs work: Upcoming, Past, Cancelled
 
 **Notes:**
 ```
-Booking Visible: [ ] Yes [ ] No
-Booking Number: _______________
-Correct Details: [ ] Yes [ ] No
+Booking Visible: [x] Yes [ ] No
+Booking Number: #BK1766371864076768
+Correct Details: [x] Yes [ ] No
 ```
 
 ---

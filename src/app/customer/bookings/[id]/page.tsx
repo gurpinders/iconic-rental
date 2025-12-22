@@ -238,11 +238,31 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
                   <span className="px-3 py-1 bg-white/10 rounded-full text-sm">
                     {booking.vehicle.capacity} passengers
                   </span>
-                  {booking.vehicle.features.slice(0, 3).map((feature, i) => (
-                    <span key={i} className="px-3 py-1 bg-white/10 rounded-full text-sm">
-                      {feature}
-                    </span>
-                  ))}
+                  {(() => {
+                    // Parse features - handle both JSON array and comma-separated string
+                    let featuresArray: string[] = [];
+                    
+                    if (typeof booking.vehicle.features === 'string') {
+                      try {
+                        // Try parsing as JSON first
+                        featuresArray = JSON.parse(booking.vehicle.features);
+                      } catch {
+                        // If not JSON, split by comma
+                        featuresArray = booking.vehicle.features
+                          .split(',')
+                          .map(f => f.trim())
+                          .filter(f => f.length > 0);
+                      }
+                    } else if (Array.isArray(booking.vehicle.features)) {
+                      featuresArray = booking.vehicle.features;
+                    }
+                    
+                    return featuresArray.slice(0, 3).map((feature, i) => (
+                      <span key={i} className="px-3 py-1 bg-white/10 rounded-full text-sm">
+                        {feature}
+                      </span>
+                    ));
+                  })()}
                 </div>
               </div>
             </div>
