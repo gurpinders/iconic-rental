@@ -25,6 +25,7 @@ export async function GET(
       },
       include: {
         vehicle: true,
+        driver: true, // ADD THIS LINE
         quote: true,
         invoices: {
           orderBy: {

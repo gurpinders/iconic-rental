@@ -9,9 +9,16 @@ interface Vehicle {
   id: string;
   name: string;
   category: string;
-  thumbnail: string;
+  imageUrl: string;
   capacity: number;
   features: string[] | string;
+}
+
+interface Driver {
+  id: string;
+  name: string;
+  phone: string;
+  email: string;
 }
 
 interface Invoice {
@@ -42,6 +49,7 @@ interface Booking {
   vehicleDetails: string | null;
   notes: string | null;
   vehicle: Vehicle | null;
+  driver: Driver | null;
   invoices: Invoice[];
   confirmedAt: string;
 }
@@ -223,13 +231,17 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
           <div className="mb-8 pb-8 border-b border-white/10">
             <h2 className="text-2xl font-bold mb-6">Vehicle</h2>
             <div className="flex flex-col sm:flex-row gap-6">
-              <div className="w-full sm:w-48 h-32 relative rounded-lg overflow-hidden bg-zinc-800">
-                <Image
-                  src={booking.vehicle.thumbnail}
-                  alt={booking.vehicle.name}
-                  fill
-                  className="object-cover"
-                />
+              <div className="w-full sm:w-48 h-32 relative rounded-lg overflow-hidden bg-zinc-800 flex items-center justify-center">
+                {booking.vehicle.imageUrl ? (
+                  <Image
+                    src={booking.vehicle.imageUrl}
+                    alt={booking.vehicle.name}
+                    fill
+                    className="object-cover"
+                  />
+                ) : (
+                  <span className="text-6xl">🚗</span>
+                )}
               </div>
               <div className="flex-1">
                 <h3 className="text-2xl font-bold mb-2">{booking.vehicle.name}</h3>
@@ -281,24 +293,37 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
         )}
 
         {/* Driver Information */}
-        {(booking.driverName || booking.driverPhone) && (
+        {(booking.driver || booking.driverName || booking.driverPhone) && (
           <div className="mb-8 pb-8 border-b border-white/10">
             <h2 className="text-2xl font-bold mb-6">Driver Information</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {booking.driverName && (
+              {(booking.driver?.name || booking.driverName) && (
                 <div>
                   <p className="text-gray-500 text-xs uppercase tracking-wider mb-2">Driver Name</p>
-                  <p className="text-white text-lg font-semibold">{booking.driverName}</p>
+                  <p className="text-white text-lg font-semibold">
+                    {booking.driver?.name || booking.driverName}
+                  </p>
                 </div>
               )}
-              {booking.driverPhone && (
+              {(booking.driver?.phone || booking.driverPhone) && (
                 <div>
                   <p className="text-gray-500 text-xs uppercase tracking-wider mb-2">Driver Phone</p>
                   <a
-                    href={`tel:${booking.driverPhone}`}
+                    href={`tel:${booking.driver?.phone || booking.driverPhone}`}
                     className="text-blue-400 text-lg font-semibold hover:underline"
                   >
-                    {booking.driverPhone}
+                    {booking.driver?.phone || booking.driverPhone}
+                  </a>
+                </div>
+              )}
+              {booking.driver?.email && (
+                <div>
+                  <p className="text-gray-500 text-xs uppercase tracking-wider mb-2">Driver Email</p>
+                  <a
+                    href={`mailto:${booking.driver.email}`}
+                    className="text-blue-400 text-lg font-semibold hover:underline"
+                  >
+                    {booking.driver.email}
                   </a>
                 </div>
               )}

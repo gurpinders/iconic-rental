@@ -563,19 +563,22 @@ Correct Details: [x] Yes [ ] No
 1. Click the booking card
 
 **Expected Result:**
-- [ ] Full booking details display
-- [ ] Event information correct
-- [ ] Location details (pickup/dropoff)
-- [ ] Vehicle info (with image/placeholder)
-- [ ] Payment summary shows
-- [ ] No driver assigned yet (should say "Not assigned" or similar)
-- [ ] Special requests show (if any)
-- [ ] Back button works
-- [ ] Link to invoice (should say "No invoice" for now)
+- [x] Full booking details display
+- [x] Event information correct
+- [x] Location details (pickup/dropoff)
+- [x] Vehicle info (with image/placeholder)
+- [x] Payment summary shows
+- [x] No driver assigned yet (should say "Not assigned" or similar)
+- [x] Special requests show (if any)
+- [x] Back button works
+- [x] Link to invoice (should say "No invoice" for now)
 
 **Notes:**
 ```
-[Add your testing notes here]
+- Photo for vehicle image not showing
+- Driver not showing
+- No Link to invoice or not showing anything 
+
 ```
 
 ---
