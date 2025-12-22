@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextResponse } from 'next/response';
 import prisma from '@/lib/prisma';
 import { getCurrentCustomer } from '@/lib/customer-auth';
 
@@ -7,12 +7,15 @@ export async function GET(request: Request) {
     // Get authenticated customer
     const customer = await getCurrentCustomer();
 
-    if (!customer) {
+    if (!customer || !customer.id) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
       );
     }
+
+    // Ensure customer.id is a string
+    const customerId = String(customer.id);
 
     // Get current date for upcoming bookings
     const now = new Date();
@@ -26,13 +29,13 @@ export async function GET(request: Request) {
     ] = await Promise.all([
       // Total bookings
       prisma.booking.count({
-        where: { customerId: customer.id },
+        where: { customerId },
       }),
       
       // Upcoming bookings (future dates, status CONFIRMED or PENDING)
       prisma.booking.count({
         where: {
-          customerId: customer.id,
+          customerId,
           eventDate: { gte: now },
           status: { in: ['CONFIRMED', 'PENDING'] },
         },
@@ -41,7 +44,7 @@ export async function GET(request: Request) {
       // Completed bookings
       prisma.booking.count({
         where: {
-          customerId: customer.id,
+          customerId,
           status: 'COMPLETED',
         },
       }),
@@ -50,7 +53,7 @@ export async function GET(request: Request) {
       prisma.invoice.count({
         where: {
           booking: {
-            customerId: customer.id,
+            customerId,
           },
           status: 'PENDING',
         },
