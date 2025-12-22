@@ -293,8 +293,8 @@ Any Errors: No Errors
 - [x] Dashboard loads
 - [x] Stats cards show correct numbers
 - [x] Recent quotes display
-- [ ] Navigation sidebar works
-- [ ] All menu items clickable
+- [x] Navigation sidebar works
+- [x] All menu items clickable
 - [x] Logout button works
 
 **Stats to verify:**
@@ -304,7 +304,8 @@ Any Errors: No Errors
 
 **Notes:**
 ```
-[Add your testing notes here]
+- Need to look into Customers, Invoices, Calendar, and Analytics (getting 404 page not found)
+
 ```
 
 ---
@@ -313,16 +314,17 @@ Any Errors: No Errors
 **URL:** https://iconic-rental.vercel.app/admin/quotes
 
 **Tests:**
-- [ ] All quotes display
-- [ ] Test quote from Session 2 appears
-- [ ] Status badges correct
-- [ ] Can click quote to view details
-- [ ] Stats cards accurate
-- [ ] Filter/search works (if implemented)
+- [x] All quotes display
+- [x] Test quote from Session 2 appears
+- [x] Status badges correct
+- [x] Can click quote to view details
+- [x] Stats cards accurate
+- [x] Filter/search works (if implemented)
 
 **Notes:**
 ```
-[Add your testing notes here]
+- Small styling touch ups are needed
+
 ```
 
 ---
