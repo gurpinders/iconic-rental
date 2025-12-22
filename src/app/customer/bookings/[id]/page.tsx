@@ -304,6 +304,14 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
                           }
                         }
                         
+                        // Clean up quotes, brackets, and curly braces from each feature
+                        featuresArray = featuresArray.map(feature => {
+                          return feature
+                            .replace(/^["'\[\{]+|["'\]\}]+$/g, '') // Remove quotes and brackets from start/end
+                            .replace(/\\"/g, '"') // Replace escaped quotes
+                            .trim();
+                        }).filter(f => f.length > 0); // Remove empty strings
+                        
                         // If no features, show a message
                         if (featuresArray.length === 0) {
                           return (
