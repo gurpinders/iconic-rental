@@ -575,9 +575,7 @@ Correct Details: [x] Yes [ ] No
 
 **Notes:**
 ```
-- Photo for vehicle image not showing
-- Driver not showing
-- No Link to invoice or not showing anything 
+- Just need invoice to test it properly
 
 ```
 

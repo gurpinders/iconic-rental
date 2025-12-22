@@ -229,63 +229,101 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
         {/* Vehicle Details */}
         {booking.vehicle && (
           <div className="mb-8 pb-8 border-b border-white/10">
-            <h2 className="text-2xl font-bold mb-6">Vehicle</h2>
-            <div className="flex flex-col sm:flex-row gap-6">
-              <div className="w-full sm:w-48 h-32 relative rounded-lg overflow-hidden bg-zinc-800 flex items-center justify-center">
-                {booking.vehicle.imageUrl ? (
-                  <Image
-                    src={booking.vehicle.imageUrl}
-                    alt={booking.vehicle.name}
-                    fill
-                    className="object-cover"
-                  />
-                ) : (
-                  <span className="text-6xl">🚗</span>
-                )}
-              </div>
-              <div className="flex-1">
-                <h3 className="text-2xl font-bold mb-2">{booking.vehicle.name}</h3>
-                <p className="text-gray-400 mb-3">{booking.vehicle.category}</p>
-                <div className="flex flex-wrap gap-2">
-                  <span className="px-3 py-1 bg-white/10 rounded-full text-sm">
-                    {booking.vehicle.capacity} passengers
-                  </span>
-                  {(() => {
-                    // Parse features - handle both JSON array and comma-separated string
-                    let featuresArray: string[] = [];
-                    const features = booking.vehicle.features;
-                    
-                    if (Array.isArray(features)) {
-                      // Already an array
-                      featuresArray = features;
-                    } else if (typeof features === 'string') {
-                      try {
-                        // Try parsing as JSON first
-                        const parsed = JSON.parse(features);
-                        if (Array.isArray(parsed)) {
-                          featuresArray = parsed;
-                        } else {
-                          // Single string, split by comma
-                          featuresArray = features
-                            .split(',')
-                            .map(f => f.trim())
-                            .filter(f => f.length > 0);
-                        }
-                      } catch {
-                        // If not JSON, split by comma
-                        featuresArray = features
-                          .split(',')
-                          .map(f => f.trim())
-                          .filter(f => f.length > 0);
-                      }
-                    }
-                    
-                    return featuresArray.slice(0, 3).map((feature, i) => (
-                      <span key={i} className="px-3 py-1 bg-white/10 rounded-full text-sm">
-                        {feature}
+            <h2 className="text-2xl font-bold mb-6">Your Vehicle</h2>
+            
+            {/* Vehicle Card */}
+            <div className="bg-black/30 rounded-xl p-6 border border-white/10">
+              <div className="flex flex-col lg:flex-row gap-8">
+                {/* Vehicle Image */}
+                <div className="lg:w-1/3">
+                  <div className="relative h-64 rounded-lg overflow-hidden bg-zinc-800 flex items-center justify-center">
+                    {booking.vehicle.imageUrl ? (
+                      <Image
+                        src={booking.vehicle.imageUrl}
+                        alt={booking.vehicle.name}
+                        fill
+                        className="object-cover"
+                      />
+                    ) : (
+                      <span className="text-8xl">🚗</span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Vehicle Info */}
+                <div className="lg:w-2/3 space-y-6">
+                  {/* Name & Category */}
+                  <div>
+                    <h3 className="text-3xl font-bold mb-2">{booking.vehicle.name}</h3>
+                    <div className="flex items-center gap-3">
+                      <span className="px-4 py-1.5 bg-white/10 rounded-full text-sm font-semibold">
+                        {booking.vehicle.category}
                       </span>
-                    ));
-                  })()}
+                      <span className="px-4 py-1.5 bg-blue-900/30 border border-blue-500/50 rounded-full text-sm font-semibold text-blue-300">
+                        <svg className="w-4 h-4 inline-block mr-1.5 -mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                        Up to {booking.vehicle.capacity} passengers
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Features */}
+                  <div>
+                    <h4 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">
+                      Vehicle Features
+                    </h4>
+                    <div className="grid grid-cols-2 gap-3">
+                      {(() => {
+                        // Parse features - handle both JSON array and comma-separated string
+                        let featuresArray: string[] = [];
+                        const features = booking.vehicle.features;
+                        
+                        if (Array.isArray(features)) {
+                          // Already an array
+                          featuresArray = features;
+                        } else if (typeof features === 'string') {
+                          try {
+                            // Try parsing as JSON first
+                            const parsed = JSON.parse(features);
+                            if (Array.isArray(parsed)) {
+                              featuresArray = parsed;
+                            } else {
+                              // Single string, split by comma
+                              featuresArray = features
+                                .split(',')
+                                .map(f => f.trim())
+                                .filter(f => f.length > 0);
+                            }
+                          } catch {
+                            // If not JSON, split by comma
+                            featuresArray = features
+                              .split(',')
+                              .map(f => f.trim())
+                              .filter(f => f.length > 0);
+                          }
+                        }
+                        
+                        // If no features, show a message
+                        if (featuresArray.length === 0) {
+                          return (
+                            <p className="col-span-2 text-gray-500 text-sm italic">
+                              No features listed
+                            </p>
+                          );
+                        }
+                        
+                        return featuresArray.map((feature, i) => (
+                          <div key={i} className="flex items-center gap-2 text-sm">
+                            <svg className="w-5 h-5 text-green-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span className="text-gray-300">{feature}</span>
+                          </div>
+                        ));
+                      })()}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
