@@ -586,15 +586,15 @@ Correct Details: [x] Yes [ ] No
 **URL:** Click "Invoices" in navigation
 
 **Expected Result:**
-- [ ] Page loads
-- [ ] Summary cards: $0 total, $0 paid, $0 pending
-- [ ] Empty state shows
-- [ ] Message: "No invoices yet" or similar
-- [ ] CTA to request quote or similar
+- [x] Page loads
+- [x] Summary cards: $0 total, $0 paid, $0 pending
+- [x] Empty state shows
+- [x] Message: "No invoices yet" or similar
+- [x] CTA to request quote or similar
 
 **Notes:**
 ```
-[Add your testing notes here]
+- Perfect
 ```
 
 ---
@@ -604,14 +604,14 @@ Correct Details: [x] Yes [ ] No
 **URL:** Click "Promotions" in navigation
 
 **Expected Result:**
-- [ ] Page loads
-- [ ] Empty state shows (no promo codes created yet)
-- [ ] Message about no active promotions
-- [ ] Professional layout
+- [x] Page loads
+- [x] Empty state shows (no promo codes created yet)
+- [x] Message about no active promotions
+- [x] Professional layout
 
 **Notes:**
 ```
-[Add your testing notes here]
+- Perfect
 ```
 
 ---
@@ -624,12 +624,12 @@ Correct Details: [x] Yes [ ] No
 
 **View Profile:**
 1. Verify all info displays correctly:
-   - [ ] First Name: Test
-   - [ ] Last Name: Customer
-   - [ ] Email: test@example.com
-   - [ ] Phone: +14161234567
-   - [ ] Member since date
-   - [ ] Last login date
+   - [x] First Name: Test
+   - [x] Last Name: Customer
+   - [x] Email: test@example.com
+   - [x] Phone: +14161234567
+   - [x] Member since date
+   - [x] Last login date
 
 **Edit Profile:**
 2. Click "Edit" button
@@ -638,23 +638,23 @@ Correct Details: [x] Yes [ ] No
 5. Click "Save Changes"
 
 **Expected Result:**
-- [ ] Edit mode activates
-- [ ] Can modify fields
-- [ ] Saves successfully
-- [ ] Success message shows
-- [ ] Changes persist after refresh
+- [x] Edit mode activates
+- [x] Can modify fields
+- [x] Saves successfully
+- [x] Success message shows
+- [x] Changes persist after refresh
 
 **Change Password:**
 6. Click "Change Password" or similar
-7. Current Password: "Customer123!"
+7. Current Password: "Sukhmeet123"
 8. New Password: "NewPassword123!"
 9. Confirm Password: "NewPassword123!"
 10. Save
 
 **Expected Result:**
-- [ ] Password changes successfully
-- [ ] Success message shows
-- [ ] Can log out and log in with NEW password
+- [x] Password changes successfully
+- [x] Success message shows
+- [x] Can log out and log in with NEW password
 
 **Test New Password:**
 11. Log out
@@ -663,13 +663,13 @@ Correct Details: [x] Yes [ ] No
     - Password: NewPassword123!
 
 **Expected Result:**
-- [ ] Login works with new password
+- [x] Login works with new password
 
 **Notes:**
 ```
-Profile Update Success: [ ] Yes [ ] No
-Password Change Success: [ ] Yes [ ] No
-New Password Works: [ ] Yes [ ] No
+Profile Update Success: [x] Yes [ ] No
+Password Change Success: [x] Yes [ ] No
+New Password Works: [x] Yes [ ] No
 ```
 
 ---
@@ -680,21 +680,21 @@ New Password Works: [ ] Yes [ ] No
 1. Click "Logout" button (top right)
 
 **Expected Result:**
-- [ ] Logs out successfully
-- [ ] Redirects to customer login page
-- [ ] Cannot access dashboard without login
-- [ ] Session cleared
+- [x] Logs out successfully
+- [x] Redirects to customer login page
+- [x] Cannot access dashboard without login
+- [x] Session cleared
 
 **Verify:**
 2. Try accessing: https://iconic-rental.vercel.app/customer/dashboard
 
 **Expected Result:**
-- [ ] Redirects back to login
-- [ ] Cannot access without authentication
+- [x] Redirects back to login
+- [x] Cannot access without authentication
 
 **Notes:**
 ```
-[Add your testing notes here]
+- Perfect
 ```
 
 ---
@@ -705,7 +705,7 @@ New Password Works: [ ] Yes [ ] No
 
 **Prerequisites:**
 - Be logged in as admin
-- Have booking from Session 4 (booking number: _______________)
+- Have booking from Session 4 (booking number: #BK1766371864076768)
 
 **Test Steps:**
 1. Go to: https://iconic-rental.vercel.app/admin/bookings
@@ -724,14 +724,14 @@ New Password Works: [ ] Yes [ ] No
 12. Click "Create Invoice"
 
 **Expected Result:**
-- [ ] Modal opens correctly
-- [ ] Subtotal pre-filled with booking total ($500)
-- [ ] Can enter tax manually
-- [ ] Total calculates: Subtotal - Discount + Tax = $565
-- [ ] Invoice creates successfully
-- [ ] Modal closes
-- [ ] Page refreshes
-- [ ] No console errors
+- [x] Modal opens correctly
+- [x] Subtotal pre-filled with booking total ($500)
+- [x] Can enter tax manually
+- [x] Total calculates: Subtotal - Discount + Tax = $565
+- [x] Invoice creates successfully
+- [x] Modal closes
+- [x] Page refreshes
+- [x] No console errors
 
 **Notes:**
 ```
@@ -751,12 +751,12 @@ Final Total: $565
 2. Scroll to "Invoices" section
 
 **Expected Result:**
-- [ ] Invoice appears in invoices section
-- [ ] Invoice number (INV...)
-- [ ] Status badge: PENDING (orange)
-- [ ] Total: $565
-- [ ] Can click to view invoice details
-- [ ] Link to invoice works
+- [x] Invoice appears in invoices section
+- [x] Invoice number (INV...)
+- [x] Status badge: PENDING (orange)
+- [x] Total: $565
+- [x] Can click to view invoice details
+- [x] Link to invoice works
 
 **Notes:**
 ```
