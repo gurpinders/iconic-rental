@@ -2,20 +2,19 @@ import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { getCurrentCustomer } from '@/lib/customer-auth';
 
-export async function GET(request: Request) {
+export async function GET() {
   try {
     // Get authenticated customer
     const customer = await getCurrentCustomer();
 
-    if (!customer || !customer.id) {
+    if (!customer || !customer.customerId) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
       );
     }
 
-    // Ensure customer.id is a string
-    const customerId = String(customer.id);
+    const customerId = customer.customerId;
 
     // Get current date for upcoming bookings
     const now = new Date();
