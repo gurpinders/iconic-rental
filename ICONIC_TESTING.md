@@ -341,17 +341,21 @@ Any Errors: No Errors
 3. Add admin notes: "Test booking for system testing"
 
 **Expected Result:**
-- [ ] Status updates successfully at each step
-- [ ] Price saves correctly ($500)
-- [ ] Notes save correctly
-- [ ] No errors in console
-- [ ] Page refreshes show updated data
+- [x] Status updates successfully at each step
+- [x] Price saves correctly ($500)
+- [x] Notes save correctly
+- [x] No errors in console
+- [x] Page refreshes show updated data
 
 **Notes:**
 ```
-Final Status: _______________
-Price Set: _______________
-Notes Saved: [ ] Yes [ ] No
+Final Status: ACCEPTED
+Price Set: $500.00
+Notes Saved: [x] Yes [ ] No
+- Getting some errors in the console that needs a taking a look at 
+- Once status is changed you have to go back to quotes page to change status again
+- Also shouldn't be able to move forward to QUOTED if there isn't a price added
+
 ```
 
 ---

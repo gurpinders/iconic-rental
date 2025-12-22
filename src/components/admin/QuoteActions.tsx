@@ -39,6 +39,13 @@ export default function QuoteActions({ quote, vehicles }: QuoteActionsProps) {
   });
 
   const handleStatusUpdate = async (newStatus: string) => {
+    // Validate: Cannot move to QUOTED without a price
+    if (newStatus === 'QUOTED' && !quote.quotedPrice) {
+      alert('⚠️ Please set a price before moving to QUOTED status.');
+      setShowPriceModal(true);
+      return;
+    }
+
     if (!confirm(`Change status to ${newStatus}?`)) return;
 
     setLoading(true);
@@ -55,7 +62,9 @@ export default function QuoteActions({ quote, vehicles }: QuoteActionsProps) {
         throw new Error('Failed to update status');
       }
 
+      // Refresh the page to show updated status
       router.refresh();
+      setLoading(false);
     } catch (err) {
       setError('Failed to update status');
       setLoading(false);
@@ -73,7 +82,6 @@ export default function QuoteActions({ quote, vehicles }: QuoteActionsProps) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           quotedPrice: parseFloat(priceForm.price),
-          status: 'QUOTED',
         }),
       });
 
@@ -83,6 +91,7 @@ export default function QuoteActions({ quote, vehicles }: QuoteActionsProps) {
 
       setShowPriceModal(false);
       router.refresh();
+      setLoading(false);
     } catch (err) {
       setError('Failed to set price');
       setLoading(false);
@@ -107,6 +116,7 @@ export default function QuoteActions({ quote, vehicles }: QuoteActionsProps) {
 
       setShowNotesModal(false);
       router.refresh();
+      setLoading(false);
     } catch (err) {
       setError('Failed to update notes');
       setLoading(false);
@@ -158,7 +168,7 @@ export default function QuoteActions({ quote, vehicles }: QuoteActionsProps) {
               disabled={loading}
               className="w-full px-4 py-3 bg-blue-900/50 hover:bg-blue-900/70 border border-blue-500/50 rounded font-semibold transition-colors disabled:opacity-50"
             >
-              Move to {nextStatus}
+              {loading ? 'Updating...' : `Move to ${nextStatus}`}
             </button>
           )}
 
