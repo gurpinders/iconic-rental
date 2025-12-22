@@ -10,16 +10,27 @@ export default function CustomerDashboardPage() {
     completedBookings: 0,
     pendingInvoices: 0,
   });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // TODO: Fetch real stats from API
-    // For now, showing placeholder data
-    setStats({
-      totalBookings: 0,
-      upcomingBookings: 0,
-      completedBookings: 0,
-      pendingInvoices: 0,
-    });
+    const fetchStats = async () => {
+      try {
+        const response = await fetch('/api/customer/stats');
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch stats');
+        }
+        
+        const data = await response.json();
+        setStats(data);
+      } catch (error) {
+        console.error('Error fetching stats:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStats();
   }, []);
 
   return (
@@ -36,7 +47,9 @@ export default function CustomerDashboardPage() {
         <div className="bg-zinc-900 border border-white/20 rounded-lg p-6">
           <div className="flex items-center justify-between mb-4">
             <div className="text-4xl">🚗</div>
-            <div className="text-3xl font-bold">{stats.totalBookings}</div>
+            <div className="text-3xl font-bold">
+              {loading ? '...' : stats.totalBookings}
+            </div>
           </div>
           <h3 className="text-gray-400 text-sm font-medium">Total Bookings</h3>
         </div>
@@ -45,7 +58,9 @@ export default function CustomerDashboardPage() {
         <div className="bg-zinc-900 border border-blue-500/50 rounded-lg p-6">
           <div className="flex items-center justify-between mb-4">
             <div className="text-4xl">📅</div>
-            <div className="text-3xl font-bold text-blue-400">{stats.upcomingBookings}</div>
+            <div className="text-3xl font-bold text-blue-400">
+              {loading ? '...' : stats.upcomingBookings}
+            </div>
           </div>
           <h3 className="text-gray-400 text-sm font-medium">Upcoming</h3>
         </div>
@@ -54,7 +69,9 @@ export default function CustomerDashboardPage() {
         <div className="bg-zinc-900 border border-green-500/50 rounded-lg p-6">
           <div className="flex items-center justify-between mb-4">
             <div className="text-4xl">✅</div>
-            <div className="text-3xl font-bold text-green-400">{stats.completedBookings}</div>
+            <div className="text-3xl font-bold text-green-400">
+              {loading ? '...' : stats.completedBookings}
+            </div>
           </div>
           <h3 className="text-gray-400 text-sm font-medium">Completed</h3>
         </div>
@@ -63,7 +80,9 @@ export default function CustomerDashboardPage() {
         <div className="bg-zinc-900 border border-orange-500/50 rounded-lg p-6">
           <div className="flex items-center justify-between mb-4">
             <div className="text-4xl">💰</div>
-            <div className="text-3xl font-bold text-orange-400">{stats.pendingInvoices}</div>
+            <div className="text-3xl font-bold text-orange-400">
+              {loading ? '...' : stats.pendingInvoices}
+            </div>
           </div>
           <h3 className="text-gray-400 text-sm font-medium">Pending Invoices</h3>
         </div>

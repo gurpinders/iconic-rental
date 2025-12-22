@@ -374,7 +374,7 @@ Notes Saved: [x] Yes [ ] No
 3. Modal should open
 
 **In the modal:**
-4. Select a vehicle: _______________
+4. Select a vehicle: Party Bus
 5. Set Total Price: $500
 6. Set Pickup Time: 10:00 AM
 7. Optional: Add driver name/phone
@@ -383,22 +383,22 @@ Notes Saved: [x] Yes [ ] No
 10. Click "Create Booking"
 
 **Expected Result:**
-- [ ] Modal opens correctly
-- [ ] All vehicles show in dropdown
-- [ ] Form validates required fields
-- [ ] Booking creates successfully
-- [ ] Modal closes
-- [ ] Page refreshes
-- [ ] Green alert shows: "✅ Booking Created"
-- [ ] Link to booking appears
-- [ ] No console errors
+- [x] Modal opens correctly
+- [x] All vehicles show in dropdown
+- [x] Form validates required fields
+- [x] Booking creates successfully
+- [x] Modal closes
+- [x] Page refreshes
+- [x] Green alert shows: "✅ Booking Created"
+- [x] Link to booking appears
+- [] No console errors
 
 **Notes:**
 ```
-Booking Number Created: _______________
-Vehicle Assigned: _______________
+Booking Number Created: #BK1766371864076768
+Vehicle Assigned: Party Bus
 Customer Account Created: [ ] Yes [ ] No
-Any Errors: _______________
+Any Errors: Some Console Errors need to be checked
 ```
 
 ---
@@ -409,19 +409,20 @@ Any Errors: _______________
 1. Click the booking link from the success message
    OR
 2. Go to: https://iconic-rental.vercel.app/admin/bookings
-3. Find your test booking (number: _______________)
+3. Find your test booking (number: #BK1766371864076768)
 
 **Expected Result:**
-- [ ] Booking appears in list
-- [ ] Booking number shows (BK...)
-- [ ] Status: CONFIRMED
-- [ ] All details correct
-- [ ] Customer info correct
-- [ ] Vehicle assigned
+- [x] Booking appears in list
+- [x] Booking number shows (BK...)
+- [x] Status: CONFIRMED
+- [x] All details correct
+- [x] Customer info correct
+- [x] Vehicle assigned
 
 **Notes:**
 ```
-[Add verification results here]
+- Perfect
+
 ```
 
 ---
@@ -432,17 +433,18 @@ Any Errors: _______________
 1. Click on the test booking
 
 **Expected Result:**
-- [ ] Full booking details display
-- [ ] Customer information section
-- [ ] Event details section
-- [ ] Vehicle assigned correctly
-- [ ] Payment summary (total: $500, paid: $0, remaining: $500)
-- [ ] Action buttons show
-- [ ] No driver assigned yet (should say "Not assigned")
+- [x] Full booking details display
+- [x] Customer information section
+- [x] Event details section
+- [x] Vehicle assigned correctly
+- [x] Payment summary (total: $500, paid: $0, remaining: $500)
+- [x] Action buttons show
+- [x] No driver assigned yet (should say "Not assigned")
 
 **Notes:**
 ```
-[Add your testing notes here]
+- Perfect but need to test if the driver is not assigned
+
 ```
 
 ---
@@ -457,8 +459,8 @@ Any Errors: _______________
 1. Try registering with email: test@example.com (should already exist from booking creation)
 
 **Expected Result:**
-- [ ] Should show "Account already exists" or similar error
-- [ ] Cannot create duplicate account
+- [x] Should show "Account already exists" or similar error
+- [x] Cannot create duplicate account
 
 **Test Steps - Register NEW account:**
 2. Register with NEW credentials:
@@ -471,15 +473,15 @@ Any Errors: _______________
 3. Submit
 
 **Expected Result:**
-- [ ] Registration succeeds
-- [ ] Redirects to login or dashboard
-- [ ] No errors
-- [ ] Account created successfully
+- [x] Registration succeeds
+- [x] Redirects to login or dashboard
+- [x] No errors
+- [x] Account created successfully
 
 **Notes:**
 ```
-Duplicate Email Result: _______________
-New Account Created: [ ] Yes [ ] No
+Duplicate Email Result: Perfect
+New Account Created: [x] Yes [ ] No
 ```
 
 ---
@@ -491,19 +493,19 @@ New Account Created: [ ] Yes [ ] No
 **Test Steps:**
 1. Log in with the ORIGINAL customer (from booking creation in Session 4):
    - Email: "test@example.com"
-   - Password: "Customer123!"
+   - Password: "Sukhmeet123"
 
 **Expected Result:**
-- [ ] Login succeeds
-- [ ] Redirects to customer dashboard
-- [ ] Welcome message or user name shows
-- [ ] Custom navigation bar (no public header)
-- [ ] Sidebar navigation (desktop) OR bottom nav (mobile)
+- [x] Login succeeds
+- [x] Redirects to customer dashboard
+- [x] Welcome message or user name shows
+- [x] Custom navigation bar (no public header)
+- [x] Sidebar navigation (desktop) OR bottom nav (mobile)
 
 **Notes:**
 ```
-Login Successful: [ ] Yes [ ] No
-Dashboard Loaded: [ ] Yes [ ] No
+Login Successful: [x] Yes [ ] No
+Dashboard Loaded: [x] Yes [ ] No
 ```
 
 ---
@@ -511,24 +513,24 @@ Dashboard Loaded: [ ] Yes [ ] No
 ### Test 5.3: Customer Dashboard
 
 **Expected Result:**
-- [ ] Stats cards show
+- [x] Stats cards show
 - [ ] Should show: 1 booking (from Session 4)
-- [ ] Should show: 0 invoices (not created yet)
-- [ ] Quick action cards display
-- [ ] Sidebar navigation works (desktop)
-- [ ] Bottom nav works (mobile)
-- [ ] User info displays (top right)
-- [ ] Logout button visible
+- [x] Should show: 0 invoices (not created yet)
+- [x] Quick action cards display
+- [x] Sidebar navigation works (desktop)
+- [x] Bottom nav works (mobile)
+- [x] User info displays (top right)
+- [x] Logout button visible
 
 **Stats to verify:**
-- Total Bookings: _______________
-- Upcoming Bookings: _______________
-- Completed Bookings: _______________
-- Pending Invoices: _______________
+- Total Bookings: 0
+- Upcoming Bookings: 0
+- Completed Bookings: 0
+- Pending Invoices: 0
 
 **Notes:**
 ```
-[Add your testing notes here]
+- Need to fix because action cards are not showing the correct numbers
 ```
 
 ---
