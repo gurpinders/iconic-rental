@@ -36,11 +36,11 @@ export default async function AdminInvoiceDetailPage({
     });
   };
 
-  const formatCurrency = (amount: number | string) => {
+  const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-CA', {
       style: 'currency',
       currency: 'CAD',
-    }).format(Number(amount));
+    }).format(amount);
   };
 
   const getPaymentStatusColor = (status: string) => {
@@ -147,38 +147,40 @@ export default async function AdminInvoiceDetailPage({
           <div className="space-y-3">
             {/* Subtotal */}
             <div className="flex justify-between items-center py-3 border-b border-white/10">
-            <span className="text-gray-400">Subtotal</span>
-            <span className="text-lg font-semibold">{formatCurrency(Number(invoice.subtotal))}</span>
+              <span className="text-gray-400">Subtotal</span>
+              <span className="text-lg font-semibold">{formatCurrency(Number(invoice.subtotal))}</span>
             </div>
 
             {/* Promo Discount */}
             {Number(invoice.promoDiscount) > 0 && (
-            <div className="flex justify-between items-center py-3 border-b border-white/10">
+              <div className="flex justify-between items-center py-3 border-b border-white/10">
                 <div>
-                <span className="text-gray-400">Promo Discount</span>
-                {invoice.promoCode && (
+                  <span className="text-gray-400">Promo Discount</span>
+                  {invoice.promoCode && (
                     <p className="text-xs text-green-400 mt-1">
-                    Code: {invoice.promoCode.code}
+                      Code: {invoice.promoCode.code}
                     </p>
-                )}
+                  )}
                 </div>
                 <span className="text-lg font-semibold text-green-400">
-                -{formatCurrency(Number(invoice.promoDiscount))}
+                  -{formatCurrency(Number(invoice.promoDiscount))}
                 </span>
-            </div>
+              </div>
             )}
 
             {/* Tax */}
             <div className="flex justify-between items-center py-3 border-b border-white/10">
-            <span className="text-gray-400">Tax (HST 13%)</span>
-            <span className="text-lg font-semibold">{formatCurrency(Number(invoice.tax))}</span>
+              <span className="text-gray-400">Tax (HST 13%)</span>
+              <span className="text-lg font-semibold">{formatCurrency(Number(invoice.tax))}</span>
             </div>
 
             {/* Total */}
             <div className="flex justify-between items-center py-4 bg-black/30 rounded-lg px-4 mt-4">
-            <span className="text-xl font-bold">Total</span>
-            <span className="text-3xl font-bold text-white">{formatCurrency(Number(invoice.total))}</span>
+              <span className="text-xl font-bold">Total</span>
+              <span className="text-3xl font-bold text-white">{formatCurrency(Number(invoice.total))}</span>
             </div>
+          </div>
+        </div>
 
         {/* Payment Information */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
