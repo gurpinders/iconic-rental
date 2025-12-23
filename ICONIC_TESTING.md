@@ -772,20 +772,20 @@ Invoice Number: _______________
 1. Click on the invoice
 
 **Expected Result:**
-- [ ] Full invoice displays
-- [ ] Company info shows (Iconic Limos & Rentals)
-- [ ] Customer info correct
-- [ ] Invoice dates (created, due)
-- [ ] Line items show booking reference
-- [ ] Tax breakdown correct
-- [ ] Total amount bold and large: $565
-- [ ] Payment status badge: PENDING
-- [ ] Link back to booking works
-- [ ] Professional invoice layout
+- [x] Full invoice displays
+- [x] Company info shows (Iconic Limos & Rentals)
+- [x] Customer info correct
+- [x] Invoice dates (created, due)
+- [x] Line items show booking reference
+- [x] Tax breakdown correct
+- [x] Total amount bold and large: $565
+- [x] Payment status badge: PENDING
+- [x] Link back to booking works
+- [x] Professional invoice layout
 
 **Notes:**
 ```
-[Add your testing notes here]
+- Perfect
 ```
 
 ---
@@ -800,16 +800,16 @@ Invoice Number: _______________
 3. Go to "Invoices" page
 
 **Expected Result:**
-- [ ] Invoice appears in customer's invoices
-- [ ] Summary cards updated:
+- [x] Invoice appears in customer's invoices
+- [x] Summary cards updated:
   - Total Invoiced: $565
   - Paid: $0
   - Pending: $565
-- [ ] Invoice card shows
-- [ ] Status: PENDING (orange)
-- [ ] Amount: $565
-- [ ] Due date shows
-- [ ] Can click to view details
+- [x] Invoice card shows
+- [x] Status: PENDING (orange)
+- [x] Amount: $565
+- [x] Due date shows
+- [x] Can click to view details
 
 **Notes:**
 ```
