@@ -4,14 +4,19 @@ import type { NextRequest } from 'next/server';
 export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
+  // IMPORTANT: Let login pages through immediately
+  if (pathname === '/admin/login' || pathname === '/customer/login') {
+    return NextResponse.next();
+  }
+
   // Create a new response
   const response = NextResponse.next();
 
   // Add pathname to headers for layout to access
   response.headers.set('x-pathname', pathname);
 
-  // Protect admin routes
-  if (pathname.startsWith('/admin') && !pathname.startsWith('/admin/login')) {
+  // Protect admin routes (but NOT /admin/login)
+  if (pathname.startsWith('/admin')) {
     const token = request.cookies.get('admin-auth-token');
 
     if (!token) {
