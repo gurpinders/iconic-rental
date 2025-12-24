@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import '../globals.css'; // Import styles
 
 export const metadata: Metadata = {
   title: 'Login - Iconic Limos',
