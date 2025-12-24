@@ -825,21 +825,21 @@ Correct Amount: [ ] Yes [ ] No
 1. Click on invoice from customer view
 
 **Expected Result:**
-- [ ] Professional invoice layout
-- [ ] All details match admin version
-- [ ] Company info
-- [ ] Customer info
-- [ ] Line items
-- [ ] Tax breakdown
-- [ ] Total: $565
-- [ ] Payment status
+- [x] Professional invoice layout
+- [x] All details match admin version
+- [x] Company info
+- [x] Customer info
+- [x] Line items
+- [x] Tax breakdown
+- [x] Total: $565
+- [x] Payment status
 - [ ] Print button works (opens print dialog)
-- [ ] Link to booking works
-- [ ] Back button works
+- [x] Link to booking works
+- [x] Back button works
 
 **Notes:**
 ```
-[Add your testing notes here]
+- Print button works but I dont like how the invoice looks when someone is trying to print it 
 ```
 
 ---
