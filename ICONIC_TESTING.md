@@ -833,7 +833,7 @@ Correct Amount: [ ] Yes [ ] No
 - [x] Tax breakdown
 - [x] Total: $565
 - [x] Payment status
-- [ ] Print button works (opens print dialog)
+- [x] Print button works (opens print dialog)
 - [x] Link to booking works
 - [x] Back button works
 
@@ -867,18 +867,18 @@ Correct Amount: [ ] Yes [ ] No
 3. Click "Create Promo Code"
 
 **Expected Result:**
-- [ ] Form validates required fields
-- [ ] Code accepts alphanumeric only
-- [ ] Promo code creates successfully
-- [ ] Redirects to promo codes list
-- [ ] New code appears in list
-- [ ] Status badge: Active (green)
-- [ ] Stats show: 0 times used
+- [x]  Form validates required fields
+- [x] Code accepts alphanumeric only
+- [x] Promo code creates successfully
+- [x] Redirects to promo codes list
+- [x] New code appears in list
+- [x] Status badge: Active (green)
+- [x] Stats show: 0 times used
 
 **Notes:**
 ```
-Promo Code Created: _______________
-Status: _______________
+Promo Code Created: TESTWINTER25
+Status: Active
 ```
 
 ---
@@ -889,17 +889,17 @@ Status: _______________
 1. Click "Edit" on the TESTWINTER25 promo code
 
 **Expected Result:**
-- [ ] All details display correctly
-- [ ] Usage stats: 0 / 10 (0 used, 10 limit)
-- [ ] Remaining uses: 10
-- [ ] Valid dates correct
-- [ ] Can edit all fields
-- [ ] Can activate/deactivate toggle
-- [ ] Delete button works (disabled if used)
+- [x] All details display correctly
+- [x] Usage stats: 0 / 10 (0 used, 10 limit)
+- [x] Remaining uses: 10
+- [x] Valid dates correct
+- [x] Can edit all fields
+- [x] Can activate/deactivate toggle
+- [x] Delete button works (disabled if used)
 
 **Notes:**
 ```
-[Add your testing notes here]
+- Perfect
 ```
 
 ---
@@ -912,21 +912,21 @@ Status: _______________
 3. Go to "Promotions" page
 
 **Expected Result:**
-- [ ] TESTWINTER25 appears
-- [ ] Gradient card design
-- [ ] Shows: **25% OFF** (large and bold)
-- [ ] Shows valid dates
-- [ ] Shows usage remaining: 10 (with progress bar)
-- [ ] Shows minimum booking: $200
-- [ ] Shows description
-- [ ] Copy button works (click to copy code)
-- [ ] Visual feedback on copy (success message)
-- [ ] "How to Use" instructions visible
+- [x] TESTWINTER25 appears
+- [x] Gradient card design
+- [x] Shows: **25% OFF** (large and bold)
+- [x] Shows valid dates
+- [x] Shows usage remaining: 10 (with progress bar)
+- [x] Shows minimum booking: $200
+- [x] Shows description
+- [x] Copy button works (click to copy code)
+- [x] Visual feedback on copy (success message)
+- [x] "How to Use" instructions visible
 
 **Notes:**
 ```
-Promo Visible: [ ] Yes [ ] No
-Copy Function Works: [ ] Yes [ ] No
+Promo Visible: [x] Yes [ ] No
+Copy Function Works: [x] Yes [ ] No
 ```
 
 ---
@@ -965,20 +965,20 @@ Copy Function Works: [ ] Yes [ ] No
 8. Click "Create Invoice"
 
 **Expected Result:**
-- [ ] Promo dropdown shows TESTWINTER25
-- [ ] Discount calculates automatically: $100
-- [ ] Total reflects discount: $452
-- [ ] Invoice saves with promo applied
-- [ ] Promo usage count increases
+- [x] Promo dropdown shows TESTWINTER25
+- [x] Discount calculates automatically: $100
+- [x] Total reflects discount: $452
+- [x] Invoice saves with promo applied
+- [x] Promo usage count increases
 
 **Verify Promo Usage:**
 9. Go to Admin → Promo Codes
 10. Check TESTWINTER25
 
 **Expected Result:**
-- [ ] Usage count: 1 / 10
-- [ ] Times used in invoices: 1
-- [ ] Remaining uses: 9
+- [x] Usage count: 1 / 10
+- [x] Times used in invoices: 1
+- [x] Remaining uses: 9
 
 **Notes:**
 ```
@@ -1014,17 +1014,17 @@ Promo Usage Updated: [ ] Yes [ ] No
 3. Click "Add Driver"
 
 **Expected Result:**
-- [ ] Form validates required fields
-- [ ] Driver creates successfully
-- [ ] Redirects to drivers list
-- [ ] New driver appears
-- [ ] Status badge: Active (green)
-- [ ] Stats update: 1 total driver
+- [x] Form validates required fields
+- [x] Driver creates successfully
+- [x] Redirects to drivers list
+- [x] New driver appears
+- [x] Status badge: Active (green)
+- [x] Stats update: 1 total driver
 
 **Notes:**
 ```
-Driver Created: [ ] Yes [ ] No
-Driver ID/Number: _______________
+Driver Created: [x] Yes [ ] No
+Driver ID/Number: EMP001
 ```
 
 ---
@@ -1035,19 +1035,19 @@ Driver ID/Number: _______________
 1. Click on John Smith
 
 **Expected Result:**
-- [ ] Full driver profile displays
-- [ ] Personal info section (name, email, phone)
-- [ ] License info section (number, class, expiry)
-- [ ] Employment info (employee #, hire date)
-- [ ] Stats: 0 total bookings, 0 upcoming, 0 completed
-- [ ] Notes section displays
-- [ ] Edit button works
-- [ ] Delete button available
-- [ ] Quick action buttons (call, email)
+- [x] Full driver profile displays
+- [x] Personal info section (name, email, phone)
+- [x] License info section (number, class, expiry)
+- [x] Employment info (employee #, hire date)
+- [x] Stats: 0 total bookings, 0 upcoming, 0 completed
+- [x] Notes section displays
+- [x] Edit button works
+- [x] Delete button available
+- [x] Quick action buttons (call, email)
 
 **Notes:**
 ```
-[Add your testing notes here]
+- Perfect
 ```
 
 ---
@@ -1062,16 +1062,16 @@ Driver ID/Number: _______________
 3. Click "Save Changes"
 
 **Expected Result:**
-- [ ] Edit mode activates
-- [ ] All fields editable
-- [ ] Changes save successfully
-- [ ] Success message shows
-- [ ] Updates display immediately
-- [ ] Changes persist after refresh
+- [x] Edit mode activates
+- [x] All fields editable
+- [x] Changes save successfully
+- [x] Success message shows
+- [x] Updates display immediately
+- [x] Changes persist after refresh
 
 **Notes:**
 ```
-Edit Successful: [ ] Yes [ ] No
+Edit Successful: [x] Yes [ ] No
 ```
 
 ---
@@ -1092,13 +1092,13 @@ Edit Successful: [ ] Yes [ ] No
    - Active: Yes
 
 **Expected Result:**
-- [ ] Second driver creates successfully
-- [ ] Both drivers show in list
-- [ ] Stats update: 2 total, 2 active
+- [x] Second driver creates successfully
+- [x] Both drivers show in list
+- [x] Stats update: 2 total, 2 active
 
 **Notes:**
 ```
-Second Driver Created: [ ] Yes [ ] No
+Second Driver Created: [x] Yes [ ] No
 ```
 
 ---
@@ -1111,10 +1111,10 @@ Second Driver Created: [ ] Yes [ ] No
 3. Save
 
 **Expected Result:**
-- [ ] Driver status changes to Inactive
-- [ ] Status badge turns red
-- [ ] Stats update: 2 total, 1 active, 1 inactive
-- [ ] Inactive driver still visible but marked
+- [x] Driver status changes to Inactive
+- [x] Status badge turns red
+- [x] Stats update: 2 total, 1 active, 1 inactive
+- [x] Inactive driver still visible but marked
 
 **Notes:**
 ```
@@ -1142,16 +1142,16 @@ Second Driver Created: [ ] Yes [ ] No
 2. Click "Add Vehicle"
 
 **Expected Result:**
-- [ ] Form validates
-- [ ] Vehicle creates successfully
-- [ ] Redirects to fleet dashboard
-- [ ] New vehicle appears
-- [ ] Status: Available (green)
-- [ ] Pricing displays correctly
+- [x] Form validates
+- [x] Vehicle creates successfully
+- [x] Redirects to fleet dashboard
+- [x] New vehicle appears
+- [x] Status: Available (green)
+- [x] Pricing displays correctly
 
 **Notes:**
 ```
-Vehicle Created: [ ] Yes [ ] No
+Vehicle Created: [x] Yes [ ] No
 Vehicle ID: _______________
 ```
 
@@ -1163,14 +1163,14 @@ Vehicle ID: _______________
 1. From fleet dashboard, click on 2024 Mercedes S-Class
 
 **Expected Result:**
-- [ ] Full vehicle info displays
-- [ ] Image shows (or placeholder if no URL)
-- [ ] Description displays
-- [ ] Features list displays
-- [ ] Pricing shows (Base: $300, Hourly: $75)
-- [ ] Stats: 0 bookings, $0 revenue
-- [ ] Edit button works
-- [ ] Delete button available
+- [x] Full vehicle info displays
+- [x] Image shows (or placeholder if no URL)
+- [x] Description displays
+- [x] Features list displays
+- [x] Pricing shows (Base: $300, Hourly: $75)
+- [x] Stats: 0 bookings, $0 revenue
+- [x] Edit button works
+- [x] Delete button available
 
 **Notes:**
 ```
@@ -1189,10 +1189,10 @@ Vehicle ID: _______________
 3. Click "Save Changes"
 
 **Expected Result:**
-- [ ] Edit mode activates
-- [ ] Changes save successfully
-- [ ] Updates display immediately
-- [ ] New rate: $80/hour
+- [x] Edit mode activates
+- [x] Changes save successfully
+- [x] Updates display immediately
+- [x] New rate: $80/hour
 
 **Notes:**
 ```
@@ -1216,13 +1216,13 @@ New Hourly Rate: $_______________
    - Active: Yes
 
 **Expected Result:**
-- [ ] Second vehicle creates
-- [ ] Both vehicles show in fleet
-- [ ] Stats update: 2 total vehicles
+- [x] Second vehicle creates
+- [x] Both vehicles show in fleet
+- [x] Stats update: 2 total vehicles
 
 **Notes:**
 ```
-Second Vehicle Created: [ ] Yes [ ] No
+Second Vehicle Created: [x] Yes [ ] No
 ```
 
 ---
@@ -1239,7 +1239,7 @@ Second Vehicle Created: [ ] Yes [ ] No
 
 **Notes:**
 ```
-Third Vehicle Created: [ ] Yes [ ] No
+Third Vehicle Created: [x] Yes [ ] No
 ```
 
 ---
@@ -1265,18 +1265,18 @@ Third Vehicle Created: [ ] Yes [ ] No
 7. Click "Assign"
 
 **Expected Result:**
-- [ ] Modal opens with both dropdowns
-- [ ] All active drivers show in driver dropdown
-- [ ] All active vehicles show in vehicle dropdown
-- [ ] Can select both or just one
-- [ ] Assignment saves successfully
-- [ ] Modal closes
-- [ ] Page refreshes
-- [ ] Booking now displays driver and vehicle info
+- [x] Modal opens with both dropdowns
+- [x] All active drivers show in driver dropdown
+- [x] All active vehicles show in vehicle dropdown
+- [x] Can select both or just one
+- [x] Assignment saves successfully
+- [x] Modal closes
+- [x] Page refreshes
+- [x] Booking now displays driver and vehicle info
 
 **Notes:**
 ```
-Assignment Successful: [ ] Yes [ ] No
+Assignment Successful: [x] Yes [ ] No
 Driver Assigned: _______________
 Vehicle Assigned: _______________
 ```
@@ -1289,11 +1289,11 @@ Vehicle Assigned: _______________
 1. Check booking details page
 
 **Expected Result:**
-- [ ] Driver section shows: John Smith
-- [ ] Driver phone shows: +14164567890
-- [ ] Vehicle section shows: 2024 Mercedes S-Class
-- [ ] Vehicle pricing shows
-- [ ] Assignment timestamp (if displayed)
+- [x] Driver section shows: John Smith
+- [x] Driver phone shows: +14164567890
+- [x] Vehicle section shows: 2024 Mercedes S-Class
+- [x] Vehicle pricing shows
+- [x] Assignment timestamp (if displayed)
 
 **Notes:**
 ```
@@ -1309,15 +1309,15 @@ Vehicle Assigned: _______________
 2. Go to booking details
 
 **Expected Result:**
-- [ ] Driver info visible to customer
-- [ ] Driver name: John Smith
-- [ ] Driver phone visible (or message to contact admin)
-- [ ] Vehicle info visible: 2024 Mercedes S-Class
-- [ ] Professional display
+- [x] Driver info visible to customer
+- [x] Driver name: John Smith
+- [x] Driver phone visible (or message to contact admin)
+- [x] Vehicle info visible: 2024 Mercedes S-Class
+- [x] Professional display
 
 **Notes:**
 ```
-Customer Can See Assignment: [ ] Yes [ ] No
+Customer Can See Assignment: [x] Yes [ ] No
 ```
 
 ---
@@ -1333,17 +1333,17 @@ Customer Can See Assignment: [ ] Yes [ ] No
 6. Click "Assign"
 
 **Expected Result:**
-- [ ] Modal shows current assignments
-- [ ] Can change driver
-- [ ] Can change vehicle
-- [ ] Can remove assignments (select "No driver/vehicle")
-- [ ] New assignment saves
-- [ ] Old assignment replaced
-- [ ] Updated info displays
+- [x] Modal shows current assignments
+- [x] Can change driver
+- [x] Can change vehicle
+- [x] Can remove assignments (select "No driver/vehicle")
+- [x] New assignment saves
+- [x] Old assignment replaced
+- [x] Updated info displays
 
 **Notes:**
 ```
-Update Successful: [ ] Yes [ ] No
+Update Successful: [x] Yes [ ] No
 New Driver: _______________
 ```
 
@@ -1358,12 +1358,12 @@ New Driver: _______________
    - Vehicle: Cadillac Escalade SUV
 
 **Expected Result:**
-- [ ] Assignment successful
-- [ ] Both bookings now have assignments
+- [x] Assignment successful
+- [x] Both bookings now have assignments
 
 **Notes:**
 ```
-[Add your testing notes here]
+- Good 
 ```
 
 ---
