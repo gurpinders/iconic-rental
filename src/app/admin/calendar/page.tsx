@@ -14,6 +14,10 @@ interface Booking {
     lastName: string;
   };
   driverName: string | null;
+  driver: {
+    firstName: string;
+    lastName: string;
+  } | null;
   vehicle: {
     name: string;
   } | null;
@@ -168,9 +172,9 @@ export default function AdminCalendarPage() {
               <div className="truncate">
                 {booking.customer.firstName} {booking.customer.lastName}
               </div>
-              {booking.driverName && (
+              {booking.driver && (
                 <div className="truncate text-[10px] opacity-75">
-                  🚗 {booking.driverName}
+                  🚗 {booking.driver.firstName} {booking.driver.lastName}
                 </div>
               )}
               {booking.vehicle && (

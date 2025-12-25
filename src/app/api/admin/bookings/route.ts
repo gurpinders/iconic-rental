@@ -30,7 +30,8 @@ export async function GET() {
         },
         driver: {
           select: {
-            name: true,
+            firstName: true,
+            lastName: true,
           },
         },
       },
