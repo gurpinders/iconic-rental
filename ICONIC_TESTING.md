@@ -1375,17 +1375,17 @@ New Driver: _______________
 **URL:** https://iconic-rental.vercel.app/admin/calendar
 
 **Expected Result:**
-- [ ] Calendar displays current month
-- [ ] Month/Year shows in header
-- [ ] Days of week header (Sun, Mon, Tue, etc.)
-- [ ] Current day highlighted (blue ring or similar)
-- [ ] Test bookings appear on correct dates
-- [ ] Bookings show color-coded by status:
+- [x] Calendar displays current month
+- [x] Month/Year shows in header
+- [x] Days of week header (Sun, Mon, Tue, etc.)
+- [x] Current day highlighted (blue ring or similar)
+- [x] Test bookings appear on correct dates
+- [x] Bookings show color-coded by status:
   - Blue: CONFIRMED
   - Purple: IN_PROGRESS
   - Green: COMPLETED
   - Red: CANCELLED
-- [ ] Each booking shows:
+- [x] Each booking shows:
   - Time (e.g., 10:00 AM)
   - Customer name
   - Driver name (if assigned)
@@ -1408,16 +1408,16 @@ Color Coding Works: [ ] Yes [ ] No
 3. Click "Today" button to return to current month
 
 **Expected Result:**
-- [ ] Next button advances month
-- [ ] Prev button goes back month
-- [ ] Today button returns to current month
-- [ ] Month/Year updates correctly
-- [ ] Bookings show on correct dates
-- [ ] Navigation smooth, no errors
+- [x] Next button advances month
+- [x] Prev button goes back month
+- [x] Today button returns to current month
+- [x] Month/Year updates correctly
+- [x] Bookings show on correct dates
+- [x] Navigation smooth, no errors
 
 **Notes:**
 ```
-Navigation Works: [ ] Yes [ ] No
+Navigation Works: [x] Yes [ ] No
 ```
 
 ---
@@ -1433,15 +1433,15 @@ Navigation Works: [ ] Yes [ ] No
 6. Select "All Bookings" to reset
 
 **Expected Result:**
-- [ ] Filter dropdown works
-- [ ] Only matching status bookings display
-- [ ] Other bookings hidden
-- [ ] Can reset to show all
-- [ ] No page reload (client-side filter)
+- [x] Filter dropdown works
+- [x] Only matching status bookings display
+- [x] Other bookings hidden
+- [x] Can reset to show all
+- [x] No page reload (client-side filter)
 
 **Notes:**
 ```
-Filter Works: [ ] Yes [ ] No
+Filter Works: [x] Yes [ ] No
 ```
 
 ---
