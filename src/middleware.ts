@@ -20,7 +20,7 @@ export function middleware(request: NextRequest) {
     const token = request.cookies.get('admin-auth-token');
 
     if (!token) {
-      return NextResponse.redirect(new URL('/admin-login', request.url));
+      return NextResponse.redirect(new URL('/auth/admin', request.url));
     }
   }
 
