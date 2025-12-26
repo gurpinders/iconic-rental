@@ -3,32 +3,27 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const router = useRouter();
 
   useEffect(() => {
-    setMounted(true);
-    
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
     };
     
-    handleScroll();
-    
-    // Check if customer is logged in
     const checkAuth = () => {
       const token = document.cookie.includes('customer-auth-token');
       setIsLoggedIn(token);
     };
     
+    // Run once on mount
+    handleScroll();
     checkAuth();
     
+    // Subscribe to scroll events
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -88,7 +83,7 @@ export default function Header() {
             </Link>
           </li>
           
-          {/* Account Button - Desktop */}
+          {/* Account Icon Button - Desktop */}
           <li>
             <Link
               href={isLoggedIn ? '/customer/dashboard' : '/customer/login'}
@@ -111,10 +106,11 @@ export default function Header() {
             </Link>
           </li>
 
+          {/* Reserve Now Button - Smaller */}
           <li>
             <Link 
               href="/quote"
-              className="btn-primary inline-block text-lg"
+              className="btn-primary inline-block text-base px-5 py-2.5"
             >
               RESERVE NOW
             </Link>
@@ -224,11 +220,12 @@ export default function Header() {
               </Link>
             </li>
 
+            {/* Reserve Now Button - Mobile */}
             <li className="pt-2">
               <Link 
                 href="/quote"
                 onClick={closeMobileMenu}
-                className="btn-primary block text-center text-lg"
+                className="btn-primary block text-center text-base py-3"
               >
                 RESERVE NOW
               </Link>
