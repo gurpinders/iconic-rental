@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import '../globals.css'; // Import styles
 
 export const metadata: Metadata = {
   title: 'Login - Iconic Limos',
@@ -12,10 +11,8 @@ export default function AuthLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className="min-h-screen bg-black text-white antialiased">
-        {children}
-      </body>
-    </html>
+    <div className="min-h-screen">
+      {children}
+    </div>
   );
 }
