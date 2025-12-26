@@ -14,7 +14,7 @@ const montserrat = Montserrat({
 })
 
 export const metadata: Metadata = {
-    metadataBase: new URL('https://your-site.vercel.app'),
+    metadataBase: new URL('https://iconic-rental.vercel.app'),
     title: {
       default: 'Iconic Limos & Rentals | Luxury Transportation in GTA',
       template: '%s | Iconic Limos & Rentals'
@@ -35,6 +35,8 @@ export default async function RootLayout({
 }) {
   const headersList = await headers()
   const pathname = headersList.get('x-pathname') || ''
+  
+  console.log('🔍 PATHNAME:', pathname);
   
   // Hide header/footer on admin pages AND all customer pages
   const isAdminRoute = pathname.startsWith('/admin')

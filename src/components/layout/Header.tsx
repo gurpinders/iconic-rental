@@ -92,11 +92,11 @@ export default function Header() {
           <li>
             <Link
               href={isLoggedIn ? '/customer/dashboard' : '/customer/login'}
-              className="p-2.5 border-2 border-white/30 rounded-full hover:border-white hover:bg-white/10 transition-all duration-300 group"
+              className="text-white hover:text-gray-300 transition-colors"
               title={isLoggedIn ? 'My Account' : 'Sign In'}
             >
               <svg 
-                className="w-6 h-6 text-white group-hover:scale-110 transition-transform" 
+                className="w-7 h-7" 
                 fill="none" 
                 stroke="currentColor" 
                 viewBox="0 0 24 24"
