@@ -5,7 +5,7 @@ import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import { headers } from 'next/headers'
 import StructuredData from '@/components/StructuredData'
-import GoogleTagManager from '@/components/analytics/GoogleTagManager' // NEW
+import GoogleTagManager from '@/components/analytics/GoogleTagManager'
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -14,18 +14,23 @@ const montserrat = Montserrat({
 })
 
 export const metadata: Metadata = {
-    metadataBase: new URL('https://iconic-rental.vercel.app'),
-    title: {
-      default: 'Iconic Limos & Rentals | Luxury Transportation in GTA',
-      template: '%s | Iconic Limos & Rentals'
-    },
-    description: 'Premium limousine and bus rental services...',
-    keywords: ['limousine rental', 'bus rental'],
-    
-    verification: {
-      google: 'hCOgbVYc_swzIgALMLQZX36bvX9BD2pbU6PL39ZY9fI', 
-    },
-    
+  metadataBase: new URL('https://iconic-rental.vercel.app'),
+  title: {
+    default: 'Iconic Limos & Rentals | Luxury Transportation in GTA',
+    template: '%s | Iconic Limos & Rentals'
+  },
+  description: 'Premium limousine and bus rental services in the Greater Toronto Area. Professional chauffeurs, luxury fleet, and exceptional service for all occasions.',
+  keywords: ['limousine rental', 'bus rental', 'luxury transportation', 'GTA limo service', 'Toronto limo'],
+  
+  icons: {
+    icon: '/favicon.ico',
+    shortcut: '/favicon.ico',
+    apple: '/apple-icon.png',
+  },
+  
+  verification: {
+    google: 'hCOgbVYc_swzIgALMLQZX36bvX9BD2pbU6PL39ZY9fI', 
+  },
 }
 
 export default async function RootLayout({
