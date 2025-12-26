@@ -3,11 +3,14 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     setMounted(true);
@@ -17,6 +20,14 @@ export default function Header() {
     };
     
     handleScroll();
+    
+    // Check if customer is logged in
+    const checkAuth = () => {
+      const token = document.cookie.includes('customer-auth-token');
+      setIsLoggedIn(token);
+    };
+    
+    checkAuth();
     
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
@@ -76,6 +87,30 @@ export default function Header() {
               Contact
             </Link>
           </li>
+          
+          {/* Account Button - Desktop */}
+          <li>
+            <Link
+              href={isLoggedIn ? '/customer/dashboard' : '/customer/login'}
+              className="p-2.5 border-2 border-white/30 rounded-full hover:border-white hover:bg-white/10 transition-all duration-300 group"
+              title={isLoggedIn ? 'My Account' : 'Sign In'}
+            >
+              <svg 
+                className="w-6 h-6 text-white group-hover:scale-110 transition-transform" 
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
+              >
+                <path 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  strokeWidth={2} 
+                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" 
+                />
+              </svg>
+            </Link>
+          </li>
+
           <li>
             <Link 
               href="/quote"
@@ -164,7 +199,32 @@ export default function Header() {
                 Contact
               </Link>
             </li>
-            <li className="pt-4">
+            
+            {/* Account Button - Mobile */}
+            <li className="pt-2">
+              <Link 
+                href={isLoggedIn ? '/customer/dashboard' : '/customer/login'}
+                onClick={closeMobileMenu}
+                className="flex items-center gap-3 text-lg text-white hover:text-gray-300 transition-colors font-medium py-2"
+              >
+                <svg 
+                  className="w-6 h-6" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round" 
+                    strokeWidth={2} 
+                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" 
+                  />
+                </svg>
+                {isLoggedIn ? 'My Account' : 'Sign In'}
+              </Link>
+            </li>
+
+            <li className="pt-2">
               <Link 
                 href="/quote"
                 onClick={closeMobileMenu}
