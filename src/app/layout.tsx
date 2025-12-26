@@ -39,8 +39,10 @@ export default async function RootLayout({
   // Hide header/footer on admin pages AND all customer pages
   const isAdminRoute = pathname.startsWith('/admin')
   const isCustomerRoute = pathname.startsWith('/customer')
+  const isAuthRoute = pathname.startsWith('/admin-login')
+
   
-  const hideHeaderFooter = isAdminRoute || isCustomerRoute
+  const hideHeaderFooter = isAdminRoute || isCustomerRoute || isAuthRoute
 
   return (
     <html lang="en">

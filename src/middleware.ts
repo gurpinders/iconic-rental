@@ -8,7 +8,6 @@ export function middleware(request: NextRequest) {
   if (
     pathname.startsWith('/auth') || 
     pathname.startsWith('/admin-login') ||
-    pathname === '/admin/login' ||
     pathname === '/not-found' ||
     pathname === '/_not-found'
   ) {
@@ -26,7 +25,7 @@ export function middleware(request: NextRequest) {
     const token = request.cookies.get('admin-auth-token');
 
     if (!token) {
-      return NextResponse.redirect(new URL('/admin/login', request.url));
+      return NextResponse.redirect(new URL('/admin-login', request.url));
     }
   }
 
