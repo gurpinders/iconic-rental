@@ -4,8 +4,14 @@ import type { NextRequest } from 'next/server';
 export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
-  // Let auth pages through
-  if (pathname.startsWith('/auth')) {
+  // Let these pages through WITHOUT any checks
+  if (
+    pathname.startsWith('/auth') || 
+    pathname.startsWith('/admin-login') ||
+    pathname === '/admin/login' ||
+    pathname === '/not-found' ||
+    pathname === '/_not-found'
+  ) {
     return NextResponse.next();
   }
 
@@ -15,12 +21,12 @@ export function middleware(request: NextRequest) {
   // Add pathname to headers for layout to access
   response.headers.set('x-pathname', pathname);
 
-  // Protect admin routes
-  if (pathname.startsWith('/admin')) {
+  // Protect admin routes (EXCEPT /admin/login)
+  if (pathname.startsWith('/admin') && pathname !== '/admin/login') {
     const token = request.cookies.get('admin-auth-token');
 
     if (!token) {
-      return NextResponse.redirect(new URL('/auth/admin', request.url));
+      return NextResponse.redirect(new URL('/admin/login', request.url));
     }
   }
 
