@@ -4,23 +4,22 @@ import type { NextRequest } from 'next/server';
 export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
-  // Let these pages through WITHOUT any checks
+  // Create response and set pathname header FIRST
+  const response = NextResponse.next();
+  response.headers.set('x-pathname', pathname);
+
+  // Let auth pages through
   if (
     pathname.startsWith('/auth') || 
     pathname.startsWith('/admin-login') ||
+    pathname === '/admin/login' ||
     pathname === '/not-found' ||
     pathname === '/_not-found'
   ) {
-    return NextResponse.next();
+    return response; // Return the response with header set
   }
 
-  // Create a new response
-  const response = NextResponse.next();
-
-  // Add pathname to headers for layout to access
-  response.headers.set('x-pathname', pathname);
-
-  // Protect admin routes (EXCEPT /admin/login)
+  // Protect admin routes
   if (pathname.startsWith('/admin') && pathname !== '/admin/login') {
     const token = request.cookies.get('admin-auth-token');
 
@@ -43,9 +42,3 @@ export function middleware(request: NextRequest) {
 
   return response;
 }
-
-export const config = {
-  matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
-  ],
-};
