@@ -11,7 +11,7 @@ export default function Button({
   className = '',
   ...props 
 }: ButtonProps) {
-  const baseStyles = "px-6 py-3 font-semibold tracking-wide transition-all duration-300";
+  const baseStyles = "px-6 py-3 font-semibold tracking-wide transition-all duration-300 rounded-xl";
   
   const variants = {
     primary: "bg-white text-black hover:bg-gray-200",
