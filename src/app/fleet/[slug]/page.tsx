@@ -90,27 +90,23 @@ export default function VehicleDetailPage({
 
   const hasMultipleImages = allImages.length > 1;
 
-  // Parse features - handle different formats
+  // Parse features
   let featuresArray: string[] = [];
   
   if (vehicle.features) {
     try {
-      // Try to parse as JSON first (in case it's a JSON array)
       const parsed = JSON.parse(vehicle.features);
       if (Array.isArray(parsed)) {
         featuresArray = parsed;
       } else {
-        // If not an array, treat as comma-separated
         featuresArray = vehicle.features.split(',').map(f => f.trim()).filter(Boolean);
       }
     } catch {
-      // Not JSON, treat as comma-separated string
       featuresArray = vehicle.features
         .split(',')
         .map(f => f.trim())
         .filter(Boolean)
         .map(f => {
-          // Clean up any remaining quotes or brackets
           return f.replace(/^["'\[\{]+|["'\]\}]+$/g, '').trim();
         });
     }
@@ -140,7 +136,7 @@ export default function VehicleDetailPage({
                 {/* Previous Button */}
                 <button
                   onClick={prevImage}
-                  className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 bg-black/70 hover:bg-black/90 backdrop-blur-sm p-4 rounded-full transition-all z-10"
+                  className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 bg-black/70 hover:bg-white hover:text-black backdrop-blur-sm p-4 rounded-full transition-all z-10 border-2 border-white/20 hover:border-white"
                   aria-label="Previous image"
                 >
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -151,7 +147,7 @@ export default function VehicleDetailPage({
                 {/* Next Button */}
                 <button
                   onClick={nextImage}
-                  className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 bg-black/70 hover:bg-black/90 backdrop-blur-sm p-4 rounded-full transition-all z-10"
+                  className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 bg-black/70 hover:bg-white hover:text-black backdrop-blur-sm p-4 rounded-full transition-all z-10 border-2 border-white/20 hover:border-white"
                   aria-label="Next image"
                 >
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -159,13 +155,18 @@ export default function VehicleDetailPage({
                   </svg>
                 </button>
 
+                {/* Image Count Badge */}
+                <div className="absolute top-6 right-6 bg-black/70 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-semibold border border-white/20">
+                  {currentImageIndex + 1} / {allImages.length}
+                </div>
+
                 {/* Image Indicators */}
                 <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-10">
                   {allImages.map((_, index) => (
                     <button
                       key={index}
                       onClick={() => setCurrentImageIndex(index)}
-                      className={`transition-all ${
+                      className={`transition-all cursor-pointer ${
                         index === currentImageIndex
                           ? 'bg-white w-8 h-2'
                           : 'bg-white/50 hover:bg-white/75 w-2 h-2'
@@ -241,7 +242,7 @@ export default function VehicleDetailPage({
                     {featuresArray.map((feature, index) => (
                       <div
                         key={index}
-                        className="flex items-start gap-3 p-4 bg-white/5 rounded-lg border border-white/10 hover:border-white/20 hover:bg-white/10 transition-all"
+                        className="flex items-start gap-3 p-4 bg-white/5 rounded-xl border border-white/10 hover:border-white/20 hover:bg-white/10 transition-all cursor-default"
                       >
                         <svg className="w-6 h-6 text-green-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -257,17 +258,17 @@ export default function VehicleDetailPage({
               {hasMultipleImages && (
                 <div>
                   <h2 className="text-3xl font-bold mb-6 border-b border-white/10 pb-4">
-                    Gallery
+                    Photo Gallery ({allImages.length} photos)
                   </h2>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                     {allImages.map((image, index) => (
                       <button
                         key={image.id}
                         onClick={() => setCurrentImageIndex(index)}
-                        className={`relative aspect-video rounded-lg overflow-hidden border-2 transition-all ${
+                        className={`group relative aspect-video rounded-xl overflow-hidden border-2 transition-all cursor-pointer ${
                           index === currentImageIndex
-                            ? 'border-white shadow-lg'
-                            : 'border-white/20 hover:border-white/50'
+                            ? 'border-white shadow-[0_0_20px_rgba(255,255,255,0.5)] scale-105'
+                            : 'border-white/20 hover:border-white/50 hover:scale-105'
                         }`}
                       >
                         <Image
@@ -275,8 +276,18 @@ export default function VehicleDetailPage({
                           alt={image.alt}
                           fill
                           className="object-cover"
-                          sizes="(max-width: 768px) 50vw, 25vw"
+                          sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
                         />
+                        {/* Overlay on hover */}
+                        <div className={`absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all ${
+                          index === currentImageIndex ? 'bg-black/0' : ''
+                        }`} />
+                        {/* Current indicator */}
+                        {index === currentImageIndex && (
+                          <div className="absolute top-2 right-2 bg-white text-black text-xs font-bold px-2 py-1 rounded-full">
+                            CURRENT
+                          </div>
+                        )}
                       </button>
                     ))}
                   </div>
@@ -286,7 +297,7 @@ export default function VehicleDetailPage({
 
             {/* Right Column - Booking Card */}
             <div className="lg:col-span-1">
-              <div className="sticky top-24 bg-zinc-900 border-2 border-white/20 rounded-2xl p-8">
+              <div className="sticky top-24 bg-zinc-900 border-2 border-white/20 rounded-2xl p-8 shadow-lg">
                 <h3 className="text-2xl font-bold mb-6">Book This Vehicle</h3>
                 
                 {/* Pricing Display */}
@@ -337,7 +348,7 @@ export default function VehicleDetailPage({
                 {/* CTA Button */}
                 <Link
                   href={`/quote?vehicle=${vehicle.id}`}
-                  className="block w-full bg-white text-black text-center py-4 px-6 rounded-lg font-bold text-lg hover:bg-gray-200 transition-colors mb-4"
+                  className="block w-full bg-white text-black text-center py-4 px-6 rounded-xl font-bold text-lg hover:bg-gray-200 transition-colors mb-4 cursor-pointer"
                 >
                   Request a Quote
                 </Link>
@@ -363,13 +374,13 @@ export default function VehicleDetailPage({
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href={`/quote?vehicle=${vehicle.id}`}
-              className="bg-white text-black px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-200 transition-colors inline-block"
+              className="bg-white text-black px-8 py-4 rounded-xl font-bold text-lg hover:bg-gray-200 transition-colors inline-block cursor-pointer"
             >
               Get Your Custom Quote
             </Link>
             <Link
               href="/fleet"
-              className="border-2 border-white/20 text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-white/10 transition-colors inline-block"
+              className="border-2 border-white/20 text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-white/10 transition-colors inline-block cursor-pointer"
             >
               View More Vehicles
             </Link>
