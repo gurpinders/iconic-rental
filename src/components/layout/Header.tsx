@@ -53,32 +53,32 @@ export default function Header() {
         {/* Desktop Navigation */}
         <ul className="hidden lg:flex items-center gap-6 xl:gap-8">
           <li className="border-r border-white/30 pr-6 xl:pr-8">
-            <Link href="/" className="text-lg text-white hover:text-gray-300 transition-colors font-bold">
+            <Link href="/" className="text-base text-white hover:text-gray-300 transition-colors font-bold">
               Home
             </Link>
           </li>
           <li className="border-r border-white/30 pr-6 xl:pr-8">
-            <Link href="/fleet" className="text-lg text-white hover:text-gray-300 transition-colors font-bold">
+            <Link href="/fleet" className="text-base text-white hover:text-gray-300 transition-colors font-bold">
               Fleet
             </Link>
           </li>
           <li className="border-r border-white/30 pr-6 xl:pr-8">
-            <Link href="/services" className="text-lg text-white hover:text-gray-300 transition-colors font-bold">
+            <Link href="/services" className="text-base text-white hover:text-gray-300 transition-colors font-bold">
               Services
             </Link>
           </li>
           <li className="border-r border-white/30 pr-6 xl:pr-8">
-            <Link href="/about" className="text-lg text-white hover:text-gray-300 transition-colors font-bold">
+            <Link href="/about" className="text-base text-white hover:text-gray-300 transition-colors font-bold">
               About
             </Link>
           </li>
           <li className="border-r border-white/30 pr-6 xl:pr-8">
-            <Link href="/faq" className="text-lg text-white hover:text-gray-300 transition-colors font-bold">
+            <Link href="/faq" className="text-base text-white hover:text-gray-300 transition-colors font-bold">
               FAQ
             </Link>
           </li>
           <li className="pr-6 xl:pr-8">
-            <Link href="/contact" className="text-lg text-white hover:text-gray-300 transition-colors font-bold">
+            <Link href="/contact" className="text-base text-white hover:text-gray-300 transition-colors font-bold">
               Contact
             </Link>
           </li>
@@ -148,7 +148,7 @@ export default function Header() {
               <Link 
                 href="/" 
                 onClick={closeMobileMenu}
-                className="block text-lg text-white hover:text-gray-300 transition-colors font-bold py-2"
+                className="block text-base text-white hover:text-gray-300 transition-colors font-bold py-2"
               >
                 Home
               </Link>
@@ -157,7 +157,7 @@ export default function Header() {
               <Link 
                 href="/fleet" 
                 onClick={closeMobileMenu}
-                className="block text-lg text-white hover:text-gray-300 transition-colors font-bold py-2"
+                className="block text-base text-white hover:text-gray-300 transition-colors font-bold py-2"
               >
                 Fleet
               </Link>
@@ -166,7 +166,7 @@ export default function Header() {
               <Link 
                 href="/services" 
                 onClick={closeMobileMenu}
-                className="block text-lg text-white hover:text-gray-300 transition-colors font-bold py-2"
+                className="block text-base text-white hover:text-gray-300 transition-colors font-bold py-2"
               >
                 Services
               </Link>
@@ -175,7 +175,7 @@ export default function Header() {
               <Link 
                 href="/about" 
                 onClick={closeMobileMenu}
-                className="block text-lg text-white hover:text-gray-300 transition-colors font-bold py-2"
+                className="block text-base text-white hover:text-gray-300 transition-colors font-bold py-2"
               >
                 About
               </Link>
@@ -184,7 +184,7 @@ export default function Header() {
               <Link 
                 href="/faq" 
                 onClick={closeMobileMenu}
-                className="block text-lg text-white hover:text-gray-300 transition-colors font-bold py-2"
+                className="block text-base text-white hover:text-gray-300 transition-colors font-bold py-2"
               >
                 FAQ
               </Link>
@@ -193,7 +193,7 @@ export default function Header() {
               <Link 
                 href="/contact" 
                 onClick={closeMobileMenu}
-                className="block text-lg text-white hover:text-gray-300 transition-colors font-bold py-2"
+                className="block text-base text-white hover:text-gray-300 transition-colors font-bold py-2"
               >
                 Contact
               </Link>
@@ -207,7 +207,7 @@ export default function Header() {
               <Link 
                 href={isLoggedIn ? '/customer/dashboard' : '/customer/login'}
                 onClick={closeMobileMenu}
-                className="flex items-center gap-3 text-lg text-white hover:text-gray-300 transition-colors font-bold py-2"
+                className="flex items-center gap-3 text-base text-white hover:text-gray-300 transition-colors font-bold py-2"
               >
                 <svg 
                   className="w-6 h-6" 
