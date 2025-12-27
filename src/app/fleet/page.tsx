@@ -31,6 +31,17 @@ export default function FleetPage() {
         const data = await res.json()
         // Only show active vehicles
         const activeVehicles = data.vehicles.filter((v: Vehicle) => v.isActive)
+        
+        // DEBUG: See actual categories in database
+        console.log('=== VEHICLE CATEGORIES DEBUG ===')
+        console.log('Total active vehicles:', activeVehicles.length)
+        console.log('Actual vehicle categories:', activeVehicles.map(v => ({
+          name: v.name,
+          category: v.category
+        })))
+        console.log('Unique categories:', Array.from(new Set(activeVehicles.map(v => v.category))))
+        console.log('================================')
+        
         setVehicles(activeVehicles)
         setFilteredVehicles(activeVehicles)
         setLoading(false)
@@ -46,16 +57,19 @@ export default function FleetPage() {
     let filtered = [...vehicles]
 
     if (categoryFilter !== 'ALL') {
-      filtered = filtered.filter(v => v.category === categoryFilter)
+      // Case-insensitive matching
+      filtered = filtered.filter(v => 
+        v.category.toUpperCase() === categoryFilter.toUpperCase()
+      )
     }
 
     setFilteredVehicles(filtered)
-    console.log('Filter applied:', categoryFilter, 'Results:', filtered.length) // Debug log
+    console.log('Filter applied:', categoryFilter, 'Results:', filtered.length)
   }, [categoryFilter, vehicles])
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newCategory = e.target.value
-    console.log('Category changed to:', newCategory) // Debug log
+    console.log('Category changed to:', newCategory)
     setCategoryFilter(newCategory)
   }
 
