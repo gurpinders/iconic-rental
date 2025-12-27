@@ -8,10 +8,13 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-
+    
     const vehicle = await prisma.vehicle.findUnique({
       where: { id },
       include: {
+        images: {
+          orderBy: { order: 'asc' }  // ← ADDED THIS!
+        },
         bookings: {
           include: {
             customer: {
@@ -51,7 +54,6 @@ export async function GET(
       success: true,
       vehicle,
     });
-
   } catch (error) {
     console.error('Get vehicle error:', error);
     return NextResponse.json(
@@ -71,7 +73,6 @@ export async function PATCH(
     const body = await request.json();
 
     const updateData: any = {};
-
     if (body.name !== undefined) updateData.name = body.name;
     if (body.category !== undefined) updateData.category = body.category;
     if (body.description !== undefined) updateData.description = body.description || null;
@@ -84,6 +85,36 @@ export async function PATCH(
     const vehicle = await prisma.vehicle.update({
       where: { id },
       data: updateData,
+      include: {
+        images: {
+          orderBy: { order: 'asc' }  // ← ADDED THIS!
+        },
+        bookings: {
+          include: {
+            customer: {
+              select: {
+                firstName: true,
+                lastName: true,
+                email: true,
+              },
+            },
+            driver: {
+              select: {
+                firstName: true,
+                lastName: true,
+              },
+            },
+          },
+          orderBy: {
+            eventDate: 'desc',
+          },
+        },
+        _count: {
+          select: {
+            bookings: true,
+          },
+        },
+      },
     });
 
     return NextResponse.json({
@@ -91,7 +122,6 @@ export async function PATCH(
       message: 'Vehicle updated successfully',
       vehicle,
     });
-
   } catch (error) {
     console.error('Update vehicle error:', error);
     return NextResponse.json(
@@ -135,6 +165,12 @@ export async function DELETE(
       );
     }
 
+    // Delete all vehicle images first
+    await prisma.vehicleImage.deleteMany({
+      where: { vehicleId: id },
+    });
+
+    // Delete vehicle
     await prisma.vehicle.delete({
       where: { id },
     });
@@ -143,7 +179,6 @@ export async function DELETE(
       success: true,
       message: 'Vehicle deleted successfully',
     });
-
   } catch (error) {
     console.error('Delete vehicle error:', error);
     return NextResponse.json(
