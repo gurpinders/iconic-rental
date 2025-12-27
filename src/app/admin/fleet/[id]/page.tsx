@@ -40,6 +40,9 @@ export default function VehicleDetailPage({ params }: { params: Promise<{ id: st
   const [error, setError] = useState('');
   const [newImageUrl, setNewImageUrl] = useState('');
   const [addingImage, setAddingImage] = useState(false);
+  const [uploadingFile, setUploadingFile] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string>('');
 
   const [formData, setFormData] = useState({
     name: '',
@@ -139,6 +142,67 @@ export default function VehicleDetailPage({ params }: { params: Promise<{ id: st
       setError(err instanceof Error ? err.message : 'Failed to update vehicle');
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+      // Create preview
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewUrl(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleUploadFile = async () => {
+    if (!selectedFile) return;
+
+    setUploadingFile(true);
+    try {
+      // Upload file to get URL
+      const formData = new FormData();
+      formData.append('image', selectedFile);
+
+      const uploadResponse = await fetch(`/api/admin/fleet/vehicles/${vehicleId}/upload-image`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!uploadResponse.ok) {
+        const data = await uploadResponse.json();
+        throw new Error(data.error || 'Failed to upload file');
+      }
+
+      const uploadData = await uploadResponse.json();
+      const imageUrl = uploadData.url;
+
+      // Add image to vehicle
+      const response = await fetch(`/api/admin/fleet/vehicles/${vehicleId}/images`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          url: imageUrl,
+          alt: vehicle?.name || 'Vehicle image',
+        }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Failed to add image');
+      }
+
+      // Clear form
+      setSelectedFile(null);
+      setPreviewUrl('');
+      fetchVehicle();
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Failed to upload image');
+    } finally {
+      setUploadingFile(false);
     }
   };
 
@@ -483,22 +547,131 @@ export default function VehicleDetailPage({ params }: { params: Promise<{ id: st
 
                 <div className="border-t border-white/10 pt-6">
                   <label className="block text-sm font-semibold mb-3">Add New Image</label>
-                  <div className="flex gap-3">
-                    <input
-                      type="url"
-                      value={newImageUrl}
-                      onChange={(e) => setNewImageUrl(e.target.value)}
-                      placeholder="https://example.com/image.jpg"
-                      className="flex-1 px-4 py-3 bg-black border border-white/20 rounded-xl focus:border-white/50 focus:outline-none cursor-text"
-                    />
+                  
+                  {/* Tab Buttons */}
+                  <div className="flex gap-2 mb-4">
                     <button
-                      onClick={handleAddImage}
-                      disabled={!newImageUrl.trim() || addingImage}
-                      className="px-6 py-3 bg-white text-black hover:bg-gray-200 rounded-xl font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                      type="button"
+                      onClick={() => {
+                        setSelectedFile(null);
+                        setPreviewUrl('');
+                      }}
+                      className={`flex-1 px-4 py-2 rounded-xl font-semibold transition-all cursor-pointer ${
+                        !selectedFile 
+                          ? 'bg-white text-black' 
+                          : 'bg-white/10 text-white hover:bg-white/20'
+                      }`}
                     >
-                      {addingImage ? 'Adding...' : 'Add'}
+                      From URL
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setNewImageUrl('')}
+                      className={`flex-1 px-4 py-2 rounded-xl font-semibold transition-all cursor-pointer ${
+                        selectedFile 
+                          ? 'bg-white text-black' 
+                          : 'bg-white/10 text-white hover:bg-white/20'
+                      }`}
+                    >
+                      Upload File
                     </button>
                   </div>
+
+                  {!selectedFile ? (
+                    /* URL Input */
+                    <div>
+                      <div className="flex gap-3">
+                        <input
+                          type="url"
+                          value={newImageUrl}
+                          onChange={(e) => setNewImageUrl(e.target.value)}
+                          placeholder="https://example.com/image.jpg"
+                          className="flex-1 px-4 py-3 bg-black border border-white/20 rounded-xl focus:border-white/50 focus:outline-none cursor-text"
+                        />
+                        <button
+                          onClick={handleAddImage}
+                          disabled={!newImageUrl.trim() || addingImage}
+                          className="px-6 py-3 bg-white text-black hover:bg-gray-200 rounded-xl font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer whitespace-nowrap"
+                        >
+                          {addingImage ? 'Adding...' : 'Add'}
+                        </button>
+                      </div>
+                      <p className="text-xs text-gray-500 mt-2">
+                        Paste an image URL from the web
+                      </p>
+                    </div>
+                  ) : (
+                    /* File Upload */
+                    <div>
+                      {/* Preview */}
+                      {previewUrl && (
+                        <div className="mb-4 relative aspect-video rounded-xl overflow-hidden border-2 border-white/20">
+                          <Image
+                            src={previewUrl}
+                            alt="Preview"
+                            fill
+                            className="object-cover"
+                          />
+                        </div>
+                      )}
+
+                      {/* File Info */}
+                      <div className="flex items-center gap-3 mb-3 p-3 bg-black/50 rounded-xl border border-white/10">
+                        <svg className="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                        <div className="flex-1">
+                          <p className="font-medium">{selectedFile.name}</p>
+                          <p className="text-xs text-gray-400">
+                            {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
+                          </p>
+                        </div>
+                        <button
+                          onClick={() => {
+                            setSelectedFile(null);
+                            setPreviewUrl('');
+                          }}
+                          className="text-gray-400 hover:text-white cursor-pointer"
+                        >
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
+                      </div>
+
+                      {/* Upload Button */}
+                      <button
+                        onClick={handleUploadFile}
+                        disabled={uploadingFile}
+                        className="w-full px-6 py-3 bg-white text-black hover:bg-gray-200 rounded-xl font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                      >
+                        {uploadingFile ? 'Uploading...' : 'Upload & Add to Gallery'}
+                      </button>
+                    </div>
+                  )}
+
+                  {/* File Input (Hidden) */}
+                  {selectedFile === null && (
+                    <div className="mt-4">
+                      <label className="block w-full px-6 py-3 bg-white/10 hover:bg-white/20 border-2 border-dashed border-white/20 rounded-xl text-center font-semibold transition-all cursor-pointer">
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleFileSelect}
+                          className="hidden"
+                        />
+                        <span className="flex items-center justify-center gap-2">
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          </svg>
+                          Or Click to Browse Files
+                        </span>
+                      </label>
+                      <p className="text-xs text-gray-500 mt-2 text-center">
+                        Max file size: 5MB • Supported: JPG, PNG, WebP, GIF
+                      </p>
+                    </div>
+                  )}
                 </div>
               </div>
 
