@@ -35,11 +35,11 @@ export default function FleetPage() {
         // DEBUG: See actual categories in database
         console.log('=== VEHICLE CATEGORIES DEBUG ===')
         console.log('Total active vehicles:', activeVehicles.length)
-        console.log('Actual vehicle categories:', activeVehicles.map(v => ({
+        console.log('Actual vehicle categories:', activeVehicles.map((v: Vehicle) => ({
           name: v.name,
           category: v.category
         })))
-        console.log('Unique categories:', Array.from(new Set(activeVehicles.map(v => v.category))))
+        console.log('Unique categories:', Array.from(new Set(activeVehicles.map((v: Vehicle) => v.category))))
         console.log('================================')
         
         setVehicles(activeVehicles)
