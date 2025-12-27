@@ -29,18 +29,7 @@ export default function FleetPage() {
       try {
         const res = await fetch('/api/vehicles')
         const data = await res.json()
-        // Only show active vehicles
         const activeVehicles = data.vehicles.filter((v: Vehicle) => v.isActive)
-        
-        // DEBUG: See actual categories in database
-        console.log('=== VEHICLE CATEGORIES DEBUG ===')
-        console.log('Total active vehicles:', activeVehicles.length)
-        console.log('Actual vehicle categories:', activeVehicles.map((v: Vehicle) => ({
-          name: v.name,
-          category: v.category
-        })))
-        console.log('Unique categories:', Array.from(new Set(activeVehicles.map((v: Vehicle) => v.category))))
-        console.log('================================')
         
         setVehicles(activeVehicles)
         setFilteredVehicles(activeVehicles)
@@ -57,20 +46,25 @@ export default function FleetPage() {
     let filtered = [...vehicles]
 
     if (categoryFilter !== 'ALL') {
-      // Case-insensitive matching
-      filtered = filtered.filter(v => 
-        v.category.toUpperCase() === categoryFilter.toUpperCase()
-      )
+      filtered = filtered.filter(v => v.category === categoryFilter)
     }
 
     setFilteredVehicles(filtered)
-    console.log('Filter applied:', categoryFilter, 'Results:', filtered.length)
   }, [categoryFilter, vehicles])
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newCategory = e.target.value
-    console.log('Category changed to:', newCategory)
-    setCategoryFilter(newCategory)
+    setCategoryFilter(e.target.value)
+  }
+
+  // Get unique categories dynamically
+  const uniqueCategories = Array.from(new Set(vehicles.map((v: Vehicle) => v.category)))
+
+  // Format category name for display
+  const formatCategoryName = (category: string) => {
+    return category
+      .split('_')
+      .map(word => word.charAt(0) + word.slice(1).toLowerCase())
+      .join(' ')
   }
 
   if (loading) {
@@ -112,13 +106,11 @@ export default function FleetPage() {
               className="px-6 py-3 bg-zinc-900 border-2 border-white/20 rounded-xl text-white focus:border-white/50 hover:border-white/30 transition-all cursor-pointer font-medium min-w-[200px]"
             >
               <option value="ALL">All Categories</option>
-              <option value="SEDAN">Sedans</option>
-              <option value="SUV">SUVs</option>
-              <option value="LIMOUSINE">Limousines</option>
-              <option value="SPRINTER">Sprinter Vans</option>
-              <option value="BUS">Buses</option>
-              <option value="LUXURY">Luxury</option>
-              <option value="VAN">Vans</option>
+              {uniqueCategories.map((category) => (
+                <option key={category} value={category}>
+                  {formatCategoryName(category)}
+                </option>
+              ))}
             </select>
           </div>
 
@@ -138,7 +130,7 @@ export default function FleetPage() {
         {/* Results Count */}
         <p className="text-center text-gray-400 mb-8 text-lg">
           Showing <span className="font-bold text-white">{filteredVehicles.length}</span> {filteredVehicles.length === 1 ? 'vehicle' : 'vehicles'}
-          {categoryFilter !== 'ALL' && <span className="text-gray-500"> in {categoryFilter.replace(/_/g, ' ')}</span>}
+          {categoryFilter !== 'ALL' && <span className="text-gray-500"> in {formatCategoryName(categoryFilter)}</span>}
         </p>
 
         {/* Vehicle Grid */}
@@ -181,7 +173,7 @@ export default function FleetPage() {
                 <div className="p-6">
                   <div className="mb-4">
                     <span className="inline-block px-3 py-1 text-xs font-semibold tracking-wide border border-white/30 rounded-full mb-3">
-                      {vehicle.category.replace(/_/g, ' ')}
+                      {formatCategoryName(vehicle.category)}
                     </span>
                     <h3 className="text-2xl font-bold mb-2">{vehicle.name}</h3>
                     <p className="text-gray-400 text-sm line-clamp-2">
