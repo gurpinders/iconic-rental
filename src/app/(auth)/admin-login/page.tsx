@@ -20,7 +20,7 @@ export default function AdminLoginPage() {
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/admin-login', {
+      const response = await fetch('/api/admin/login', {  // FIXED: Changed from /api/admin-login
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -72,12 +72,12 @@ export default function AdminLoginPage() {
         </div>
 
         {/* Login Form */}
-        <div className="bg-zinc-900 border border-white/20 rounded-lg p-8">
+        <div className="bg-zinc-900 border border-white/20 rounded-xl p-8">
           <form onSubmit={handleSubmit}>
             
             {/* Error Message */}
             {error && (
-              <div className="mb-6 p-4 bg-red-900/50 border border-red-500/50 rounded">
+              <div className="mb-6 p-4 bg-red-900/50 border border-red-500/50 rounded-xl">
                 <p className="text-red-200 text-sm">{error}</p>
               </div>
             )}
@@ -93,7 +93,7 @@ export default function AdminLoginPage() {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 bg-black border border-white/20 rounded focus:outline-none focus:border-white/50 transition-colors"
+                className="w-full px-4 py-3 bg-black border border-white/20 rounded-xl focus:outline-none focus:border-white/50 transition-colors cursor-text"
                 placeholder="admin@iconiclimos.com"
               />
             </div>
@@ -109,7 +109,7 @@ export default function AdminLoginPage() {
                 value={formData.password}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 bg-black border border-white/20 rounded focus:outline-none focus:border-white/50 transition-colors"
+                className="w-full px-4 py-3 bg-black border border-white/20 rounded-xl focus:outline-none focus:border-white/50 transition-colors cursor-text"
                 placeholder="Enter your password"
               />
             </div>
@@ -118,7 +118,7 @@ export default function AdminLoginPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full px-6 py-3 bg-white text-black hover:bg-gray-200 transition-all duration-300 font-semibold tracking-wide disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full px-6 py-3 bg-white text-black hover:bg-gray-200 transition-all duration-300 font-semibold tracking-wide rounded-xl disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             >
               {isLoading ? 'Logging in...' : 'Login'}
             </button>
@@ -130,8 +130,8 @@ export default function AdminLoginPage() {
         <div className="text-center mt-6">
           <Link 
             href="/"
-            className="text-gray-400 hover:text-white transition-colors text-sm"
-            >
+            className="text-gray-400 hover:text-white transition-colors text-sm cursor-pointer"
+          >
             ← Back to Website
           </Link>
         </div>
