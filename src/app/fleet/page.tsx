@@ -50,7 +50,14 @@ export default function FleetPage() {
     }
 
     setFilteredVehicles(filtered)
+    console.log('Filter applied:', categoryFilter, 'Results:', filtered.length) // Debug log
   }, [categoryFilter, vehicles])
+
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newCategory = e.target.value
+    console.log('Category changed to:', newCategory) // Debug log
+    setCategoryFilter(newCategory)
+  }
 
   if (loading) {
     return (
@@ -82,11 +89,13 @@ export default function FleetPage() {
         <div className="mb-12 flex flex-wrap gap-6 justify-center">
           {/* Category Filter */}
           <div>
-            <label className="block text-sm font-semibold mb-2 text-gray-400">CATEGORY</label>
+            <label className="block text-sm font-semibold mb-3 text-gray-400 uppercase tracking-wide">
+              Filter by Category
+            </label>
             <select
               value={categoryFilter}
-              onChange={(e) => setCategoryFilter(e.target.value)}
-              className="px-6 py-3 bg-zinc-900 border border-white/20 rounded-lg text-white focus:border-white/50 transition-all"
+              onChange={handleCategoryChange}
+              className="px-6 py-3 bg-zinc-900 border-2 border-white/20 rounded-xl text-white focus:border-white/50 hover:border-white/30 transition-all cursor-pointer font-medium min-w-[200px]"
             >
               <option value="ALL">All Categories</option>
               <option value="SEDAN">Sedans</option>
@@ -104,7 +113,7 @@ export default function FleetPage() {
             <div className="flex items-end">
               <button
                 onClick={() => setCategoryFilter('ALL')}
-                className="px-6 py-3 text-sm border border-white/30 rounded-lg hover:border-white/50 transition-all"
+                className="px-6 py-3 text-sm font-semibold border-2 border-white/30 rounded-xl hover:border-white/50 hover:bg-white/5 transition-all cursor-pointer"
               >
                 Clear Filters
               </button>
@@ -113,8 +122,9 @@ export default function FleetPage() {
         </div>
 
         {/* Results Count */}
-        <p className="text-center text-gray-400 mb-8">
-          Showing {filteredVehicles.length} {filteredVehicles.length === 1 ? 'vehicle' : 'vehicles'}
+        <p className="text-center text-gray-400 mb-8 text-lg">
+          Showing <span className="font-bold text-white">{filteredVehicles.length}</span> {filteredVehicles.length === 1 ? 'vehicle' : 'vehicles'}
+          {categoryFilter !== 'ALL' && <span className="text-gray-500"> in {categoryFilter.replace(/_/g, ' ')}</span>}
         </p>
 
         {/* Vehicle Grid */}
@@ -123,7 +133,7 @@ export default function FleetPage() {
             <p className="text-2xl text-gray-400 mb-4">No vehicles match your filters</p>
             <button
               onClick={() => setCategoryFilter('ALL')}
-              className="text-white underline hover:text-gray-300"
+              className="text-white underline hover:text-gray-300 cursor-pointer"
             >
               Clear all filters
             </button>
@@ -134,7 +144,7 @@ export default function FleetPage() {
               <Link
                 key={vehicle.id}
                 href={`/fleet/${vehicle.id}`}
-                className="group bg-zinc-900 rounded-lg border border-white/20 overflow-hidden hover:border-white/50 hover:shadow-[0_0_40px_rgba(255,255,255,0.3)] transition-all duration-500 cursor-pointer"
+                className="group bg-zinc-900 rounded-xl border border-white/20 overflow-hidden hover:border-white/50 hover:shadow-[0_0_40px_rgba(255,255,255,0.3)] transition-all duration-500 cursor-pointer"
               >
                 {/* Vehicle Image */}
                 <div className="relative h-64 overflow-hidden">
