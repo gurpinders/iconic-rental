@@ -18,6 +18,11 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+/* Cursor pointer for all interactive elements */
+a, button, [role="button"] {
+  cursor: pointer;
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -51,25 +56,25 @@ button:focus-visible {
 
 /* Primary Button (White/Light) */
 .btn-primary {
-  @apply px-8 py-4 bg-gradient-to-r from-white to-gray-100 text-black hover:from-gray-100 hover:to-white transition-all duration-300 font-bold tracking-wide shadow-lg hover:shadow-xl transform hover:scale-105 hover:-translate-y-0.5 rounded-xl;
+  @apply px-8 py-4 bg-gradient-to-r from-white to-gray-100 text-black hover:from-gray-100 hover:to-white transition-all duration-300 font-bold tracking-wide shadow-lg hover:shadow-xl transform hover:scale-105 hover:-translate-y-0.5 rounded-xl cursor-pointer;
 }
 
 /* Secondary Button (Outline) */
 .btn-secondary {
-  @apply px-8 py-4 border-2 border-white text-white hover:bg-white hover:text-black transition-all duration-300 font-bold tracking-wide shadow-lg hover:shadow-xl transform hover:scale-105 hover:-translate-y-0.5 rounded-xl;
+  @apply px-8 py-4 border-2 border-white text-white hover:bg-white hover:text-black transition-all duration-300 font-bold tracking-wide shadow-lg hover:shadow-xl transform hover:scale-105 hover:-translate-y-0.5 rounded-xl cursor-pointer;
 }
 
 /* Tertiary Button (Subtle) */
 .btn-tertiary {
-  @apply px-8 py-4 bg-white/10 backdrop-blur-sm border border-white/20 text-white hover:bg-white/20 hover:border-white/40 transition-all duration-300 font-semibold tracking-wide rounded-xl;
+  @apply px-8 py-4 bg-white/10 backdrop-blur-sm border border-white/20 text-white hover:bg-white/20 hover:border-white/40 transition-all duration-300 font-semibold tracking-wide rounded-xl cursor-pointer;
 }
 
 /* Small Button */
 .btn-small {
-  @apply px-6 py-3 bg-gradient-to-r from-white to-gray-100 text-black hover:from-gray-100 hover:to-white transition-all duration-300 font-bold tracking-wide text-sm shadow-md hover:shadow-lg transform hover:scale-105 rounded-xl;
+  @apply px-6 py-3 bg-gradient-to-r from-white to-gray-100 text-black hover:from-gray-100 hover:to-white transition-all duration-300 font-bold tracking-wide text-sm shadow-md hover:shadow-lg transform hover:scale-105 rounded-xl cursor-pointer;
 }
 
 /* Link Button */
 .btn-link {
-  @apply text-white hover:text-gray-300 transition-colors underline decoration-2 underline-offset-4 font-medium;
+  @apply text-white hover:text-gray-300 transition-colors underline decoration-2 underline-offset-4 font-medium cursor-pointer;
 }
