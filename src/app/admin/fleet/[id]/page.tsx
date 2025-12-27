@@ -3,6 +3,14 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
+
+interface VehicleImage {
+  id: string;
+  url: string;
+  alt: string;
+  order: number;
+}
 
 interface Vehicle {
   id: string;
@@ -15,6 +23,7 @@ interface Vehicle {
   imageUrl: string | null;
   isActive: boolean;
   createdAt: string;
+  images: VehicleImage[];
   bookings: any[];
   _count: {
     bookings: number;
@@ -29,6 +38,8 @@ export default function VehicleDetailPage({ params }: { params: Promise<{ id: st
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  const [newImageUrl, setNewImageUrl] = useState('');
+  const [addingImage, setAddingImage] = useState(false);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -49,6 +60,9 @@ export default function VehicleDetailPage({ params }: { params: Promise<{ id: st
     'BUS',
     'LIMOUSINE',
     'SPRINTER',
+    'LIMO',
+    'PARTY_BUS',
+    'SPRINTER_VAN',
   ];
 
   useEffect(() => {
@@ -59,6 +73,7 @@ export default function VehicleDetailPage({ params }: { params: Promise<{ id: st
     if (vehicleId) {
       fetchVehicle();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [vehicleId]);
 
   const fetchVehicle = async () => {
@@ -73,7 +88,6 @@ export default function VehicleDetailPage({ params }: { params: Promise<{ id: st
       const vehicleData = data.vehicle;
       setVehicle(vehicleData);
 
-      // Set form data
       setFormData({
         name: vehicleData.name,
         category: vehicleData.category,
@@ -128,6 +142,53 @@ export default function VehicleDetailPage({ params }: { params: Promise<{ id: st
     }
   };
 
+  const handleAddImage = async () => {
+    if (!newImageUrl.trim()) return;
+
+    setAddingImage(true);
+    try {
+      const response = await fetch(`/api/admin/fleet/vehicles/${vehicleId}/images`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          url: newImageUrl,
+          alt: vehicle?.name || 'Vehicle image',
+        }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Failed to add image');
+      }
+
+      setNewImageUrl('');
+      fetchVehicle();
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Failed to add image');
+    } finally {
+      setAddingImage(false);
+    }
+  };
+
+  const handleDeleteImage = async (imageId: string) => {
+    if (!confirm('Delete this image?')) return;
+
+    try {
+      const response = await fetch(`/api/admin/fleet/vehicles/${vehicleId}/images/${imageId}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Failed to delete image');
+      }
+
+      fetchVehicle();
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Failed to delete image');
+    }
+  };
+
   const handleDelete = async () => {
     if (!confirm('Are you sure you want to delete this vehicle? This cannot be undone.')) {
       return;
@@ -170,7 +231,7 @@ export default function VehicleDetailPage({ params }: { params: Promise<{ id: st
     return (
       <div className="max-w-5xl mx-auto">
         <div className="animate-pulse space-y-8">
-          <div className="h-12 bg-zinc-800 rounded w-1/3"></div>
+          <div className="h-12 bg-zinc-800 rounded-xl w-1/3"></div>
           <div className="h-96 bg-zinc-800 rounded-xl"></div>
         </div>
       </div>
@@ -181,7 +242,6 @@ export default function VehicleDetailPage({ params }: { params: Promise<{ id: st
     return null;
   }
 
-  // Calculate stats
   const upcomingBookings = vehicle.bookings.filter(b => {
     const eventDate = new Date(b.eventDate);
     return eventDate >= new Date() && b.status !== 'CANCELLED';
@@ -195,11 +255,10 @@ export default function VehicleDetailPage({ params }: { params: Promise<{ id: st
 
   return (
     <div className="max-w-5xl mx-auto">
-      {/* Header */}
       <div className="mb-8">
         <Link
           href="/admin/fleet"
-          className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-4 transition-colors"
+          className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-4 transition-colors cursor-pointer"
         >
           <span>←</span>
           <span>Back to Fleet</span>
@@ -208,21 +267,21 @@ export default function VehicleDetailPage({ params }: { params: Promise<{ id: st
         <div className="flex items-start justify-between gap-4">
           <div>
             <h1 className="text-4xl font-bold mb-2">{vehicle.name}</h1>
-            <p className="text-gray-400">{vehicle.category}</p>
+            <p className="text-gray-400">{vehicle.category.replace(/_/g, ' ')}</p>
           </div>
           <div className="flex gap-3">
             {!editing && (
               <>
                 <button
                   onClick={() => setEditing(true)}
-                  className="px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded font-semibold transition-colors"
+                  className="px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-xl font-semibold transition-colors cursor-pointer"
                 >
                   Edit
                 </button>
                 <button
                   onClick={handleDelete}
                   disabled={vehicle._count.bookings > 0}
-                  className="px-4 py-2 bg-red-900/50 hover:bg-red-900/70 border border-red-500/50 rounded font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-4 py-2 bg-red-900/50 hover:bg-red-900/70 border border-red-500/50 rounded-xl font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                   title={vehicle._count.bookings > 0 ? 'Cannot delete vehicle with bookings' : 'Delete vehicle'}
                 >
                   Delete
@@ -232,41 +291,36 @@ export default function VehicleDetailPage({ params }: { params: Promise<{ id: st
           </div>
         </div>
 
-        {/* Stats */}
         <div className="mt-6 grid grid-cols-4 gap-4">
-          <div className="bg-zinc-900 border border-white/20 rounded-lg p-4">
+          <div className="bg-zinc-900 border border-white/20 rounded-xl p-4">
             <p className="text-gray-400 text-sm mb-1">Total Bookings</p>
             <p className="text-3xl font-bold">{vehicle._count.bookings}</p>
           </div>
-          <div className="bg-zinc-900 border border-blue-500/50 rounded-lg p-4">
+          <div className="bg-zinc-900 border border-blue-500/50 rounded-xl p-4">
             <p className="text-gray-400 text-sm mb-1">Upcoming</p>
             <p className="text-3xl font-bold text-blue-400">{upcomingBookings.length}</p>
           </div>
-          <div className="bg-zinc-900 border border-green-500/50 rounded-lg p-4">
+          <div className="bg-zinc-900 border border-green-500/50 rounded-xl p-4">
             <p className="text-gray-400 text-sm mb-1">Completed</p>
             <p className="text-3xl font-bold text-green-400">{completedBookings.length}</p>
           </div>
-          <div className="bg-zinc-900 border border-purple-500/50 rounded-lg p-4">
+          <div className="bg-zinc-900 border border-purple-500/50 rounded-xl p-4">
             <p className="text-gray-400 text-sm mb-1">Total Revenue</p>
             <p className="text-2xl font-bold text-purple-400">{formatCurrency(totalRevenue)}</p>
           </div>
         </div>
       </div>
 
-      {/* Main Content */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left Column - Vehicle Info */}
         <div className="lg:col-span-2 space-y-6">
           {editing ? (
-            /* Edit Form */
-            <form onSubmit={handleSubmit} className="bg-zinc-900 border border-white/20 rounded-lg p-6 space-y-6">
+            <form onSubmit={handleSubmit} className="bg-zinc-900 border border-white/20 rounded-xl p-6 space-y-6">
               {error && (
-                <div className="p-4 bg-red-900/20 border border-red-500/50 rounded text-red-300 text-sm">
+                <div className="p-4 bg-red-900/20 border border-red-500/50 rounded-xl text-red-300 text-sm">
                   {error}
                 </div>
               )}
 
-              {/* Basic Info */}
               <div>
                 <h2 className="text-xl font-bold mb-4">Basic Information</h2>
                 <div className="space-y-4">
@@ -277,7 +331,7 @@ export default function VehicleDetailPage({ params }: { params: Promise<{ id: st
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       required
-                      className="w-full px-4 py-3 bg-black border border-white/20 rounded focus:border-white/50 focus:outline-none"
+                      className="w-full px-4 py-3 bg-black border border-white/20 rounded-xl focus:border-white/50 focus:outline-none cursor-text"
                     />
                   </div>
                   <div>
@@ -286,11 +340,11 @@ export default function VehicleDetailPage({ params }: { params: Promise<{ id: st
                       value={formData.category}
                       onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                       required
-                      className="w-full px-4 py-3 bg-black border border-white/20 rounded focus:border-white/50 focus:outline-none"
+                      className="w-full px-4 py-3 bg-black border border-white/20 rounded-xl focus:border-white/50 focus:outline-none cursor-pointer"
                     >
                       {categories.map((cat) => (
                         <option key={cat} value={cat}>
-                          {cat}
+                          {cat.replace(/_/g, ' ')}
                         </option>
                       ))}
                     </select>
@@ -301,22 +355,21 @@ export default function VehicleDetailPage({ params }: { params: Promise<{ id: st
                       value={formData.description}
                       onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                       rows={3}
-                      className="w-full px-4 py-3 bg-black border border-white/20 rounded focus:border-white/50 focus:outline-none resize-none"
+                      className="w-full px-4 py-3 bg-black border border-white/20 rounded-xl focus:border-white/50 focus:outline-none resize-none cursor-text"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-2">Features</label>
+                    <label className="block text-sm font-medium mb-2">Features (comma-separated)</label>
                     <textarea
                       value={formData.features}
                       onChange={(e) => setFormData({ ...formData, features: e.target.value })}
                       rows={3}
-                      className="w-full px-4 py-3 bg-black border border-white/20 rounded focus:border-white/50 focus:outline-none resize-none"
+                      className="w-full px-4 py-3 bg-black border border-white/20 rounded-xl focus:border-white/50 focus:outline-none resize-none cursor-text"
                     />
                   </div>
                 </div>
               </div>
 
-              {/* Pricing */}
               <div>
                 <h2 className="text-xl font-bold mb-4">Pricing</h2>
                 <div className="grid grid-cols-2 gap-4">
@@ -328,7 +381,7 @@ export default function VehicleDetailPage({ params }: { params: Promise<{ id: st
                       min="0"
                       value={formData.basePrice}
                       onChange={(e) => setFormData({ ...formData, basePrice: e.target.value })}
-                      className="w-full px-4 py-3 bg-black border border-white/20 rounded focus:border-white/50 focus:outline-none"
+                      className="w-full px-4 py-3 bg-black border border-white/20 rounded-xl focus:border-white/50 focus:outline-none cursor-text"
                     />
                   </div>
                   <div>
@@ -339,95 +392,132 @@ export default function VehicleDetailPage({ params }: { params: Promise<{ id: st
                       min="0"
                       value={formData.hourlyRate}
                       onChange={(e) => setFormData({ ...formData, hourlyRate: e.target.value })}
-                      className="w-full px-4 py-3 bg-black border border-white/20 rounded focus:border-white/50 focus:outline-none"
+                      className="w-full px-4 py-3 bg-black border border-white/20 rounded-xl focus:border-white/50 focus:outline-none cursor-text"
                     />
                   </div>
                 </div>
               </div>
 
-              {/* Image URL */}
               <div>
-                <label className="block text-sm font-medium mb-2">Image URL</label>
+                <label className="block text-sm font-medium mb-2">Main Image URL (fallback)</label>
                 <input
                   type="url"
                   value={formData.imageUrl}
                   onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
-                  className="w-full px-4 py-3 bg-black border border-white/20 rounded focus:border-white/50 focus:outline-none"
+                  className="w-full px-4 py-3 bg-black border border-white/20 rounded-xl focus:border-white/50 focus:outline-none cursor-text"
                 />
               </div>
 
-              {/* Active Status */}
-              <div className="flex items-center gap-3 p-4 bg-black/50 border border-white/10 rounded">
+              <div className="flex items-center gap-3 p-4 bg-black/50 border border-white/10 rounded-xl">
                 <input
                   type="checkbox"
                   id="isActive"
                   checked={formData.isActive}
                   onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
-                  className="w-5 h-5"
+                  className="w-5 h-5 cursor-pointer"
                 />
-                <label htmlFor="isActive" className="font-medium">
+                <label htmlFor="isActive" className="font-medium cursor-pointer">
                   Vehicle is active
                 </label>
               </div>
 
-              {/* Actions */}
               <div className="flex gap-4">
                 <button
                   type="button"
-                  onClick={() => setEditing(false)}
-                  className="flex-1 px-6 py-3 bg-white/10 hover:bg-white/20 border border-white/20 rounded font-semibold transition-colors"
+                  onClick={() => {
+                    setEditing(false);
+                    setError('');
+                  }}
+                  className="flex-1 px-6 py-3 bg-white/10 hover:bg-white/20 border border-white/20 rounded-xl font-semibold transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="flex-1 px-6 py-3 bg-white text-black hover:bg-gray-200 rounded font-semibold transition-colors disabled:opacity-50"
+                  className="flex-1 px-6 py-3 bg-white text-black hover:bg-gray-200 rounded-xl font-semibold transition-colors disabled:opacity-50 cursor-pointer"
                 >
                   {saving ? 'Saving...' : 'Save Changes'}
                 </button>
               </div>
             </form>
           ) : (
-            /* View Mode */
             <>
-              {/* Vehicle Image */}
-              {vehicle.imageUrl ? (
-                <div className="bg-zinc-900 border border-white/20 rounded-lg overflow-hidden">
-                  <img
-                    src={vehicle.imageUrl}
-                    alt={vehicle.name}
-                    className="w-full h-64 object-cover"
-                  />
-                </div>
-              ) : (
-                <div className="bg-zinc-900 border border-white/20 rounded-lg p-12 flex items-center justify-center">
-                  <div className="text-center">
-                    <div className="text-8xl mb-4">🚗</div>
-                    <p className="text-gray-400">No image available</p>
+              <div className="bg-zinc-900 border border-white/20 rounded-xl p-6">
+                <h2 className="text-xl font-bold mb-4">
+                  Photo Gallery ({vehicle.images?.length || 0} photos)
+                </h2>
+
+                {vehicle.images && vehicle.images.length > 0 ? (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-6">
+                    {vehicle.images.sort((a, b) => a.order - b.order).map((image, index) => (
+                      <div key={image.id} className="relative group rounded-xl overflow-hidden border-2 border-white/20">
+                        <div className="relative aspect-video">
+                          <Image
+                            src={image.url}
+                            alt={image.alt}
+                            fill
+                            className="object-cover"
+                            sizes="(max-width: 640px) 50vw, 33vw"
+                          />
+                        </div>
+                        <div className="absolute top-2 left-2 bg-black/70 backdrop-blur-sm px-2 py-1 rounded-full text-xs font-bold">
+                          #{index + 1}
+                        </div>
+                        <button
+                          onClick={() => handleDeleteImage(image.id)}
+                          className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 p-2 rounded-full opacity-0 group-hover:opacity-100 transition-all cursor-pointer"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-8 mb-6 border border-white/10 rounded-xl bg-black/20">
+                    <p className="text-gray-400">No images yet</p>
+                  </div>
+                )}
+
+                <div className="border-t border-white/10 pt-6">
+                  <label className="block text-sm font-semibold mb-3">Add New Image</label>
+                  <div className="flex gap-3">
+                    <input
+                      type="url"
+                      value={newImageUrl}
+                      onChange={(e) => setNewImageUrl(e.target.value)}
+                      placeholder="https://example.com/image.jpg"
+                      className="flex-1 px-4 py-3 bg-black border border-white/20 rounded-xl focus:border-white/50 focus:outline-none cursor-text"
+                    />
+                    <button
+                      onClick={handleAddImage}
+                      disabled={!newImageUrl.trim() || addingImage}
+                      className="px-6 py-3 bg-white text-black hover:bg-gray-200 rounded-xl font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                    >
+                      {addingImage ? 'Adding...' : 'Add'}
+                    </button>
                   </div>
                 </div>
-              )}
+              </div>
 
-              {/* Description */}
               {vehicle.description && (
-                <div className="bg-zinc-900 border border-white/20 rounded-lg p-6">
+                <div className="bg-zinc-900 border border-white/20 rounded-xl p-6">
                   <h2 className="text-xl font-bold mb-4">Description</h2>
                   <p className="text-gray-300 whitespace-pre-wrap">{vehicle.description}</p>
                 </div>
               )}
 
-              {/* Features */}
               {vehicle.features && (
-                <div className="bg-zinc-900 border border-white/20 rounded-lg p-6">
+                <div className="bg-zinc-900 border border-white/20 rounded-xl p-6">
                   <h2 className="text-xl font-bold mb-4">Features</h2>
                   <p className="text-gray-300 whitespace-pre-wrap">{vehicle.features}</p>
                 </div>
               )}
 
-              {/* Pricing */}
               {(vehicle.basePrice || vehicle.hourlyRate) && (
-                <div className="bg-zinc-900 border border-white/20 rounded-lg p-6">
+                <div className="bg-zinc-900 border border-white/20 rounded-xl p-6">
                   <h2 className="text-xl font-bold mb-4">Pricing</h2>
                   <div className="grid grid-cols-2 gap-4">
                     {vehicle.basePrice && (
@@ -446,27 +536,21 @@ export default function VehicleDetailPage({ params }: { params: Promise<{ id: st
                 </div>
               )}
 
-              {/* Recent Bookings */}
               {vehicle.bookings.length > 0 && (
-                <div className="bg-zinc-900 border border-white/20 rounded-lg p-6">
+                <div className="bg-zinc-900 border border-white/20 rounded-xl p-6">
                   <h2 className="text-xl font-bold mb-4">Recent Bookings</h2>
                   <div className="space-y-3">
                     {vehicle.bookings.slice(0, 5).map((booking: any) => (
                       <Link
                         key={booking.id}
                         href={`/admin/bookings/${booking.id}`}
-                        className="flex items-center justify-between p-4 bg-black/50 rounded-lg hover:bg-black/70 transition-colors border border-white/10"
+                        className="flex items-center justify-between p-4 bg-black/50 rounded-xl hover:bg-black/70 transition-colors border border-white/10 cursor-pointer"
                       >
                         <div>
                           <p className="font-semibold">Booking #{booking.bookingNumber}</p>
                           <p className="text-sm text-gray-400">
                             {booking.customer.firstName} {booking.customer.lastName} • {formatDate(booking.eventDate)}
                           </p>
-                          {booking.driver && (
-                            <p className="text-xs text-gray-500">
-                              Driver: {booking.driver.firstName} {booking.driver.lastName}
-                            </p>
-                          )}
                         </div>
                         <div className="text-right">
                           <p className="text-xl font-bold">{formatCurrency(Number(booking.totalPrice))}</p>
@@ -481,10 +565,8 @@ export default function VehicleDetailPage({ params }: { params: Promise<{ id: st
           )}
         </div>
 
-        {/* Right Column - Quick Info */}
         <div className="space-y-6">
-          {/* Status */}
-          <div className="bg-zinc-900 border border-white/20 rounded-lg p-6">
+          <div className="bg-zinc-900 border border-white/20 rounded-xl p-6">
             <h3 className="font-bold mb-4">Status</h3>
             <span
               className={`px-4 py-2 rounded-full text-sm font-bold border block text-center ${
@@ -497,16 +579,19 @@ export default function VehicleDetailPage({ params }: { params: Promise<{ id: st
             </span>
           </div>
 
-          {/* Category */}
-          <div className="bg-zinc-900 border border-white/20 rounded-lg p-6">
+          <div className="bg-zinc-900 border border-white/20 rounded-xl p-6">
             <h3 className="font-bold mb-3">Category</h3>
-            <p className="text-xl font-semibold">{vehicle.category}</p>
+            <p className="text-xl font-semibold">{vehicle.category.replace(/_/g, ' ')}</p>
           </div>
 
-          {/* Added Date */}
-          <div className="bg-zinc-900 border border-white/20 rounded-lg p-6">
+          <div className="bg-zinc-900 border border-white/20 rounded-xl p-6">
             <h3 className="font-bold mb-3">Added to Fleet</h3>
             <p className="text-sm">{formatDate(vehicle.createdAt)}</p>
+          </div>
+
+          <div className="bg-zinc-900 border border-white/20 rounded-xl p-6">
+            <h3 className="font-bold mb-3">Gallery Images</h3>
+            <p className="text-3xl font-bold">{vehicle.images?.length || 0}</p>
           </div>
         </div>
       </div>
