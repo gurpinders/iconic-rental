@@ -21,6 +21,32 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/**',
       },
+      // ADD IMGUR SUPPORT
+      {
+        protocol: 'https',
+        hostname: 'i.imgur.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'imgur.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.imgur.com',
+        port: '',
+        pathname: '/**',
+      },
+      // ADD CLOUDINARY (if you use it later)
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+        port: '',
+        pathname: '/**',
+      },
     ],
   },
 };
