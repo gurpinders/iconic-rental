@@ -1,14 +1,21 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
-import { hashPassword, generateVerificationToken } from '@/lib/customer-auth';
+import { hashPassword } from '@/lib/customer-auth';
+import { sendVerificationEmail } from '@/lib/email';
+import crypto from 'crypto';
+
+// Generate a secure random token
+function generateVerificationToken(): string {
+  return crypto.randomBytes(32).toString('hex');
+}
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { email, password, firstName, lastName, phone, company } = body;
+    const { firstName, lastName, email, phone, company, password } = body;
 
     // Validate required fields
-    if (!email || !password || !firstName || !lastName || !phone) {
+    if (!firstName || !lastName || !email || !password) {
       return NextResponse.json(
         { error: 'Missing required fields' },
         { status: 400 }
@@ -50,7 +57,7 @@ export async function POST(request: Request) {
     // Generate verification token
     const verificationToken = generateVerificationToken();
 
-    // Create customer
+    // Create customer with email NOT verified
     const customer = await prisma.customer.create({
       data: {
         email: email.toLowerCase(),
@@ -60,25 +67,29 @@ export async function POST(request: Request) {
         phone,
         company: company || null,
         verificationToken,
-        emailVerified: false,
+        emailVerified: false, // Changed to false - requires verification
       },
     });
 
     console.log('Customer registered:', customer.email);
 
-    // TODO: Send verification email (we'll add this later)
-    // For now, we'll auto-verify in development
-    if (process.env.NODE_ENV === 'development') {
-      await prisma.customer.update({
-        where: { id: customer.id },
-        data: { emailVerified: true, verificationToken: null },
-      });
+    // Send verification email
+    const emailResult = await sendVerificationEmail(
+      customer.email,
+      verificationToken,
+      firstName
+    );
+
+    if (!emailResult.success) {
+      console.error('Failed to send verification email:', emailResult.error);
+      // Don't fail registration if email fails - customer can request resend
     }
 
     return NextResponse.json({
       success: true,
-      message: 'Account created successfully',
+      message: 'Account created successfully. Please check your email to verify your account.',
       customerId: customer.id,
+      emailSent: emailResult.success,
     });
 
   } catch (error) {

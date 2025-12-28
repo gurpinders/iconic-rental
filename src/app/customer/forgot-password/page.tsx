@@ -15,12 +15,25 @@ export default function ForgotPasswordPage() {
     setError('');
     setSuccess(false);
 
-    // TODO: Implement password reset API when you add email functionality
-    // For now, show a message that this feature is coming soon
-    setTimeout(() => {
+    try {
+      const response = await fetch('/api/customer/forgot-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setSuccess(true);
+      } else {
+        setError(data.error || 'Failed to send reset email');
+      }
+    } catch (err) {
+      setError('An error occurred. Please try again.');
+    } finally {
       setLoading(false);
-      setSuccess(true);
-    }, 1000);
+    }
   };
 
   return (
@@ -29,7 +42,7 @@ export default function ForgotPasswordPage() {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold tracking-wide mb-3">Reset Password</h1>
-          <p className="text-gray-400">Enter your email to reset your password</p>
+          <p className="text-gray-400">Enter your email to receive a password reset link</p>
         </div>
 
         {/* Form */}
@@ -42,13 +55,10 @@ export default function ForgotPasswordPage() {
 
           {success && (
             <div className="mb-6 p-4 bg-green-900/50 border border-green-500/50 rounded-xl text-green-200">
-              <p className="font-semibold mb-2">Password Reset Coming Soon!</p>
+              <p className="font-semibold mb-2">Check Your Email!</p>
               <p className="text-sm">
-                This feature is currently under development. Please contact us at{' '}
-                <a href="mailto:info@iconiclimos.com" className="underline hover:text-green-300">
-                  info@iconiclimos.com
-                </a>{' '}
-                for password reset assistance.
+                If an account exists with that email, we've sent password reset instructions. 
+                The link will expire in 1 hour.
               </p>
             </div>
           )}

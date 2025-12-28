@@ -44,13 +44,13 @@ export async function POST(request: Request) {
       );
     }
 
-    // // Check email verification (optional - you can skip this in development)
-    // if (!customer.emailVerified && process.env.NODE_ENV === 'production') {
-    //   return NextResponse.json(
-    //     { error: 'Please verify your email before logging in' },
-    //     { status: 403 }
-    //   );
-    // }
+    // Check email verification (optional - you can skip this in development)
+    if (!customer.emailVerified && process.env.NODE_ENV === 'production') {
+      return NextResponse.json(
+        { error: 'Please verify your email before logging in' },
+        { status: 403 }
+      );
+    }
 
     // Update last login
     await prisma.customer.update({
