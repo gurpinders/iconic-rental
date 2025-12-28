@@ -132,40 +132,40 @@ export default function FAQPage() {
           
           {/* Booking Questions */}
           <div className="mb-16">
-            <h2 className="text-3xl font-bold tracking-wide mb-8 pb-4 border-b-2 border-white/20">
-              📅 Booking & Reservations
+            <h2 className="text-3xl font-bold tracking-wide mb-8 pb-4 border-b-2 border-white/20 flex items-center gap-3">
+              <span className="grayscale brightness-200">📅</span> Booking & Reservations
             </h2>
             <Accordion items={bookingFAQs} />
           </div>
 
           {/* Pricing Questions */}
           <div className="mb-16">
-            <h2 className="text-3xl font-bold tracking-wide mb-8 pb-4 border-b-2 border-white/20">
-              💰 Pricing & Payment
+            <h2 className="text-3xl font-bold tracking-wide mb-8 pb-4 border-b-2 border-white/20 flex items-center gap-3">
+              <span className="grayscale brightness-200">💰</span> Pricing & Payment
             </h2>
             <Accordion items={pricingFAQs} />
           </div>
 
           {/* Vehicle Questions */}
           <div className="mb-16">
-            <h2 className="text-3xl font-bold tracking-wide mb-8 pb-4 border-b-2 border-white/20">
-              🚗 Vehicles & Fleet
+            <h2 className="text-3xl font-bold tracking-wide mb-8 pb-4 border-b-2 border-white/20 flex items-center gap-3">
+              <span className="grayscale brightness-200">🚗</span> Vehicles & Fleet
             </h2>
             <Accordion items={vehicleFAQs} />
           </div>
 
           {/* Service Questions */}
           <div className="mb-16">
-            <h2 className="text-3xl font-bold tracking-wide mb-8 pb-4 border-b-2 border-white/20">
-              🌟 Services & Amenities
+            <h2 className="text-3xl font-bold tracking-wide mb-8 pb-4 border-b-2 border-white/20 flex items-center gap-3">
+              <span className="grayscale brightness-200">🌟</span> Services & Amenities
             </h2>
             <Accordion items={serviceFAQs} />
           </div>
 
           {/* Event Questions */}
           <div className="mb-16">
-            <h2 className="text-3xl font-bold tracking-wide mb-8 pb-4 border-b-2 border-white/20">
-              🎉 Events & Special Occasions
+            <h2 className="text-3xl font-bold tracking-wide mb-8 pb-4 border-b-2 border-white/20 flex items-center gap-3">
+              <span className="grayscale brightness-200">🎉</span> Events & Special Occasions
             </h2>
             <Accordion items={eventFAQs} />
           </div>
@@ -185,13 +185,13 @@ export default function FAQPage() {
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
             <Link
               href="/contact"
-              className="inline-block px-8 py-4 bg-white text-black hover:bg-gray-200 transition-all duration-300 text-lg font-semibold tracking-wide"
+              className="inline-block px-8 py-4 bg-white text-black hover:bg-gray-200 transition-all duration-300 text-lg font-semibold tracking-wide rounded-xl"
             >
               CONTACT US
             </Link>
             <a
               href="tel:+14161234567"
-              className="inline-block px-8 py-4 border-2 border-white text-white hover:bg-white hover:text-black transition-all duration-300 text-lg font-semibold tracking-wide"
+              className="inline-block px-8 py-4 border-2 border-white text-white hover:bg-white hover:text-black transition-all duration-300 text-lg font-semibold tracking-wide rounded-xl"
             >
               CALL (416) 123-4567
             </a>
