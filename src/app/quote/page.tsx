@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Button from '@/components/ui/Button'
 
 export default function QuotePage() {
@@ -36,6 +36,31 @@ export default function QuotePage() {
   const [error, setError] = useState('')
   const [quoteNumber, setQuoteNumber] = useState('')
   const [validationErrors, setValidationErrors] = useState<{[key: string]: string}>({})
+  const [maxPassengers, setMaxPassengers] = useState(50) // Default max
+
+  // Vehicle capacity mapping
+  const vehicleCapacities: { [key: string]: number } = {
+    'LIMO': 10,
+    'PARTY_BUS': 45,
+    'LUXURY_BUS': 45,
+    'SPRINTER_VAN': 12,
+    'SUV': 7,
+    '': 50 // No preference
+  }
+
+  // Update max passengers when vehicle category changes
+  useEffect(() => {
+    const capacity = vehicleCapacities[formData.vehicleCategory] || 50
+    setMaxPassengers(capacity)
+    
+    // If current passengers exceed new max, reset to max
+    if (formData.numberOfPassengers && parseInt(formData.numberOfPassengers) > capacity) {
+      setFormData(prev => ({
+        ...prev,
+        numberOfPassengers: capacity.toString()
+      }))
+    }
+  }, [formData.vehicleCategory])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -96,6 +121,8 @@ export default function QuotePage() {
       errors.numberOfPassengers = 'Number of passengers is required'
     } else if (parseInt(formData.numberOfPassengers) < 1) {
       errors.numberOfPassengers = 'Must be at least 1 passenger'
+    } else if (parseInt(formData.numberOfPassengers) > maxPassengers) {
+      errors.numberOfPassengers = `Maximum ${maxPassengers} passengers for selected vehicle type`
     }
 
     setValidationErrors(errors)
@@ -420,10 +447,16 @@ export default function QuotePage() {
                     value={formData.numberOfPassengers}
                     onChange={handleChange}
                     min="1"
+                    max={maxPassengers}
                     className={`w-full px-4 py-3 bg-black border rounded-lg focus:border-white/50 transition-all ${
                       validationErrors.numberOfPassengers ? 'border-red-500' : 'border-white/20'
                     }`}
                   />
+                  {formData.vehicleCategory && (
+                    <p className="text-sm text-gray-400 mt-1">
+                      Maximum capacity: {maxPassengers} passengers
+                    </p>
+                  )}
                   {validationErrors.numberOfPassengers && (
                     <p className="text-red-400 text-sm mt-1">{validationErrors.numberOfPassengers}</p>
                   )}
@@ -444,11 +477,11 @@ export default function QuotePage() {
                 className="w-full px-4 py-3 bg-black border border-white/20 rounded-lg focus:border-white/50 transition-all"
               >
                 <option value="">No Preference</option>
-                <option value="LIMO">Limousine</option>
-                <option value="PARTY_BUS">Party Bus</option>
-                <option value="LUXURY_BUS">Luxury Bus</option>
-                <option value="SPRINTER_VAN">Sprinter Van</option>
-                <option value="SUV">SUV</option>
+                <option value="LIMO">Limousine (Up to 10 passengers)</option>
+                <option value="PARTY_BUS">Party Bus (Up to 45 passengers)</option>
+                <option value="LUXURY_BUS">Luxury Bus (Up to 45 passengers)</option>
+                <option value="SPRINTER_VAN">Sprinter Van (Up to 12 passengers)</option>
+                <option value="SUV">SUV (Up to 7 passengers)</option>
               </select>
             </div>
           </div>
