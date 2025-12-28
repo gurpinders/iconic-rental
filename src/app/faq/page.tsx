@@ -131,42 +131,67 @@ export default function FAQPage() {
         <div className="max-w-4xl mx-auto">
           
           {/* Booking Questions */}
-          <div className="mb-16">
-            <h2 className="text-3xl font-bold tracking-wide mb-8 pb-4 border-b-2 border-white/20 flex items-center gap-3">
-              <span className="grayscale brightness-200">📅</span> Booking & Reservations
-            </h2>
+          <div className="mb-16 group">
+            <div className="flex items-center gap-4 mb-8 pb-4 border-b-2 border-white/20">
+              <div className="text-white text-4xl group-hover:scale-110 transition-transform duration-500">
+                📅
+              </div>
+              <h2 className="text-3xl font-bold tracking-wide">
+                Booking & Reservations
+              </h2>
+            </div>
             <Accordion items={bookingFAQs} />
           </div>
 
           {/* Pricing Questions */}
-          <div className="mb-16">
-            <h2 className="text-3xl font-bold tracking-wide mb-8 pb-4 border-b-2 border-white/20 flex items-center gap-3">
-              <span className="grayscale brightness-200">💰</span> Pricing & Payment
-            </h2>
+          <div className="mb-16 group">
+            <div className="flex items-center gap-4 mb-8 pb-4 border-b-2 border-white/20">
+              <div className="text-white text-4xl group-hover:scale-110 transition-transform duration-500">
+                💰
+              </div>
+              <h2 className="text-3xl font-bold tracking-wide">
+                Pricing & Payment
+              </h2>
+            </div>
             <Accordion items={pricingFAQs} />
           </div>
 
           {/* Vehicle Questions */}
-          <div className="mb-16">
-            <h2 className="text-3xl font-bold tracking-wide mb-8 pb-4 border-b-2 border-white/20 flex items-center gap-3">
-              <span className="grayscale brightness-200">🚗</span> Vehicles & Fleet
-            </h2>
+          <div className="mb-16 group">
+            <div className="flex items-center gap-4 mb-8 pb-4 border-b-2 border-white/20">
+              <div className="text-white text-4xl group-hover:scale-110 transition-transform duration-500">
+                🚗
+              </div>
+              <h2 className="text-3xl font-bold tracking-wide">
+                Vehicles & Fleet
+              </h2>
+            </div>
             <Accordion items={vehicleFAQs} />
           </div>
 
           {/* Service Questions */}
-          <div className="mb-16">
-            <h2 className="text-3xl font-bold tracking-wide mb-8 pb-4 border-b-2 border-white/20 flex items-center gap-3">
-              <span className="grayscale brightness-200">🌟</span> Services & Amenities
-            </h2>
+          <div className="mb-16 group">
+            <div className="flex items-center gap-4 mb-8 pb-4 border-b-2 border-white/20">
+              <div className="text-white text-4xl group-hover:scale-110 transition-transform duration-500">
+                🌟
+              </div>
+              <h2 className="text-3xl font-bold tracking-wide">
+                Services & Amenities
+              </h2>
+            </div>
             <Accordion items={serviceFAQs} />
           </div>
 
           {/* Event Questions */}
-          <div className="mb-16">
-            <h2 className="text-3xl font-bold tracking-wide mb-8 pb-4 border-b-2 border-white/20 flex items-center gap-3">
-              <span className="grayscale brightness-200">🎉</span> Events & Special Occasions
-            </h2>
+          <div className="mb-16 group">
+            <div className="flex items-center gap-4 mb-8 pb-4 border-b-2 border-white/20">
+              <div className="text-white text-4xl group-hover:scale-110 transition-transform duration-500">
+                🎉
+              </div>
+              <h2 className="text-3xl font-bold tracking-wide">
+                Events & Special Occasions
+              </h2>
+            </div>
             <Accordion items={eventFAQs} />
           </div>
 
