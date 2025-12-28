@@ -133,8 +133,10 @@ export default function FAQPage() {
           {/* Booking Questions */}
           <div className="mb-16 group">
             <div className="flex items-center gap-4 mb-8 pb-4 border-b-2 border-white/20">
-              <div className="text-white text-4xl group-hover:scale-110 transition-transform duration-500">
-                📅
+              <div className="text-white group-hover:scale-110 transition-transform duration-500">
+                <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
               </div>
               <h2 className="text-3xl font-bold tracking-wide">
                 Booking & Reservations
@@ -146,8 +148,10 @@ export default function FAQPage() {
           {/* Pricing Questions */}
           <div className="mb-16 group">
             <div className="flex items-center gap-4 mb-8 pb-4 border-b-2 border-white/20">
-              <div className="text-white text-4xl group-hover:scale-110 transition-transform duration-500">
-                💰
+              <div className="text-white group-hover:scale-110 transition-transform duration-500">
+                <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
               </div>
               <h2 className="text-3xl font-bold tracking-wide">
                 Pricing & Payment
@@ -159,8 +163,10 @@ export default function FAQPage() {
           {/* Vehicle Questions */}
           <div className="mb-16 group">
             <div className="flex items-center gap-4 mb-8 pb-4 border-b-2 border-white/20">
-              <div className="text-white text-4xl group-hover:scale-110 transition-transform duration-500">
-                🚗
+              <div className="text-white group-hover:scale-110 transition-transform duration-500">
+                <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                </svg>
               </div>
               <h2 className="text-3xl font-bold tracking-wide">
                 Vehicles & Fleet
@@ -172,8 +178,10 @@ export default function FAQPage() {
           {/* Service Questions */}
           <div className="mb-16 group">
             <div className="flex items-center gap-4 mb-8 pb-4 border-b-2 border-white/20">
-              <div className="text-white text-4xl group-hover:scale-110 transition-transform duration-500">
-                🌟
+              <div className="text-white group-hover:scale-110 transition-transform duration-500">
+                <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                </svg>
               </div>
               <h2 className="text-3xl font-bold tracking-wide">
                 Services & Amenities
@@ -185,8 +193,10 @@ export default function FAQPage() {
           {/* Event Questions */}
           <div className="mb-16 group">
             <div className="flex items-center gap-4 mb-8 pb-4 border-b-2 border-white/20">
-              <div className="text-white text-4xl group-hover:scale-110 transition-transform duration-500">
-                🎉
+              <div className="text-white group-hover:scale-110 transition-transform duration-500">
+                <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
+                </svg>
               </div>
               <h2 className="text-3xl font-bold tracking-wide">
                 Events & Special Occasions
