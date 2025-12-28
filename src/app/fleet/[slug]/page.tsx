@@ -278,11 +278,6 @@ export default function VehicleDetailPage({
                   {currentImageIndex + 1} / {allImages.length}
                 </div>
 
-                {/* Drag Hint */}
-                <div className="absolute top-6 left-6 bg-black/70 backdrop-blur-sm px-4 py-2 rounded-full text-xs font-semibold border border-white/20 z-10 animate-pulse">
-                  👆 Drag to browse
-                </div>
-
                 {/* Image Indicators */}
                 <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-10">
                   {allImages.map((_, index) => (
