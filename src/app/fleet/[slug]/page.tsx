@@ -3,7 +3,7 @@
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 interface VehicleImage {
   id: string;
@@ -32,6 +32,10 @@ export default function VehicleDetailPage({
   const [vehicle, setVehicle] = useState<Vehicle | null>(null);
   const [loading, setLoading] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
+  const carouselRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     params.then(p => {
@@ -60,13 +64,94 @@ export default function VehicleDetailPage({
   const nextImage = () => {
     if (!vehicle) return;
     const totalImages = vehicle.images.length || 1;
-    setCurrentImageIndex((prev) => (prev + 1) % totalImages);
+    const newIndex = (currentImageIndex + 1) % totalImages;
+    setCurrentImageIndex(newIndex);
+    scrollToImage(newIndex);
   };
 
   const prevImage = () => {
     if (!vehicle) return;
     const totalImages = vehicle.images.length || 1;
-    setCurrentImageIndex((prev) => (prev - 1 + totalImages) % totalImages);
+    const newIndex = (currentImageIndex - 1 + totalImages) % totalImages;
+    setCurrentImageIndex(newIndex);
+    scrollToImage(newIndex);
+  };
+
+  const scrollToImage = (index: number) => {
+    if (carouselRef.current) {
+      const scrollWidth = carouselRef.current.scrollWidth;
+      const clientWidth = carouselRef.current.clientWidth;
+      const totalImages = vehicle?.images.length || 1;
+      const scrollPosition = (scrollWidth / totalImages) * index;
+      carouselRef.current.scrollTo({
+        left: scrollPosition,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  // Mouse drag handlers
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (!carouselRef.current) return;
+    setIsDragging(true);
+    setStartX(e.pageX - carouselRef.current.offsetLeft);
+    setScrollLeft(carouselRef.current.scrollLeft);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging || !carouselRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - carouselRef.current.offsetLeft;
+    const walk = (x - startX) * 2; // Scroll speed
+    carouselRef.current.scrollLeft = scrollLeft - walk;
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+    if (!carouselRef.current) return;
+    
+    // Snap to nearest image
+    const scrollWidth = carouselRef.current.scrollWidth;
+    const clientWidth = carouselRef.current.clientWidth;
+    const totalImages = vehicle?.images.length || 1;
+    const currentScroll = carouselRef.current.scrollLeft;
+    const imageWidth = scrollWidth / totalImages;
+    const newIndex = Math.round(currentScroll / imageWidth);
+    setCurrentImageIndex(newIndex);
+    scrollToImage(newIndex);
+  };
+
+  const handleMouseLeave = () => {
+    if (isDragging) {
+      handleMouseUp();
+    }
+  };
+
+  // Touch handlers for mobile
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (!carouselRef.current) return;
+    setStartX(e.touches[0].pageX - carouselRef.current.offsetLeft);
+    setScrollLeft(carouselRef.current.scrollLeft);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!carouselRef.current) return;
+    const x = e.touches[0].pageX - carouselRef.current.offsetLeft;
+    const walk = (x - startX) * 2;
+    carouselRef.current.scrollLeft = scrollLeft - walk;
+  };
+
+  const handleTouchEnd = () => {
+    if (!carouselRef.current) return;
+    
+    // Snap to nearest image
+    const scrollWidth = carouselRef.current.scrollWidth;
+    const totalImages = vehicle?.images.length || 1;
+    const currentScroll = carouselRef.current.scrollLeft;
+    const imageWidth = scrollWidth / totalImages;
+    const newIndex = Math.round(currentScroll / imageWidth);
+    setCurrentImageIndex(newIndex);
+    scrollToImage(newIndex);
   };
 
   if (loading) {
@@ -118,16 +203,49 @@ export default function VehicleDetailPage({
       <section className="relative h-[70vh] min-h-[600px] max-h-[800px] bg-zinc-900">
         {allImages.length > 0 ? (
           <>
-            <div className="relative w-full h-full">
-              <Image
-                src={allImages[currentImageIndex].url}
-                alt={allImages[currentImageIndex].alt}
-                fill
-                className="object-contain bg-black"
-                priority
-                sizes="100vw"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/30" />
+            {/* Draggable Carousel Container */}
+            <div
+              ref={carouselRef}
+              className={`relative w-full h-full overflow-x-scroll scrollbar-hide ${
+                isDragging ? 'cursor-grabbing' : 'cursor-grab'
+              }`}
+              onMouseDown={handleMouseDown}
+              onMouseMove={handleMouseMove}
+              onMouseUp={handleMouseUp}
+              onMouseLeave={handleMouseLeave}
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
+              style={{
+                scrollSnapType: 'x mandatory',
+                scrollbarWidth: 'none',
+                msOverflowStyle: 'none',
+              }}
+            >
+              {/* Images Container */}
+              <div className="flex h-full" style={{ width: `${allImages.length * 100}%` }}>
+                {allImages.map((image, index) => (
+                  <div
+                    key={image.id}
+                    className="relative flex-shrink-0 h-full"
+                    style={{ 
+                      width: `${100 / allImages.length}%`,
+                      scrollSnapAlign: 'center',
+                    }}
+                  >
+                    <Image
+                      src={image.url}
+                      alt={image.alt}
+                      fill
+                      className="object-contain bg-black pointer-events-none"
+                      priority={index === 0}
+                      sizes="100vw"
+                      draggable={false}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/30 pointer-events-none" />
+                  </div>
+                ))}
+              </div>
             </div>
 
             {/* Carousel Controls */}
@@ -136,7 +254,7 @@ export default function VehicleDetailPage({
                 {/* Previous Button */}
                 <button
                   onClick={prevImage}
-                  className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 bg-black/70 hover:bg-white hover:text-black backdrop-blur-sm p-4 rounded-full transition-all z-10 border-2 border-white/20 hover:border-white"
+                  className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 bg-black/70 hover:bg-white hover:text-black backdrop-blur-sm p-4 rounded-full transition-all z-10 border-2 border-white/20 hover:border-white cursor-pointer"
                   aria-label="Previous image"
                 >
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -147,7 +265,7 @@ export default function VehicleDetailPage({
                 {/* Next Button */}
                 <button
                   onClick={nextImage}
-                  className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 bg-black/70 hover:bg-white hover:text-black backdrop-blur-sm p-4 rounded-full transition-all z-10 border-2 border-white/20 hover:border-white"
+                  className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 bg-black/70 hover:bg-white hover:text-black backdrop-blur-sm p-4 rounded-full transition-all z-10 border-2 border-white/20 hover:border-white cursor-pointer"
                   aria-label="Next image"
                 >
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -156,8 +274,13 @@ export default function VehicleDetailPage({
                 </button>
 
                 {/* Image Count Badge */}
-                <div className="absolute top-6 right-6 bg-black/70 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-semibold border border-white/20">
+                <div className="absolute top-6 right-6 bg-black/70 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-semibold border border-white/20 z-10">
                   {currentImageIndex + 1} / {allImages.length}
+                </div>
+
+                {/* Drag Hint */}
+                <div className="absolute top-6 left-6 bg-black/70 backdrop-blur-sm px-4 py-2 rounded-full text-xs font-semibold border border-white/20 z-10 animate-pulse">
+                  👆 Drag to browse
                 </div>
 
                 {/* Image Indicators */}
@@ -165,7 +288,10 @@ export default function VehicleDetailPage({
                   {allImages.map((_, index) => (
                     <button
                       key={index}
-                      onClick={() => setCurrentImageIndex(index)}
+                      onClick={() => {
+                        setCurrentImageIndex(index);
+                        scrollToImage(index);
+                      }}
                       className={`transition-all cursor-pointer ${
                         index === currentImageIndex
                           ? 'bg-white w-8 h-2'
@@ -188,7 +314,7 @@ export default function VehicleDetailPage({
         )}
 
         {/* Vehicle Name & Pricing - Bottom Overlay */}
-        <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 bg-gradient-to-t from-black to-transparent">
+        <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 bg-gradient-to-t from-black to-transparent pointer-events-none z-10">
           <div className="max-w-7xl mx-auto">
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-3">
               {vehicle.name}
@@ -213,7 +339,6 @@ export default function VehicleDetailPage({
           </div>
         </div>
       </section>
-
       {/* Content Section */}
       <section className="py-12 md:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

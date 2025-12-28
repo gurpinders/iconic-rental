@@ -78,3 +78,13 @@ button:focus-visible {
 .btn-link {
   @apply text-white hover:text-gray-300 transition-colors underline decoration-2 underline-offset-4 font-medium cursor-pointer;
 }
+
+/* Hide scrollbar for carousel */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
