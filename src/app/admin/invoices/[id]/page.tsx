@@ -1,3 +1,5 @@
+// File: src/app/admin/invoices/[id]/page.tsx
+
 import { notFound } from 'next/navigation';
 import prisma from '@/lib/prisma';
 import Link from 'next/link';
@@ -65,11 +67,11 @@ export default async function AdminInvoiceDetailPage({
       {/* Back Button - Hide when printing */}
       <div className="mb-8 no-print">
         <Link
-          href={`/admin/bookings/${invoice.bookingId}`}
+          href={invoice.bookingId ? `/admin/bookings/${invoice.bookingId}` : '/admin/invoices'}
           className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-4 transition-colors"
         >
           <span>←</span>
-          <span>Back to Booking</span>
+          <span>{invoice.bookingId ? 'Back to Booking' : 'Back to Invoices'}</span>
         </Link>
       </div>
 
@@ -127,22 +129,26 @@ export default async function AdminInvoiceDetailPage({
           {/* Booking Info */}
           <div>
             <h2 className="text-xl font-bold mb-4">Service Details</h2>
-            <div className="space-y-2 text-sm">
-              <div>
-                <p className="text-gray-400 print:text-black text-xs mb-1">Booking Number</p>
-                <p className="font-semibold">#{invoice.booking.bookingNumber}</p>
-              </div>
-              <div>
-                <p className="text-gray-400 print:text-black text-xs mb-1">Event Date</p>
-                <p className="font-semibold">{formatDate(invoice.booking.eventDate)}</p>
-              </div>
-              {invoice.booking.vehicle && (
+            {invoice.booking ? (
+              <div className="space-y-2 text-sm">
                 <div>
-                  <p className="text-gray-400 print:text-black text-xs mb-1">Vehicle</p>
-                  <p className="font-semibold">{invoice.booking.vehicle.name}</p>
+                  <p className="text-gray-400 print:text-black text-xs mb-1">Booking Number</p>
+                  <p className="font-semibold">#{invoice.booking.bookingNumber}</p>
                 </div>
-              )}
-            </div>
+                <div>
+                  <p className="text-gray-400 print:text-black text-xs mb-1">Event Date</p>
+                  <p className="font-semibold">{formatDate(invoice.booking.eventDate)}</p>
+                </div>
+                {invoice.booking.vehicle && (
+                  <div>
+                    <p className="text-gray-400 print:text-black text-xs mb-1">Vehicle</p>
+                    <p className="font-semibold">{invoice.booking.vehicle.name}</p>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <p className="text-gray-400 print:text-black text-sm">No booking associated with this invoice</p>
+            )}
           </div>
         </div>
 
@@ -248,12 +254,14 @@ export default async function AdminInvoiceDetailPage({
 
       {/* Action Buttons - Hide when printing */}
       <div className="flex gap-4 no-print">
-        <Link
-          href={`/admin/bookings/${invoice.bookingId}`}
-          className="px-6 py-3 border border-white/20 rounded-lg hover:bg-white/5 transition-colors"
-        >
-          View Booking
-        </Link>
+        {invoice.bookingId && (
+          <Link
+            href={`/admin/bookings/${invoice.bookingId}`}
+            className="px-6 py-3 border border-white/20 rounded-lg hover:bg-white/5 transition-colors"
+          >
+            View Booking
+          </Link>
+        )}
         <button
           onClick={() => window.print()}
           className="px-6 py-3 bg-white text-black rounded-lg hover:bg-gray-200 transition-colors font-semibold"
