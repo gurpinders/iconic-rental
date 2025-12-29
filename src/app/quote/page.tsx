@@ -1,7 +1,9 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Button from '@/components/ui/Button'
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
 
 export default function QuotePage() {
   const [formData, setFormData] = useState({
@@ -31,12 +33,16 @@ export default function QuotePage() {
     specialRequests: ''
   })
 
+  // Date and time state for pickers
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null)
+  const [selectedTime, setSelectedTime] = useState<Date | null>(null)
+
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState('')
   const [quoteNumber, setQuoteNumber] = useState('')
   const [validationErrors, setValidationErrors] = useState<{[key: string]: string}>({})
-  const [maxPassengers, setMaxPassengers] = useState(50) // Default max
+  const [maxPassengers, setMaxPassengers] = useState(50)
 
   // Vehicle capacity mapping
   const vehicleCapacities: { [key: string]: number } = {
@@ -45,22 +51,12 @@ export default function QuotePage() {
     'LUXURY_BUS': 45,
     'SPRINTER_VAN': 12,
     'SUV': 7,
-    '': 50 // No preference
+    '': 50
   }
 
-  // Update max passengers when vehicle category changes
-  useEffect(() => {
-    const capacity = vehicleCapacities[formData.vehicleCategory] || 50
-    setMaxPassengers(capacity)
-    
-    // If current passengers exceed new max, reset to max
-    if (formData.numberOfPassengers && parseInt(formData.numberOfPassengers) > capacity) {
-      setFormData(prev => ({
-        ...prev,
-        numberOfPassengers: capacity.toString()
-      }))
-    }
-  }, [formData.vehicleCategory])
+  // Calculate minimum booking date (2 weeks from now)
+  const minBookingDate = new Date()
+  minBookingDate.setDate(minBookingDate.getDate() + 14)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -75,6 +71,48 @@ export default function QuotePage() {
       setValidationErrors({
         ...validationErrors,
         [name]: ''
+      })
+    }
+
+    // Update max passengers when vehicle changes
+    if (name === 'vehicleCategory') {
+      const capacity = vehicleCapacities[value] || 50
+      setMaxPassengers(capacity)
+      
+      if (formData.numberOfPassengers && parseInt(formData.numberOfPassengers) > capacity) {
+        setFormData(prev => ({
+          ...prev,
+          numberOfPassengers: capacity.toString()
+        }))
+      }
+    }
+  }
+
+  const handleDateChange = (date: Date | null) => {
+    setSelectedDate(date)
+    if (date) {
+      setFormData({
+        ...formData,
+        eventDate: date.toISOString().split('T')[0]
+      })
+      
+      if (validationErrors.eventDate) {
+        setValidationErrors({
+          ...validationErrors,
+          eventDate: ''
+        })
+      }
+    }
+  }
+
+  const handleTimeChange = (time: Date | null) => {
+    setSelectedTime(time)
+    if (time) {
+      const hours = time.getHours().toString().padStart(2, '0')
+      const minutes = time.getMinutes().toString().padStart(2, '0')
+      setFormData({
+        ...formData,
+        pickupTime: `${hours}:${minutes}`
       })
     }
   }
@@ -132,7 +170,6 @@ export default function QuotePage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
-    // Validate form
     if (!validateForm()) {
       window.scrollTo({ top: 0, behavior: 'smooth' })
       setError('Please fix the errors below before submitting')
@@ -159,11 +196,8 @@ export default function QuotePage() {
 
       setQuoteNumber(data.quoteNumber)
       setSubmitted(true)
-
-      // Scroll to top smoothly
       window.scrollTo({ top: 0, behavior: 'smooth' })
 
-      // Track conversion in GTM
       if (typeof window !== 'undefined' && (window as any).dataLayer) {
         (window as any).dataLayer.push({
           event: 'quote_submitted',
@@ -210,14 +244,97 @@ export default function QuotePage() {
 
   return (
     <main className="min-h-screen bg-black pt-32 pb-20">
+      <style jsx global>{`
+        /* Custom DatePicker Styles */
+        .react-datepicker {
+          background-color: #18181b !important;
+          border: 1px solid rgba(255,255,255,0.2) !important;
+          border-radius: 12px !important;
+          font-family: inherit !important;
+        }
+        
+        .react-datepicker__header {
+          background-color: #000000 !important;
+          border-bottom: 1px solid rgba(255,255,255,0.2) !important;
+          border-radius: 12px 12px 0 0 !important;
+          padding-top: 12px !important;
+        }
+        
+        .react-datepicker__current-month,
+        .react-datepicker__day-name {
+          color: #ffffff !important;
+          font-weight: 600 !important;
+        }
+        
+        .react-datepicker__day {
+          color: #a1a1aa !important;
+          border-radius: 8px !important;
+          transition: all 0.2s !important;
+        }
+        
+        .react-datepicker__day:hover {
+          background-color: rgba(255,255,255,0.1) !important;
+          color: #ffffff !important;
+        }
+        
+        .react-datepicker__day--selected {
+          background-color: #ffffff !important;
+          color: #000000 !important;
+          font-weight: bold !important;
+        }
+        
+        .react-datepicker__day--disabled {
+          color: #3f3f46 !important;
+          cursor: not-allowed !important;
+        }
+        
+        .react-datepicker__day--disabled:hover {
+          background-color: transparent !important;
+        }
+        
+        .react-datepicker__navigation-icon::before {
+          border-color: #ffffff !important;
+        }
+        
+        .react-datepicker__time-container {
+          border-left: 1px solid rgba(255,255,255,0.2) !important;
+        }
+        
+        .react-datepicker__time {
+          background-color: #18181b !important;
+        }
+        
+        .react-datepicker__time-list {
+          background-color: #18181b !important;
+        }
+        
+        .react-datepicker__time-list-item {
+          color: #a1a1aa !important;
+          transition: all 0.2s !important;
+        }
+        
+        .react-datepicker__time-list-item:hover {
+          background-color: rgba(255,255,255,0.1) !important;
+          color: #ffffff !important;
+        }
+        
+        .react-datepicker__time-list-item--selected {
+          background-color: #ffffff !important;
+          color: #000000 !important;
+          font-weight: bold !important;
+        }
+        
+        .react-datepicker-popper {
+          z-index: 9999 !important;
+        }
+      `}</style>
+
       <div className="max-w-4xl mx-auto px-8">
-        {/* Page Header */}
         <div className="text-center mb-12">
           <h1 className="text-5xl font-bold mb-4 tracking-wide">Request a Quote</h1>
           <p className="text-xl text-gray-400">Fill out the form below and we'll get back to you with a personalized quote</p>
         </div>
 
-        {/* General Error Message */}
         {error && (
           <div className="mb-8 p-4 bg-red-900/20 border-2 border-red-500/50 rounded-lg text-red-300">
             <div className="flex items-center gap-2">
@@ -347,32 +464,39 @@ export default function QuotePage() {
                   <p className="text-red-400 text-sm mt-1">{validationErrors.eventType}</p>
                 )}
               </div>
+              
+              {/* Date Picker */}
               <div>
                 <label className="block text-sm font-semibold mb-2">Event Date *</label>
-                <input
-                  type="date"
-                  name="eventDate"
-                  value={formData.eventDate}
-                  onChange={handleChange}
-                  min={new Date().toISOString().split('T')[0]}
-                  className={`w-full px-4 py-3 bg-black border rounded-lg focus:border-white/50 transition-all cursor-pointer [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-100 [&::-webkit-calendar-picker-indicator]:invert ${
+                <DatePicker
+                  selected={selectedDate}
+                  onChange={handleDateChange}
+                  minDate={minBookingDate}
+                  dateFormat="MMMM d, yyyy"
+                  placeholderText="Click to select date"
+                  className={`w-full px-4 py-3 bg-black border rounded-lg focus:border-white/50 transition-all cursor-pointer ${
                     validationErrors.eventDate ? 'border-red-500' : 'border-white/20'
                   }`}
                 />
+                <p className="text-sm text-gray-500 mt-1">Minimum 2 weeks notice required</p>
                 {validationErrors.eventDate && (
                   <p className="text-red-400 text-sm mt-1">{validationErrors.eventDate}</p>
                 )}
               </div>
+              
+              {/* Time Picker */}
               <div>
-                <label className="block text-sm font-medium mb-2">
-                  Pickup Time
-                </label>
-                <input
-                  type="time"
-                  name="pickupTime"
-                  value={formData.pickupTime}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 bg-black border border-white/20 rounded-lg focus:outline-none focus:border-white/50"
+                <label className="block text-sm font-semibold mb-2">Pickup Time</label>
+                <DatePicker
+                  selected={selectedTime}
+                  onChange={handleTimeChange}
+                  showTimeSelect
+                  showTimeSelectOnly
+                  timeIntervals={15}
+                  timeCaption="Time"
+                  dateFormat="h:mm aa"
+                  placeholderText="Click to select time"
+                  className="w-full px-4 py-3 bg-black border border-white/20 rounded-lg focus:border-white/50 transition-all cursor-pointer"
                 />
                 <p className="text-sm text-gray-500 mt-1">When should we pick you up?</p>
               </div>
