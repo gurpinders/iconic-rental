@@ -16,11 +16,7 @@ export default async function AdminBookingDetailPage({
     include: {
       customer: true,
       vehicle: true,
-      quote: {
-        select: {
-          quoteNumber: true,
-        },
-      },
+      quote: true, // Get full quote for customer info when no account exists
       invoices: {
         orderBy: {
           createdAt: 'desc',
@@ -32,6 +28,23 @@ export default async function AdminBookingDetailPage({
   if (!booking) {
     notFound();
   }
+
+  // Get customer info from account or quote
+  const customerInfo = booking.customer ? {
+    firstName: booking.customer.firstName,
+    lastName: booking.customer.lastName,
+    email: booking.customer.email,
+    phone: booking.customer.phone,
+    company: booking.customer.company,
+    hasAccount: true,
+  } : {
+    firstName: booking.quote.firstName,
+    lastName: booking.quote.lastName,
+    email: booking.quote.email,
+    phone: booking.quote.phone,
+    company: booking.quote.company,
+    hasAccount: false,
+  };
 
   const formatDate = (date: Date) => {
     return new Date(date).toLocaleDateString('en-US', {
@@ -97,7 +110,7 @@ export default async function AdminBookingDetailPage({
           <div>
             <h1 className="text-4xl font-bold mb-2">Booking #{booking.bookingNumber}</h1>
             <p className="text-gray-400">
-              Confirmed on {formatDate(booking.confirmedAt)}
+              Created on {formatDate(booking.createdAt)}
             </p>
           </div>
           <span
@@ -116,22 +129,29 @@ export default async function AdminBookingDetailPage({
         <div className="lg:col-span-2 space-y-6">
           {/* Customer Information */}
           <div className="bg-zinc-900 border border-white/20 rounded-lg p-6">
-            <h2 className="text-xl font-bold mb-4">Customer Information</h2>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-bold">Customer Information</h2>
+              {!customerInfo.hasAccount && (
+                <span className="text-xs px-2 py-1 bg-orange-900/50 text-orange-300 rounded border border-orange-500/50">
+                  No Account
+                </span>
+              )}
+            </div>
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
                 <p className="text-gray-400 mb-1">Name</p>
                 <p className="font-semibold">
-                  {booking.customer.firstName} {booking.customer.lastName}
+                  {customerInfo.firstName} {customerInfo.lastName}
                 </p>
               </div>
               <div>
                 <p className="text-gray-400 mb-1">Email</p>
                 <p className="font-semibold">
                   <a
-                    href={`mailto:${booking.customer.email}`}
+                    href={`mailto:${customerInfo.email}`}
                     className="text-blue-400 hover:underline"
                   >
-                    {booking.customer.email}
+                    {customerInfo.email}
                   </a>
                 </p>
               </div>
@@ -139,20 +159,25 @@ export default async function AdminBookingDetailPage({
                 <p className="text-gray-400 mb-1">Phone</p>
                 <p className="font-semibold">
                   <a
-                    href={`tel:${booking.customer.phone}`}
+                    href={`tel:${customerInfo.phone}`}
                     className="text-blue-400 hover:underline"
                   >
-                    {booking.customer.phone}
+                    {customerInfo.phone}
                   </a>
                 </p>
               </div>
-              {booking.customer.company && (
+              {customerInfo.company && (
                 <div>
                   <p className="text-gray-400 mb-1">Company</p>
-                  <p className="font-semibold">{booking.customer.company}</p>
+                  <p className="font-semibold">{customerInfo.company}</p>
                 </div>
               )}
             </div>
+            {!customerInfo.hasAccount && (
+              <p className="text-xs text-gray-500 mt-4 pt-4 border-t border-white/10">
+                💡 This customer doesn't have an online account. Communication via email only.
+              </p>
+            )}
           </div>
 
           {/* Event Details */}
