@@ -53,7 +53,7 @@ export async function POST(
       );
     }
 
-    let customerId = quote.customerId;
+    let customerId: string | null = quote.customerId;
 
     // Check if customer already exists by email
     const existingCustomer = await prisma.customer.findUnique({
@@ -101,11 +101,11 @@ export async function POST(
     // Generate booking number
     const bookingNumber = `BK${Date.now()}${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`;
 
-    // Create the booking
+    // Create the booking (conditionally include customerId)
     const booking = await prisma.booking.create({
       data: {
         bookingNumber,
-        customerId: customerId || undefined, // Allow null for email-only bookings
+        ...(customerId ? { customerId } : {}), // Only include if not null
         quoteId: id,
         status: 'CONFIRMED',
         serviceType: quote.serviceType,
@@ -132,7 +132,7 @@ export async function POST(
       where: { id },
       data: {
         status: 'ACCEPTED',
-        customerId: customerId || undefined, // Link the quote to customer if exists
+        ...(customerId ? { customerId } : {}), // Only include if not null
       },
     });
 
