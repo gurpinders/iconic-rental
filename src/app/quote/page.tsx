@@ -478,7 +478,6 @@ export default function QuotePage() {
                     validationErrors.eventDate ? 'border-red-500' : 'border-white/20'
                   }`}
                 />
-                <p className="text-sm text-gray-500 mt-1">Minimum 2 weeks notice required</p>
                 {validationErrors.eventDate && (
                   <p className="text-red-400 text-sm mt-1">{validationErrors.eventDate}</p>
                 )}
