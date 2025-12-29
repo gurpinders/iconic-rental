@@ -10,6 +10,13 @@ interface Vehicle {
   category: string;
 }
 
+interface Driver {
+  id: string;
+  firstName: string;
+  lastName: string;
+  phone: string;
+}
+
 interface QuoteActionsProps {
   quote: {
     id: string;
@@ -20,9 +27,10 @@ interface QuoteActionsProps {
     hasBooking: boolean;
   };
   vehicles: Vehicle[];
+  drivers: Driver[];
 }
 
-export default function QuoteActions({ quote, vehicles }: QuoteActionsProps) {
+export default function QuoteActions({ quote, vehicles, drivers }: QuoteActionsProps) {
   const router = useRouter();
   const [showPriceModal, setShowPriceModal] = useState(false);
   const [showNotesModal, setShowNotesModal] = useState(false);
@@ -286,6 +294,7 @@ export default function QuoteActions({ quote, vehicles }: QuoteActionsProps) {
         <CreateBookingModal
           quoteId={quote.id}
           vehicles={vehicles}
+          drivers={drivers}
           onSuccess={() => {
             setShowBookingModal(false);
             router.refresh();

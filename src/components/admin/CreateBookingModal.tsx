@@ -12,9 +12,17 @@ interface Vehicle {
   category: string;
 }
 
+interface Driver {
+  id: string;
+  firstName: string;
+  lastName: string;
+  phone: string;
+}
+
 interface CreateBookingModalProps {
   quoteId: string;
   vehicles: Vehicle[];
+  drivers: Driver[];
   onSuccess: () => void;
   onClose: () => void;
 }
@@ -22,6 +30,7 @@ interface CreateBookingModalProps {
 export default function CreateBookingModal({
   quoteId,
   vehicles,
+  drivers,
   onSuccess,
   onClose,
 }: CreateBookingModalProps) {
@@ -33,6 +42,7 @@ export default function CreateBookingModal({
     vehicleId: '',
     totalPrice: '',
     pickupTime: '',
+    driverId: '',
     driverName: '',
     driverPhone: '',
     vehicleDetails: '',
@@ -49,6 +59,29 @@ export default function CreateBookingModal({
       setFormData({
         ...formData,
         pickupTime: `${hours}:${minutes}`
+      });
+    }
+  };
+
+  const handleDriverChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const driverId = e.target.value;
+    
+    if (driverId) {
+      const selectedDriver = drivers.find(d => d.id === driverId);
+      if (selectedDriver) {
+        setFormData({
+          ...formData,
+          driverId,
+          driverName: `${selectedDriver.firstName} ${selectedDriver.lastName}`,
+          driverPhone: selectedDriver.phone,
+        });
+      }
+    } else {
+      setFormData({
+        ...formData,
+        driverId: '',
+        driverName: '',
+        driverPhone: '',
       });
     }
   };
@@ -205,21 +238,29 @@ export default function CreateBookingModal({
           {/* Driver Information */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-2">Driver Name (Optional)</label>
-              <input
-                type="text"
-                value={formData.driverName}
-                onChange={(e) => setFormData({ ...formData, driverName: e.target.value })}
+              <label className="block text-sm font-medium mb-2">Driver (Optional)</label>
+              <select
+                value={formData.driverId}
+                onChange={handleDriverChange}
                 className="w-full px-4 py-3 bg-black border border-white/20 rounded focus:border-white/50 focus:outline-none"
-              />
+              >
+                <option value="">Select a driver</option>
+                {drivers.map((driver) => (
+                  <option key={driver.id} value={driver.id}>
+                    {driver.firstName} {driver.lastName}
+                  </option>
+                ))}
+              </select>
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2">Driver Phone (Optional)</label>
+              <label className="block text-sm font-medium mb-2">Driver Phone</label>
               <input
                 type="tel"
                 value={formData.driverPhone}
                 onChange={(e) => setFormData({ ...formData, driverPhone: e.target.value })}
-                className="w-full px-4 py-3 bg-black border border-white/20 rounded focus:border-white/50 focus:outline-none"
+                readOnly
+                className="w-full px-4 py-3 bg-black/50 border border-white/20 rounded focus:border-white/50 focus:outline-none text-gray-400"
+                placeholder="Auto-filled from driver"
               />
             </div>
           </div>

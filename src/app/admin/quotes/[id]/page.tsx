@@ -15,7 +15,7 @@ export default async function AdminQuoteDetailPage({
     where: { id },
     include: {
       vehicle: true,
-      booking: true, // Check if booking already exists
+      booking: true,
     },
   });
 
@@ -32,6 +32,18 @@ export default async function AdminQuoteDetailPage({
       category: true,
     },
     orderBy: { name: 'asc' },
+  });
+
+  // Fetch all active drivers for booking creation
+  const drivers = await prisma.driver.findMany({
+    where: { isActive: true },
+    select: {
+      id: true,
+      firstName: true,
+      lastName: true,
+      phone: true,
+    },
+    orderBy: { firstName: 'asc' },
   });
 
   const formatDate = (date: Date) => {
@@ -242,6 +254,7 @@ export default async function AdminQuoteDetailPage({
               hasBooking: !!quote.booking,
             }}
             vehicles={vehicles}
+            drivers={drivers}
           />
 
           {/* Quick Contact */}
