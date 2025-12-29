@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
+import AutoLogout from '@/components/customer/AutoLogout';
 
 interface Customer {
   id: string;
@@ -59,7 +60,9 @@ export default function CustomerLayout({
   // Skip layout for login/register pages
   if (pathname?.startsWith('/customer/login') || 
       pathname?.startsWith('/customer/register') ||
-      pathname?.startsWith('/customer/forgot-password')) {
+      pathname?.startsWith('/customer/forgot-password') ||
+      pathname?.startsWith('/customer/verify-email') ||
+      pathname?.startsWith('/customer/reset-password')) {
     return <>{children}</>;
   }
 
@@ -84,6 +87,9 @@ export default function CustomerLayout({
 
   return (
     <div className="min-h-screen bg-black text-white">
+      {/* Auto-Logout Component - Only active when logged in */}
+      <AutoLogout />
+
       {/* Top Navigation Bar */}
       <header className="bg-zinc-900 border-b border-white/10 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

@@ -1,42 +1,33 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import Image from 'next/image';
+import Button from '@/components/ui/Button';
 
-export default function CustomerLoginPage() {
+function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
+  const wasTimedOut = searchParams.get('timeout') === 'true';
+  
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
-
-  useEffect(() => {
-    // Check if redirected from registration
-    if (searchParams.get('registered') === 'true') {
-      setSuccessMessage('Account created successfully! Please log in.');
-    }
-  }, [searchParams]);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-    setError('');
-  };
+  const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    setIsSubmitting(true);
     setError('');
 
     try {
       const response = await fetch('/api/customer/login', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify(formData),
       });
 
@@ -46,108 +37,111 @@ export default function CustomerLoginPage() {
         throw new Error(data.error || 'Login failed');
       }
 
-      // Success - redirect to dashboard
       router.push('/customer/dashboard');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Login failed');
-      setLoading(false);
+      setError(err instanceof Error ? err.message : 'An error occurred');
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-black text-white flex items-center justify-center py-12 px-4">
-      <div className="max-w-xl w-full">
-        {/* Logo */}
-        <div className="text-center mb-8">
-          <Link href="/">
-            <Image 
-              src="/logo_no_bg.png" 
-              alt="Iconic Limos Logo" 
-              width={200}
-              height={100}
-              className="mx-auto mb-6 cursor-pointer"
-            />
-          </Link>
-          <h1 className="text-5xl font-bold mb-3">Welcome Back</h1>
-          <p className="text-gray-400 text-lg">Sign in to your account</p>
+    <main className="min-h-screen bg-black pt-32 pb-20">
+      <div className="max-w-md mx-auto px-8">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-bold mb-4">Customer Login</h1>
+          <p className="text-gray-400">Access your bookings and account</p>
         </div>
 
-        {/* Login Form */}
-        <div className="bg-zinc-900 border border-white/20 rounded-lg p-10">
-          {successMessage && (
-            <div className="mb-6 p-4 bg-green-900/20 border border-green-500/50 rounded text-green-300">
-              {successMessage}
+        {/* Timeout Message */}
+        {wasTimedOut && (
+          <div className="mb-6 p-4 bg-orange-900/20 border border-orange-500/50 rounded-lg">
+            <div className="flex items-start gap-3">
+              <svg className="w-5 h-5 text-orange-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <div>
+                <p className="font-semibold text-orange-300">Session Expired</p>
+                <p className="text-sm text-orange-200 mt-1">
+                  You were logged out due to inactivity. Please log in again.
+                </p>
+              </div>
             </div>
-          )}
+          </div>
+        )}
 
-          {error && (
-            <div className="mb-6 p-4 bg-red-900/20 border border-red-500/50 rounded text-red-300">
-              {error}
+        {error && (
+          <div className="mb-6 p-4 bg-red-900/20 border border-red-500/50 rounded-lg text-red-300">
+            <div className="flex items-center gap-2">
+              <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <p>{error}</p>
             </div>
-          )}
+          </div>
+        )}
 
-          <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Email */}
-            <div>
-              <label htmlFor="email" className="block text-base font-medium mb-2">
-                Email Address
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-                className="w-full px-5 py-4 text-base bg-black border border-white/20 rounded focus:border-white/50 focus:outline-none transition-colors"
-              />
-            </div>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label className="block text-sm font-semibold mb-2">Email Address</label>
+            <input
+              type="email"
+              value={formData.email}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              required
+              className="w-full px-4 py-3 bg-black border border-white/20 rounded-lg focus:border-white/50 transition-all"
+              placeholder="you@example.com"
+            />
+          </div>
 
-            {/* Password */}
-            <div>
-              <label htmlFor="password" className="block text-base font-medium mb-2">
-                Password
-              </label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                required
-                className="w-full px-5 py-4 text-base bg-black border border-white/20 rounded focus:border-white/50 focus:outline-none transition-colors"
-              />
-            </div>
+          <div>
+            <label className="block text-sm font-semibold mb-2">Password</label>
+            <input
+              type="password"
+              value={formData.password}
+              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+              required
+              className="w-full px-4 py-3 bg-black border border-white/20 rounded-lg focus:border-white/50 transition-all"
+              placeholder="••••••••"
+            />
+          </div>
 
-            {/* Forgot Password Link */}
-            <div className="text-right">
-              <Link
-                href="/customer/forgot-password"
-                className="text-sm text-gray-400 hover:text-white transition-colors"
-              >
-                Forgot password?
-              </Link>
-            </div>
-
-            {/* Submit Button */}
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full btn-primary text-xl py-5 disabled:opacity-50 disabled:cursor-not-allowed mt-8"
-            >
-              {loading ? 'Signing In...' : 'Sign In'}
-            </button>
-          </form>
-
-          {/* Register Link */}
-          <div className="mt-8 text-center text-base text-gray-400">
-            Don't have an account?{' '}
-            <Link href="/customer/register" className="text-white hover:underline font-medium">
-              Create Account
+          <div className="flex items-center justify-between text-sm">
+            <Link href="/customer/forgot-password" className="text-gray-400 hover:text-white transition-colors">
+              Forgot password?
             </Link>
           </div>
+
+          <Button
+            variant="primary"
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full"
+          >
+            {isSubmitting ? 'Logging in...' : 'Login'}
+          </Button>
+        </form>
+
+        <div className="mt-8 text-center">
+          <p className="text-gray-400">
+            Don't have an account?{' '}
+            <Link href="/customer/register" className="text-white hover:underline font-semibold">
+              Register here
+            </Link>
+          </p>
         </div>
       </div>
-    </div>
+    </main>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <main className="min-h-screen bg-black pt-32 pb-20 flex items-center justify-center">
+        <div className="text-gray-400">Loading...</div>
+      </main>
+    }>
+      <LoginContent />
+    </Suspense>
   );
 }
