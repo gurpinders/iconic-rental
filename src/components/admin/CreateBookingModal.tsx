@@ -45,8 +45,6 @@ export default function CreateBookingModal({
     driverPhone: '',
     vehicleDetails: '',
     notes: '',
-    createCustomerAccount: true,
-    customerPassword: '',
   });
 
   const handleTimeChange = (time: Date | null) => {
@@ -101,8 +99,8 @@ export default function CreateBookingModal({
           driverPhone: formData.driverPhone || null,
           vehicleDetails: formData.vehicleDetails || null,
           notes: formData.notes || null,
-          createCustomerAccount: formData.createCustomerAccount,
-          customerPassword: formData.customerPassword || null,
+          createCustomerAccount: false, // Always false now
+          customerPassword: null,
         }),
       });
 
@@ -186,7 +184,7 @@ export default function CreateBookingModal({
           {/* Vehicle Selection */}
           <div>
             <label className="block text-sm font-medium mb-2">Vehicle *</label>
-            <div className='select-wrapper'>
+            <div className="select-wrapper">
               <select
                 value={formData.vehicleId}
                 onChange={(e) => setFormData({ ...formData, vehicleId: e.target.value })}
@@ -200,7 +198,6 @@ export default function CreateBookingModal({
                 ))}
               </select>
             </div>
-            
           </div>
 
           {/* Price and Pickup Time */}
@@ -239,7 +236,7 @@ export default function CreateBookingModal({
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium mb-2">Driver (Optional)</label>
-              <div className='select-wrapper'>
+              <div className="select-wrapper">
                 <select
                   value={formData.driverId}
                   onChange={handleDriverChange}
@@ -290,47 +287,22 @@ export default function CreateBookingModal({
             />
           </div>
 
-          {/* Customer Account */}
+          {/* Customer Account Info */}
           <div className="border-t border-white/10 pt-5">
-            <div className="flex items-start gap-3 mb-4">
-              <input
-                type="checkbox"
-                id="createAccount"
-                checked={formData.createCustomerAccount}
-                onChange={(e) =>
-                  setFormData({ ...formData, createCustomerAccount: e.target.checked })
-                }
-                className="mt-1"
-              />
-              <label htmlFor="createAccount" className="text-sm">
-                <span className="font-medium">Create customer account</span>
-                <p className="text-gray-400 text-xs mt-1">
-                  Allow customer to access their booking online
-                </p>
-              </label>
-            </div>
-
-            {formData.createCustomerAccount && (
-              <div>
-                <label className="block text-sm font-medium mb-2">
-                  Customer Password *
-                </label>
-                <input
-                  type="password"
-                  value={formData.customerPassword}
-                  onChange={(e) =>
-                    setFormData({ ...formData, customerPassword: e.target.value })
-                  }
-                  required={formData.createCustomerAccount}
-                  minLength={8}
-                  className="w-full px-4 py-3 bg-black border border-white/20 rounded focus:border-white/50 focus:outline-none"
-                  placeholder="Set a password for the customer"
-                />
-                <p className="text-xs text-gray-500 mt-1">
-                  Customer will use this to log in. Minimum 8 characters.
-                </p>
+            <div className="bg-blue-900/20 border border-blue-500/50 rounded-lg p-4">
+              <div className="flex items-start gap-3">
+                <svg className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <div className="text-sm">
+                  <p className="font-semibold text-blue-300 mb-1">Customer Account</p>
+                  <p className="text-blue-200">
+                    Customer can create their own account at any time to track their booking online. 
+                    They'll use their booking email to register and set their own password.
+                  </p>
+                </div>
               </div>
-            )}
+            </div>
           </div>
 
           {/* Actions */}
