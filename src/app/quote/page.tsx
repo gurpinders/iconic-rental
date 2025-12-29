@@ -742,19 +742,21 @@ export default function QuotePage() {
             <h2 className="text-2xl font-bold mb-6">Vehicle Preference</h2>
             <div>
               <label className="block text-sm font-semibold mb-2">Preferred Vehicle Type</label>
-              <select
-                name="vehicleCategory"
-                value={formData.vehicleCategory}
-                onChange={handleChange}
-                className="w-full px-4 py-3 bg-black border border-white/20 rounded-lg focus:border-white/50 transition-all"
-              >
-                <option value="">No Preference</option>
-                <option value="LIMO">Limousine (Up to 10 passengers)</option>
-                <option value="PARTY_BUS">Party Bus (Up to 45 passengers)</option>
-                <option value="LUXURY_BUS">Luxury Bus (Up to 45 passengers)</option>
-                <option value="SPRINTER_VAN">Sprinter Van (Up to 12 passengers)</option>
-                <option value="SUV">SUV (Up to 7 passengers)</option>
-              </select>
+              <div className="select-wrapper">
+                  <select
+                    name="vehicleCategory"
+                    value={formData.vehicleCategory}
+                    onChange={handleChange}
+                  >
+                    <option value="">No Preference</option>
+                    <option value="LIMO">Limousine (Up to 10 passengers)</option>
+                    <option value="PARTY_BUS">Party Bus (Up to 45 passengers)</option>
+                    <option value="LUXURY_BUS">Luxury Bus (Up to 45 passengers)</option>
+                    <option value="SPRINTER_VAN">Sprinter Van (Up to 12 passengers)</option>
+                    <option value="SUV">SUV (Up to 7 passengers)</option>
+                  </select>
+              </div>
+              
             </div>
           </div>
 

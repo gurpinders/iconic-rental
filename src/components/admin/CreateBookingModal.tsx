@@ -1,5 +1,3 @@
-// File: src/components/admin/CreateBookingModal.tsx
-
 'use client';
 
 import { useState } from 'react';
@@ -188,19 +186,21 @@ export default function CreateBookingModal({
           {/* Vehicle Selection */}
           <div>
             <label className="block text-sm font-medium mb-2">Vehicle *</label>
-            <select
-              value={formData.vehicleId}
-              onChange={(e) => setFormData({ ...formData, vehicleId: e.target.value })}
-              required
-              className="w-full px-4 py-3 bg-black border border-white/20 rounded focus:border-white/50 focus:outline-none"
-            >
-              <option value="">Select a vehicle</option>
-              {vehicles.map((vehicle) => (
-                <option key={vehicle.id} value={vehicle.id}>
-                  {vehicle.name}
-                </option>
-              ))}
-            </select>
+            <div className='select-wrapper'>
+              <select
+                value={formData.vehicleId}
+                onChange={(e) => setFormData({ ...formData, vehicleId: e.target.value })}
+                required
+              >
+                <option value="">Select a vehicle</option>
+                {vehicles.map((vehicle) => (
+                  <option key={vehicle.id} value={vehicle.id}>
+                    {vehicle.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            
           </div>
 
           {/* Price and Pickup Time */}
@@ -239,18 +239,19 @@ export default function CreateBookingModal({
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium mb-2">Driver (Optional)</label>
-              <select
-                value={formData.driverId}
-                onChange={handleDriverChange}
-                className="w-full px-4 py-3 bg-black border border-white/20 rounded focus:border-white/50 focus:outline-none"
-              >
-                <option value="">Select a driver</option>
-                {drivers.map((driver) => (
-                  <option key={driver.id} value={driver.id}>
-                    {driver.firstName} {driver.lastName}
-                  </option>
-                ))}
-              </select>
+              <div className='select-wrapper'>
+                <select
+                  value={formData.driverId}
+                  onChange={handleDriverChange}
+                >
+                  <option value="">Select a driver</option>
+                  {drivers.map((driver) => (
+                    <option key={driver.id} value={driver.id}>
+                      {driver.firstName} {driver.lastName}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
             <div>
               <label className="block text-sm font-medium mb-2">Driver Phone</label>
