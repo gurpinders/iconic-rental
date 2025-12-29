@@ -55,8 +55,17 @@ export async function POST(
 
     let customerId = quote.customerId;
 
-    // If customer account doesn't exist and we should create one
-    if (!customerId && createCustomerAccount) {
+    // Check if customer already exists by email
+    const existingCustomer = await prisma.customer.findUnique({
+      where: { email: quote.email.toLowerCase() },
+    });
+
+    if (existingCustomer) {
+      // Customer already has an account - link to it automatically
+      customerId = existingCustomer.id;
+      console.log('Linking booking to existing customer account:', existingCustomer.email);
+    } else if (createCustomerAccount) {
+      // Customer doesn't exist and admin wants to create account
       if (!customerPassword) {
         return NextResponse.json(
           { error: 'Password required to create customer account' },
@@ -64,40 +73,29 @@ export async function POST(
         );
       }
 
-      // Check if customer already exists by email
-      const existingCustomer = await prisma.customer.findUnique({
-        where: { email: quote.email.toLowerCase() },
+      // Create customer account
+      const passwordHash = await hashPassword(customerPassword);
+      const verificationToken = generateVerificationToken();
+
+      const newCustomer = await prisma.customer.create({
+        data: {
+          email: quote.email.toLowerCase(),
+          passwordHash,
+          firstName: quote.firstName,
+          lastName: quote.lastName,
+          phone: quote.phone,
+          company: quote.company,
+          verificationToken,
+          emailVerified: true, // Auto-verify since admin is creating
+        },
       });
 
-      if (existingCustomer) {
-        customerId = existingCustomer.id;
-      } else {
-        // Create customer account
-        const passwordHash = await hashPassword(customerPassword);
-        const verificationToken = generateVerificationToken();
-
-        const newCustomer = await prisma.customer.create({
-          data: {
-            email: quote.email.toLowerCase(),
-            passwordHash,
-            firstName: quote.firstName,
-            lastName: quote.lastName,
-            phone: quote.phone,
-            company: quote.company,
-            verificationToken,
-            emailVerified: false, // They'll need to verify
-          },
-        });
-
-        customerId = newCustomer.id;
-      }
-    }
-
-    if (!customerId) {
-      return NextResponse.json(
-        { error: 'Customer account required. Enable "Create customer account" option.' },
-        { status: 400 }
-      );
+      customerId = newCustomer.id;
+      console.log('Created new customer account:', newCustomer.email);
+    } else {
+      // No customer account - booking will use email communication only
+      customerId = null;
+      console.log('Creating booking without customer account - email communication only');
     }
 
     // Generate booking number
@@ -107,7 +105,7 @@ export async function POST(
     const booking = await prisma.booking.create({
       data: {
         bookingNumber,
-        customerId,
+        customerId: customerId || undefined, // Allow null for email-only bookings
         quoteId: id,
         status: 'CONFIRMED',
         serviceType: quote.serviceType,
@@ -134,7 +132,7 @@ export async function POST(
       where: { id },
       data: {
         status: 'ACCEPTED',
-        customerId, // Link the quote to customer
+        customerId: customerId || undefined, // Link the quote to customer if exists
       },
     });
 
@@ -146,6 +144,7 @@ export async function POST(
       booking: {
         id: booking.id,
         bookingNumber: booking.bookingNumber,
+        hasCustomerAccount: !!customerId,
       },
     });
 
