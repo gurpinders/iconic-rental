@@ -1,3 +1,5 @@
+// File: src/app/admin/bookings/page.tsx
+
 import Link from 'next/link';
 import prisma from '@/lib/prisma';
 
@@ -16,6 +18,13 @@ export default async function AdminBookingsPage() {
       vehicle: {
         select: {
           name: true,
+        },
+      },
+      quote: {
+        select: {
+          firstName: true,
+          lastName: true,
+          email: true,
         },
       },
       invoices: {
@@ -136,62 +145,77 @@ export default async function AdminBookingsPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/10">
-                {bookings.map((booking) => (
-                  <tr
-                    key={booking.id}
-                    className="hover:bg-white/5 transition-colors"
-                  >
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <Link
-                        href={`/admin/bookings/${booking.id}`}
-                        className="text-blue-400 hover:underline font-medium"
-                      >
-                        {booking.bookingNumber}
-                      </Link>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div>
-                        <p className="font-medium">
-                          {booking.customer.firstName} {booking.customer.lastName}
-                        </p>
-                        <p className="text-sm text-gray-400">{booking.customer.email}</p>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {formatDate(booking.eventDate)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {booking.eventType}
-                    </td>
-                    <td className="px-6 py-4">
-                      {booking.vehicle?.name || 'Not assigned'}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span
-                        className={`px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(
-                          booking.status
-                        )}`}
-                      >
-                        {booking.status}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap font-semibold">
-                      {formatCurrency(Number(booking.totalPrice))}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {booking.invoices.length > 0 ? (
+                {bookings.map((booking) => {
+                  // Get customer info from account or quote
+                  const customerName = booking.customer 
+                    ? `${booking.customer.firstName} ${booking.customer.lastName}`
+                    : `${booking.quote.firstName} ${booking.quote.lastName}`;
+                  const customerEmail = booking.customer 
+                    ? booking.customer.email
+                    : booking.quote.email;
+
+                  return (
+                    <tr
+                      key={booking.id}
+                      className="hover:bg-white/5 transition-colors"
+                    >
+                      <td className="px-6 py-4 whitespace-nowrap">
                         <Link
-                          href={`/admin/invoices/${booking.invoices[0].id}`}
-                          className="text-green-400 hover:underline text-sm"
+                          href={`/admin/bookings/${booking.id}`}
+                          className="text-blue-400 hover:underline font-medium"
                         >
-                          {booking.invoices[0].invoiceNumber}
+                          {booking.bookingNumber}
                         </Link>
-                      ) : (
-                        <span className="text-gray-500 text-sm">No invoice</span>
-                      )}
-                    </td>
-                  </tr>
-                ))}
+                      </td>
+                      <td className="px-6 py-4">
+                        <div>
+                          <p className="font-medium">
+                            {customerName}
+                            {!booking.customer && (
+                              <span className="ml-2 text-xs px-2 py-0.5 bg-orange-900/50 text-orange-300 rounded">
+                                No Account
+                              </span>
+                            )}
+                          </p>
+                          <p className="text-sm text-gray-400">{customerEmail}</p>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        {formatDate(booking.eventDate)}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        {booking.eventType}
+                      </td>
+                      <td className="px-6 py-4">
+                        {booking.vehicle?.name || 'Not assigned'}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span
+                          className={`px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(
+                            booking.status
+                          )}`}
+                        >
+                          {booking.status}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap font-semibold">
+                        {formatCurrency(Number(booking.totalPrice))}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        {booking.invoices.length > 0 ? (
+                          <Link
+                            href={`/admin/invoices/${booking.invoices[0].id}`}
+                            className="text-green-400 hover:underline text-sm"
+                          >
+                            {booking.invoices[0].invoiceNumber}
+                          </Link>
+                        ) : (
+                          <span className="text-gray-500 text-sm">No invoice</span>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
