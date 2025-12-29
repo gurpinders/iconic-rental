@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import prisma from '@/lib/prisma';
 import Link from 'next/link';
 import Image from 'next/image';
+import PrintInvoiceButton from '@/components/admin/PrintInvoiceButton';
 import './print.css';
 
 export default async function AdminInvoiceDetailPage({
@@ -262,12 +263,7 @@ export default async function AdminInvoiceDetailPage({
             View Booking
           </Link>
         )}
-        <button
-          onClick={() => window.print()}
-          className="px-6 py-3 bg-white text-black rounded-lg hover:bg-gray-200 transition-colors font-semibold"
-        >
-          🖨️ Print Invoice
-        </button>
+        <PrintInvoiceButton />
       </div>
     </div>
   );
