@@ -4,6 +4,10 @@ import { useState } from 'react'
 import Button from '@/components/ui/Button'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
+import { useLoadScript, Autocomplete } from '@react-google-maps/api'
+
+// Google Maps libraries to load
+const libraries: ("places")[] = ["places"]
 
 export default function QuotePage() {
   const [formData, setFormData] = useState({
@@ -37,12 +41,22 @@ export default function QuotePage() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
   const [selectedTime, setSelectedTime] = useState<Date | null>(null)
 
+  // Google Maps autocomplete instances
+  const [pickupAutocomplete, setPickupAutocomplete] = useState<google.maps.places.Autocomplete | null>(null)
+  const [dropoffAutocomplete, setDropoffAutocomplete] = useState<google.maps.places.Autocomplete | null>(null)
+
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState('')
   const [quoteNumber, setQuoteNumber] = useState('')
   const [validationErrors, setValidationErrors] = useState<{[key: string]: string}>({})
   const [maxPassengers, setMaxPassengers] = useState(50)
+
+  // Load Google Maps script
+  const { isLoaded, loadError } = useLoadScript({
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '',
+    libraries,
+  })
 
   // Vehicle capacity mapping
   const vehicleCapacities: { [key: string]: number } = {
@@ -114,6 +128,46 @@ export default function QuotePage() {
         ...formData,
         pickupTime: `${hours}:${minutes}`
       })
+    }
+  }
+
+  // Handle pickup location selection from Google autocomplete
+  const onPickupPlaceChanged = () => {
+    if (pickupAutocomplete !== null) {
+      const place = pickupAutocomplete.getPlace()
+      if (place.formatted_address) {
+        setFormData({
+          ...formData,
+          pickupLocation: place.formatted_address
+        })
+        
+        if (validationErrors.pickupLocation) {
+          setValidationErrors({
+            ...validationErrors,
+            pickupLocation: ''
+          })
+        }
+      }
+    }
+  }
+
+  // Handle dropoff location selection from Google autocomplete
+  const onDropoffPlaceChanged = () => {
+    if (dropoffAutocomplete !== null) {
+      const place = dropoffAutocomplete.getPlace()
+      if (place.formatted_address) {
+        setFormData({
+          ...formData,
+          dropoffLocation: place.formatted_address
+        })
+        
+        if (validationErrors.dropoffLocation) {
+          setValidationErrors({
+            ...validationErrors,
+            dropoffLocation: ''
+          })
+        }
+      }
     }
   }
 
@@ -211,6 +265,29 @@ export default function QuotePage() {
     } finally {
       setIsSubmitting(false)
     }
+  }
+
+  // Show loading while Google Maps is loading
+  if (loadError) {
+    return (
+      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+        <p className="text-red-400">Error loading Google Maps</p>
+      </div>
+    )
+  }
+
+  if (!isLoaded) {
+    return (
+      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+        <div className="text-center">
+          <svg className="animate-spin h-12 w-12 mx-auto mb-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          <p className="text-gray-400">Loading...</p>
+        </div>
+      </div>
+    )
   }
 
   if (submitted) {
@@ -326,6 +403,51 @@ export default function QuotePage() {
         
         .react-datepicker-popper {
           z-index: 9999 !important;
+        }
+
+        /* Google Autocomplete Dropdown Styles */
+        .pac-container {
+          background-color: #18181b !important;
+          border: 1px solid rgba(255,255,255,0.2) !important;
+          border-radius: 12px !important;
+          margin-top: 4px !important;
+          font-family: inherit !important;
+          box-shadow: 0 4px 6px rgba(0,0,0,0.3) !important;
+        }
+        
+        .pac-item {
+          color: #a1a1aa !important;
+          padding: 12px 16px !important;
+          border-top: 1px solid rgba(255,255,255,0.1) !important;
+          cursor: pointer !important;
+          transition: all 0.2s !important;
+        }
+        
+        .pac-item:first-child {
+          border-top: none !important;
+        }
+        
+        .pac-item:hover {
+          background-color: rgba(255,255,255,0.1) !important;
+          color: #ffffff !important;
+        }
+        
+        .pac-item-selected {
+          background-color: rgba(255,255,255,0.1) !important;
+        }
+        
+        .pac-item-query {
+          color: #ffffff !important;
+          font-weight: 600 !important;
+        }
+        
+        .pac-icon {
+          filter: invert(1) !important;
+        }
+        
+        .pac-matched {
+          color: #ffffff !important;
+          font-weight: bold !important;
         }
       `}</style>
 
@@ -478,6 +600,7 @@ export default function QuotePage() {
                     validationErrors.eventDate ? 'border-red-500' : 'border-white/20'
                   }`}
                 />
+                <p className="text-sm text-gray-500 mt-1">Minimum 2 weeks notice required</p>
                 {validationErrors.eventDate && (
                   <p className="text-red-400 text-sm mt-1">{validationErrors.eventDate}</p>
                 )}
@@ -502,42 +625,68 @@ export default function QuotePage() {
             </div>
           </div>
 
-          {/* Trip Details */}
+          {/* Trip Details with Google Autocomplete */}
           <div className="p-8 bg-zinc-900 rounded-lg border border-white/20">
             <h2 className="text-2xl font-bold mb-6">Trip Details</h2>
             <div className="space-y-6">
+              {/* Pickup Location with Google Autocomplete */}
               <div>
-                <label className="block text-sm font-semibold mb-2">Pickup Location *</label>
-                <input
-                  type="text"
-                  name="pickupLocation"
-                  value={formData.pickupLocation}
-                  onChange={handleChange}
-                  placeholder="Enter pickup address"
-                  className={`w-full px-4 py-3 bg-black border rounded-lg focus:border-white/50 transition-all ${
-                    validationErrors.pickupLocation ? 'border-red-500' : 'border-white/20'
-                  }`}
-                />
+                <label className="block text-sm font-semibold mb-2">
+                  Pickup Location * <span className="text-gray-500 font-normal text-xs">(Start typing an address)</span>
+                </label>
+                <Autocomplete
+                  onLoad={setPickupAutocomplete}
+                  onPlaceChanged={onPickupPlaceChanged}
+                  options={{
+                    componentRestrictions: { country: 'ca' }, // Restrict to Canada
+                    types: ['address'], // Only show addresses
+                  }}
+                >
+                  <input
+                    type="text"
+                    name="pickupLocation"
+                    value={formData.pickupLocation}
+                    onChange={handleChange}
+                    placeholder="123 Main Street, Toronto, ON"
+                    className={`w-full px-4 py-3 bg-black border rounded-lg focus:border-white/50 transition-all ${
+                      validationErrors.pickupLocation ? 'border-red-500' : 'border-white/20'
+                    }`}
+                  />
+                </Autocomplete>
                 {validationErrors.pickupLocation && (
                   <p className="text-red-400 text-sm mt-1">{validationErrors.pickupLocation}</p>
                 )}
               </div>
+
+              {/* Dropoff Location with Google Autocomplete */}
               <div>
-                <label className="block text-sm font-semibold mb-2">Dropoff Location *</label>
-                <input
-                  type="text"
-                  name="dropoffLocation"
-                  value={formData.dropoffLocation}
-                  onChange={handleChange}
-                  placeholder="Enter dropoff address"
-                  className={`w-full px-4 py-3 bg-black border rounded-lg focus:border-white/50 transition-all ${
-                    validationErrors.dropoffLocation ? 'border-red-500' : 'border-white/20'
-                  }`}
-                />
+                <label className="block text-sm font-semibold mb-2">
+                  Dropoff Location * <span className="text-gray-500 font-normal text-xs">(Start typing an address)</span>
+                </label>
+                <Autocomplete
+                  onLoad={setDropoffAutocomplete}
+                  onPlaceChanged={onDropoffPlaceChanged}
+                  options={{
+                    componentRestrictions: { country: 'ca' }, // Restrict to Canada
+                    types: ['address'], // Only show addresses
+                  }}
+                >
+                  <input
+                    type="text"
+                    name="dropoffLocation"
+                    value={formData.dropoffLocation}
+                    onChange={handleChange}
+                    placeholder="456 Queen Street, Mississauga, ON"
+                    className={`w-full px-4 py-3 bg-black border rounded-lg focus:border-white/50 transition-all ${
+                      validationErrors.dropoffLocation ? 'border-red-500' : 'border-white/20'
+                    }`}
+                  />
+                </Autocomplete>
                 {validationErrors.dropoffLocation && (
                   <p className="text-red-400 text-sm mt-1">{validationErrors.dropoffLocation}</p>
                 )}
               </div>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-semibold mb-2">Estimated Duration *</label>
