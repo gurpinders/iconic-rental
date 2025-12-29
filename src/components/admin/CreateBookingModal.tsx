@@ -3,6 +3,8 @@
 'use client';
 
 import { useState } from 'react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 interface Vehicle {
   id: string;
@@ -25,6 +27,8 @@ export default function CreateBookingModal({
 }: CreateBookingModalProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [selectedTime, setSelectedTime] = useState<Date | null>(null);
+  
   const [formData, setFormData] = useState({
     vehicleId: '',
     totalPrice: '',
@@ -36,6 +40,18 @@ export default function CreateBookingModal({
     createCustomerAccount: true,
     customerPassword: '',
   });
+
+  const handleTimeChange = (time: Date | null) => {
+    setSelectedTime(time);
+    if (time) {
+      const hours = time.getHours().toString().padStart(2, '0');
+      const minutes = time.getMinutes().toString().padStart(2, '0');
+      setFormData({
+        ...formData,
+        pickupTime: `${hours}:${minutes}`
+      });
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -74,6 +90,55 @@ export default function CreateBookingModal({
 
   return (
     <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+      <style jsx global>{`
+        /* Custom DatePicker Styles for Modal */
+        .react-datepicker {
+          background-color: #18181b !important;
+          border: 1px solid rgba(255,255,255,0.2) !important;
+          border-radius: 12px !important;
+          font-family: inherit !important;
+        }
+        
+        .react-datepicker__header {
+          background-color: #000000 !important;
+          border-bottom: 1px solid rgba(255,255,255,0.2) !important;
+          border-radius: 12px 12px 0 0 !important;
+          padding-top: 12px !important;
+        }
+        
+        .react-datepicker__time-container {
+          border-left: 1px solid rgba(255,255,255,0.2) !important;
+        }
+        
+        .react-datepicker__time {
+          background-color: #18181b !important;
+        }
+        
+        .react-datepicker__time-list {
+          background-color: #18181b !important;
+        }
+        
+        .react-datepicker__time-list-item {
+          color: #a1a1aa !important;
+          transition: all 0.2s !important;
+        }
+        
+        .react-datepicker__time-list-item:hover {
+          background-color: rgba(255,255,255,0.1) !important;
+          color: #ffffff !important;
+        }
+        
+        .react-datepicker__time-list-item--selected {
+          background-color: #ffffff !important;
+          color: #000000 !important;
+          font-weight: bold !important;
+        }
+        
+        .react-datepicker-popper {
+          z-index: 9999 !important;
+        }
+      `}</style>
+
       <div className="bg-zinc-900 border-2 border-white/20 rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <div className="p-6 border-b border-white/10">
           <h2 className="text-2xl font-bold">Create Booking</h2>
@@ -122,12 +187,17 @@ export default function CreateBookingModal({
             </div>
             <div>
               <label className="block text-sm font-medium mb-2">Pickup Time *</label>
-              <input
-                type="time"
-                value={formData.pickupTime}
-                onChange={(e) => setFormData({ ...formData, pickupTime: e.target.value })}
+              <DatePicker
+                selected={selectedTime}
+                onChange={handleTimeChange}
+                showTimeSelect
+                showTimeSelectOnly
+                timeIntervals={15}
+                timeCaption="Time"
+                dateFormat="h:mm aa"
+                placeholderText="Click to select time"
                 required
-                className="w-full px-4 py-3 bg-black border border-white/20 rounded focus:border-white/50 focus:outline-none"
+                className="w-full px-4 py-3 bg-black border border-white/20 rounded focus:border-white/50 focus:outline-none cursor-pointer"
               />
             </div>
           </div>
