@@ -32,6 +32,7 @@ export async function POST(
       where: { id },
       include: {
         customer: true,
+        quote: true,
       },
     });
 
@@ -39,6 +40,14 @@ export async function POST(
       return NextResponse.json(
         { error: 'Booking not found' },
         { status: 404 }
+      );
+    }
+
+    // Check if booking has a customer account
+    if (!booking.customerId) {
+      return NextResponse.json(
+        { error: 'Cannot create invoice for booking without customer account. Customer must have an account to receive invoices.' },
+        { status: 400 }
       );
     }
 
@@ -55,7 +64,7 @@ export async function POST(
     const invoice = await prisma.invoice.create({
       data: {
         invoiceNumber,
-        customerId: booking.customerId,
+        customerId: booking.customerId, // Now guaranteed to be a string
         bookingId: booking.id,
         subtotal: subtotalNum,
         promoDiscount: promoDiscountNum,
