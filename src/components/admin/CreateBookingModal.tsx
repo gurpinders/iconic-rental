@@ -1,3 +1,5 @@
+// File: src/components/admin/CreateBookingModal.tsx
+
 'use client';
 
 import { useState } from 'react';
@@ -97,7 +99,7 @@ export default function CreateBookingModal({
               <option value="">Select a vehicle</option>
               {vehicles.map((vehicle) => (
                 <option key={vehicle.id} value={vehicle.id}>
-                  {vehicle.name} ({vehicle.category})
+                  {vehicle.name}
                 </option>
               ))}
             </select>
