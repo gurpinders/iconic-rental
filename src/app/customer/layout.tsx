@@ -26,8 +26,19 @@ export default function CustomerLayout({
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchCustomer();
-  }, []);
+    // Only fetch customer data if we're on an authenticated page
+    const isAuthPage = pathname?.startsWith('/customer/login') || 
+                       pathname?.startsWith('/customer/register') ||
+                       pathname?.startsWith('/customer/forgot-password') ||
+                       pathname?.startsWith('/customer/verify-email') ||
+                       pathname?.startsWith('/customer/reset-password');
+    
+    if (!isAuthPage) {
+      fetchCustomer();
+    } else {
+      setLoading(false);
+    }
+  }, [pathname]);
 
   const fetchCustomer = async () => {
     try {
@@ -39,6 +50,7 @@ export default function CustomerLayout({
       }
 
       const data = await response.json();
+      console.log('Customer data loaded:', data.customer); // Debug log
       setCustomer(data.customer);
     } catch (error) {
       console.error('Failed to fetch customer:', error);
@@ -106,16 +118,18 @@ export default function CustomerLayout({
             </Link>
 
             {/* User Info & Logout */}
-            <div className="flex items-center gap-6">
-              <div className="text-right hidden sm:block">
-                <p className="text-sm font-medium">
-                  {customer?.firstName} {customer?.lastName}
-                </p>
-                <p className="text-xs text-gray-400">{customer?.email}</p>
-              </div>
+            <div className="flex items-center gap-4">
+              {customer && (
+                <div className="text-right">
+                  <p className="text-sm font-medium">
+                    {customer.firstName} {customer.lastName}
+                  </p>
+                  <p className="text-xs text-gray-400">{customer.email}</p>
+                </div>
+              )}
               <button
                 onClick={handleLogout}
-                className="px-4 py-2 text-sm bg-white/10 hover:bg-white/20 border border-white/20 rounded transition-colors"
+                className="px-4 py-2 text-sm bg-white/10 hover:bg-white/20 border border-white/20 rounded transition-colors whitespace-nowrap"
               >
                 Logout
               </button>
