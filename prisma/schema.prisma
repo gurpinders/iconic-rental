@@ -223,8 +223,8 @@ model Booking {
   id                String        @id @default(uuid())
   bookingNumber     String        @unique
   
-  customerId        String
-  customer          Customer      @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  customerId        String?
+  customer          Customer?      @relation(fields: [customerId], references: [id], onDelete: Cascade)
   
   quoteId           String        @unique
   quote             Quote         @relation(fields: [quoteId], references: [id])
