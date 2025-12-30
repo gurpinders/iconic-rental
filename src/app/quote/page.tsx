@@ -33,6 +33,9 @@ export default function QuotePage() {
     // Vehicle Preference
     vehicleCategory: '',
     
+    // Promo Code
+    promoCode: '',
+
     // Additional Info
     specialRequests: ''
   })
@@ -763,6 +766,23 @@ export default function QuotePage() {
           {/* Special Requests */}
           <div className="p-8 bg-zinc-900 rounded-lg border border-white/20">
             <h2 className="text-2xl font-bold mb-6">Additional Information</h2>
+            {/* Promo Code Field - ADD THIS */}
+            <div className="mb-6">
+              <label className="block text-sm font-semibold mb-2">
+                Promotional Code (Optional) 🎁
+              </label>
+              <input
+                type="text"
+                name="promoCode"
+                value={formData.promoCode}
+                onChange={(e) => setFormData({ ...formData, promoCode: e.target.value.toUpperCase() })}
+                placeholder="Enter promo code"
+                className="w-full px-4 py-3 bg-black border border-white/20 rounded-lg focus:border-white/50 transition-all uppercase"
+              />
+              <p className="text-sm text-gray-500 mt-1">
+                Have a promotional code? Enter it here for special discounts!
+              </p>
+            </div>
             <div>
               <label className="block text-sm font-semibold mb-2">Special Requests or Notes</label>
               <textarea

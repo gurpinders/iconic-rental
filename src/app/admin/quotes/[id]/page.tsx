@@ -295,6 +295,21 @@ export default async function AdminQuoteDetailPage({
               </p>
             </div>
           )}
+          {/* Promo Code Used */}
+          {quote.promoCode && (
+            <div className="bg-zinc-900 border border-green-500/50 rounded-lg p-6">
+              <h3 className="font-bold mb-2">Promotional Code Used 🎁</h3>
+              <p className="text-lg font-semibold text-green-400">{quote.promoCode.code}</p>
+              {quote.promoCode.description && (
+                <p className="text-sm text-gray-400 mt-1">{quote.promoCode.description}</p>
+              )}
+              <p className="text-sm text-gray-400 mt-2">
+                Discount: {quote.promoCode.discountType === 'PERCENTAGE' 
+                  ? `${quote.promoCode.discountValue}%` 
+                  : `$${quote.promoCode.discountValue}`}
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </div>
