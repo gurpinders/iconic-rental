@@ -16,6 +16,7 @@ export default async function AdminQuoteDetailPage({
     include: {
       vehicle: true,
       booking: true,
+      promoCode: true,
     },
   });
 
