@@ -16,7 +16,8 @@ export default async function AdminPromoCodesPage() {
     },
   });
 
-  const formatDate = (date: Date) => {
+  const formatDate = (date: Date | null) => {
+    if (!date) return 'N/A';
     return new Date(date).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
@@ -25,8 +26,12 @@ export default async function AdminPromoCodesPage() {
   };
 
   const now = new Date();
-  const activePromos = promoCodes.filter(p => p.isActive && p.validFrom <= now && p.validUntil >= now);
-  const expiredPromos = promoCodes.filter(p => p.validUntil < now);
+  const activePromos = promoCodes.filter(p => 
+    p.isActive && 
+    (!p.validFrom || p.validFrom <= now) && 
+    (!p.validUntil || p.validUntil >= now)
+  );
+  const expiredPromos = promoCodes.filter(p => p.validUntil && p.validUntil < now);
   const inactivePromos = promoCodes.filter(p => !p.isActive);
 
   return (
@@ -107,9 +112,9 @@ export default async function AdminPromoCodesPage() {
               </thead>
               <tbody className="divide-y divide-white/10">
                 {promoCodes.map((promo) => {
-                  const isExpired = promo.validUntil < now;
-                  const isNotStarted = promo.validFrom > now;
-                  const isLimitReached = promo.usageLimit && promo.usageCount >= promo.usageLimit;
+                  const isExpired = promo.validUntil && promo.validUntil < now;
+                  const isNotStarted = promo.validFrom && promo.validFrom > now;
+                  const isLimitReached = promo.maxUses && promo.usageCount >= promo.maxUses;
                   
                   let statusText = 'Active';
                   let statusColor = 'bg-green-500/20 text-green-300 border-green-500/50';
@@ -148,8 +153,8 @@ export default async function AdminPromoCodesPage() {
                             : `$${Number(promo.discountValue)}`}{' '}
                           OFF
                         </p>
-                        {promo.maxDiscount && promo.discountType === 'PERCENTAGE' && (
-                          <p className="text-xs text-gray-400">Max: ${Number(promo.maxDiscount)}</p>
+                        {promo.minimumPurchase && (
+                          <p className="text-xs text-gray-400">Min: ${Number(promo.minimumPurchase)}</p>
                         )}
                       </td>
                       <td className="px-6 py-4">
@@ -160,7 +165,7 @@ export default async function AdminPromoCodesPage() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <p className="text-sm">
-                          {promo.usageLimit ? `${promo.usageCount} / ${promo.usageLimit}` : 'Unlimited'}
+                          {promo.maxUses ? `${promo.usageCount} / ${promo.maxUses}` : 'Unlimited'}
                         </p>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
