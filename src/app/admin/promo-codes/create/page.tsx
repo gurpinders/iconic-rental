@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 export default function CreatePromoCodePage() {
   const router = useRouter();
@@ -14,11 +16,10 @@ export default function CreatePromoCodePage() {
     description: '',
     discountType: 'PERCENTAGE',
     discountValue: '',
-    minBookingAmount: '',
-    maxDiscount: '',
-    usageLimit: '',
-    validFrom: '',
-    validUntil: '',
+    minimumPurchase: '',
+    maxUses: '',
+    validFrom: null as Date | null,
+    validUntil: null as Date | null,
     applicableServices: [] as string[],
     isActive: true,
   });
@@ -30,6 +31,13 @@ export default function CreatePromoCodePage() {
     setLoading(true);
     setError('');
 
+    // Validate dates
+    if (!formData.validFrom || !formData.validUntil) {
+      setError('Valid from and valid until dates are required');
+      setLoading(false);
+      return;
+    }
+
     try {
       const response = await fetch('/api/admin/promo-codes', {
         method: 'POST',
@@ -39,11 +47,10 @@ export default function CreatePromoCodePage() {
           description: formData.description || null,
           discountType: formData.discountType,
           discountValue: parseFloat(formData.discountValue),
-          minBookingAmount: formData.minBookingAmount ? parseFloat(formData.minBookingAmount) : null,
-          maxDiscount: formData.maxDiscount ? parseFloat(formData.maxDiscount) : null,
-          usageLimit: formData.usageLimit ? parseInt(formData.usageLimit) : null,
-          validFrom: new Date(formData.validFrom),
-          validUntil: new Date(formData.validUntil),
+          minimumPurchase: formData.minimumPurchase ? parseFloat(formData.minimumPurchase) : null,
+          maxUses: formData.maxUses ? parseInt(formData.maxUses) : null,
+          validFrom: formData.validFrom,
+          validUntil: formData.validUntil,
           applicableServices: formData.applicableServices,
           isActive: formData.isActive,
         }),
@@ -55,7 +62,7 @@ export default function CreatePromoCodePage() {
         throw new Error(data.error || 'Failed to create promo code');
       }
 
-      router.push('/admin/promo-codes');
+      router.push('/admin/promotions');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to create promo code');
       setLoading(false);
@@ -78,10 +85,55 @@ export default function CreatePromoCodePage() {
 
   return (
     <div className="max-w-4xl mx-auto">
+      <style jsx global>{`
+        /* DatePicker Styles */
+        .react-datepicker {
+          background-color: #18181b !important;
+          border: 1px solid rgba(255,255,255,0.2) !important;
+          border-radius: 12px !important;
+          font-family: inherit !important;
+        }
+        
+        .react-datepicker__header {
+          background-color: #000000 !important;
+          border-bottom: 1px solid rgba(255,255,255,0.2) !important;
+          border-radius: 12px 12px 0 0 !important;
+          padding-top: 12px !important;
+        }
+        
+        .react-datepicker__current-month,
+        .react-datepicker__day-name {
+          color: #ffffff !important;
+        }
+        
+        .react-datepicker__day {
+          color: #a1a1aa !important;
+        }
+        
+        .react-datepicker__day:hover {
+          background-color: rgba(255,255,255,0.1) !important;
+          color: #ffffff !important;
+        }
+        
+        .react-datepicker__day--selected {
+          background-color: #ffffff !important;
+          color: #000000 !important;
+          font-weight: bold !important;
+        }
+        
+        .react-datepicker__day--keyboard-selected {
+          background-color: rgba(255,255,255,0.2) !important;
+        }
+        
+        .react-datepicker__navigation-icon::before {
+          border-color: #ffffff !important;
+        }
+      `}</style>
+
       {/* Header */}
       <div className="mb-8">
         <Link
-          href="/admin/promo-codes"
+          href="/admin/promotions"
           className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-4 transition-colors"
         >
           <span>←</span>
@@ -130,15 +182,16 @@ export default function CreatePromoCodePage() {
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium mb-2">Discount Type *</label>
-            <select
-              value={formData.discountType}
-              onChange={(e) => setFormData({ ...formData, discountType: e.target.value })}
-              required
-              className="w-full px-4 py-3 bg-black border border-white/20 rounded focus:border-white/50 focus:outline-none"
-            >
-              <option value="PERCENTAGE">Percentage (%)</option>
-              <option value="FIXED_AMOUNT">Fixed Amount ($)</option>
-            </select>
+            <div className="select-wrapper">
+              <select
+                value={formData.discountType}
+                onChange={(e) => setFormData({ ...formData, discountType: e.target.value })}
+                required
+              >
+                <option value="PERCENTAGE">Percentage (%)</option>
+                <option value="FIXED_AMOUNT">Fixed Amount ($)</option>
+              </select>
+            </div>
           </div>
           <div>
             <label className="block text-sm font-medium mb-2">Discount Value *</label>
@@ -155,69 +208,59 @@ export default function CreatePromoCodePage() {
           </div>
         </div>
 
-        {/* Min Booking & Max Discount */}
+        {/* Min Purchase & Max Uses */}
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium mb-2">Min Booking Amount (Optional)</label>
+            <label className="block text-sm font-medium mb-2">Min Purchase Amount (Optional)</label>
             <input
               type="number"
               step="0.01"
               min="0"
-              value={formData.minBookingAmount}
-              onChange={(e) => setFormData({ ...formData, minBookingAmount: e.target.value })}
+              value={formData.minimumPurchase}
+              onChange={(e) => setFormData({ ...formData, minimumPurchase: e.target.value })}
               className="w-full px-4 py-3 bg-black border border-white/20 rounded focus:border-white/50 focus:outline-none"
               placeholder="100.00"
             />
+            <p className="text-xs text-gray-500 mt-1">Minimum booking amount required</p>
           </div>
-          {formData.discountType === 'PERCENTAGE' && (
-            <div>
-              <label className="block text-sm font-medium mb-2">Max Discount (Optional)</label>
-              <input
-                type="number"
-                step="0.01"
-                min="0"
-                value={formData.maxDiscount}
-                onChange={(e) => setFormData({ ...formData, maxDiscount: e.target.value })}
-                className="w-full px-4 py-3 bg-black border border-white/20 rounded focus:border-white/50 focus:outline-none"
-                placeholder="50.00"
-              />
-            </div>
-          )}
-        </div>
-
-        {/* Usage Limit */}
-        <div>
-          <label className="block text-sm font-medium mb-2">Usage Limit (Optional)</label>
-          <input
-            type="number"
-            min="1"
-            value={formData.usageLimit}
-            onChange={(e) => setFormData({ ...formData, usageLimit: e.target.value })}
-            className="w-full px-4 py-3 bg-black border border-white/20 rounded focus:border-white/50 focus:outline-none"
-            placeholder="Leave empty for unlimited uses"
-          />
+          <div>
+            <label className="block text-sm font-medium mb-2">Max Uses (Optional)</label>
+            <input
+              type="number"
+              min="1"
+              value={formData.maxUses}
+              onChange={(e) => setFormData({ ...formData, maxUses: e.target.value })}
+              className="w-full px-4 py-3 bg-black border border-white/20 rounded focus:border-white/50 focus:outline-none"
+              placeholder="Leave empty for unlimited"
+            />
+            <p className="text-xs text-gray-500 mt-1">Total number of times code can be used</p>
+          </div>
         </div>
 
         {/* Valid Period */}
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium mb-2">Valid From *</label>
-            <input
-              type="date"
-              value={formData.validFrom}
-              onChange={(e) => setFormData({ ...formData, validFrom: e.target.value })}
+            <DatePicker
+              selected={formData.validFrom}
+              onChange={(date) => setFormData({ ...formData, validFrom: date })}
+              dateFormat="MMMM d, yyyy"
+              minDate={new Date()}
+              placeholderText="Select start date"
               required
-              className="w-full px-4 py-3 bg-black border border-white/20 rounded focus:border-white/50 focus:outline-none"
+              className="w-full px-4 py-3 bg-black border border-white/20 rounded focus:border-white/50 focus:outline-none cursor-pointer"
             />
           </div>
           <div>
             <label className="block text-sm font-medium mb-2">Valid Until *</label>
-            <input
-              type="date"
-              value={formData.validUntil}
-              onChange={(e) => setFormData({ ...formData, validUntil: e.target.value })}
+            <DatePicker
+              selected={formData.validUntil}
+              onChange={(date) => setFormData({ ...formData, validUntil: date })}
+              dateFormat="MMMM d, yyyy"
+              minDate={formData.validFrom || new Date()}
+              placeholderText="Select end date"
               required
-              className="w-full px-4 py-3 bg-black border border-white/20 rounded focus:border-white/50 focus:outline-none"
+              className="w-full px-4 py-3 bg-black border border-white/20 rounded focus:border-white/50 focus:outline-none cursor-pointer"
             />
           </div>
         </div>
@@ -261,7 +304,7 @@ export default function CreatePromoCodePage() {
         {/* Submit */}
         <div className="flex gap-4 pt-4">
           <Link
-            href="/admin/promo-codes"
+            href="/admin/promotions"
             className="flex-1 px-6 py-3 bg-white/10 hover:bg-white/20 border border-white/20 rounded font-semibold text-center transition-colors"
           >
             Cancel
