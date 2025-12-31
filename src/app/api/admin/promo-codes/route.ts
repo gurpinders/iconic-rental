@@ -1,3 +1,5 @@
+// File: src/app/api/admin/promo-codes/route.ts
+
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 
@@ -14,7 +16,6 @@ export async function GET() {
       success: true,
       promoCodes,
     });
-
   } catch (error) {
     console.error('Get promo codes error:', error);
     return NextResponse.json(
@@ -33,9 +34,8 @@ export async function POST(request: Request) {
       description,
       discountType,
       discountValue,
-      minBookingAmount,
-      maxDiscount,
-      usageLimit,
+      minimumPurchase,
+      maxUses,
       validFrom,
       validUntil,
       applicableServices,
@@ -88,14 +88,12 @@ export async function POST(request: Request) {
         description: description || null,
         discountType,
         discountValue: parseFloat(discountValue),
-        minBookingAmount: minBookingAmount ? parseFloat(minBookingAmount) : null,
-        maxDiscount: maxDiscount ? parseFloat(maxDiscount) : null,
-        usageLimit: usageLimit ? parseInt(usageLimit) : null,
+        minimumPurchase: minimumPurchase ? parseFloat(minimumPurchase) : null,
+        maxUses: maxUses ? parseInt(maxUses) : null,
         usageCount: 0,
         validFrom: validFromDate,
         validUntil: validUntilDate,
         applicableServices: applicableServices || [],
-        applicableVehicles: [],
         isActive: isActive !== undefined ? isActive : true,
       },
     });
@@ -107,7 +105,6 @@ export async function POST(request: Request) {
       message: 'Promo code created successfully',
       promoCode,
     });
-
   } catch (error) {
     console.error('Create promo code error:', error);
     return NextResponse.json(
