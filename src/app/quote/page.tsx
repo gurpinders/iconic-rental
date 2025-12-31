@@ -1,3 +1,5 @@
+// File: src/app/quote/page.tsx
+
 'use client'
 
 import { useState } from 'react'
@@ -546,45 +548,45 @@ export default function QuotePage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-semibold mb-2">Service Type *</label>
-                <select
-                  name="serviceType"
-                  value={formData.serviceType}
-                  onChange={handleChange}
-                  className={`w-full px-4 py-3 bg-black border rounded-lg focus:border-white/50 transition-all ${
-                    validationErrors.serviceType ? 'border-red-500' : 'border-white/20'
-                  }`}
-                >
-                  <option value="">Select Service</option>
-                  <option value="POINT_TO_POINT">Point to Point</option>
-                  <option value="HOURLY">Hourly Charter</option>
-                  <option value="AIRPORT">Airport Transfer</option>
-                  <option value="WEDDING">Wedding</option>
-                  <option value="CORPORATE">Corporate Event</option>
-                </select>
+                <div className="select-wrapper">
+                  <select
+                    name="serviceType"
+                    value={formData.serviceType}
+                    onChange={handleChange}
+                    className={validationErrors.serviceType ? 'border-red-500' : ''}
+                  >
+                    <option value="">Select Service</option>
+                    <option value="POINT_TO_POINT">Point to Point</option>
+                    <option value="HOURLY">Hourly Charter</option>
+                    <option value="AIRPORT">Airport Transfer</option>
+                    <option value="WEDDING">Wedding</option>
+                    <option value="CORPORATE">Corporate Event</option>
+                  </select>
+                </div>
                 {validationErrors.serviceType && (
                   <p className="text-red-400 text-sm mt-1">{validationErrors.serviceType}</p>
                 )}
               </div>
               <div>
                 <label className="block text-sm font-semibold mb-2">Event Type *</label>
-                <select
-                  name="eventType"
-                  value={formData.eventType}
-                  onChange={handleChange}
-                  className={`w-full px-4 py-3 bg-black border rounded-lg focus:border-white/50 transition-all ${
-                    validationErrors.eventType ? 'border-red-500' : 'border-white/20'
-                  }`}
-                >
-                  <option value="">Select Event</option>
-                  <option value="WEDDING">Wedding</option>
-                  <option value="PROM">Prom</option>
-                  <option value="CORPORATE">Corporate Event</option>
-                  <option value="AIRPORT">Airport Transfer</option>
-                  <option value="BIRTHDAY">Birthday</option>
-                  <option value="ANNIVERSARY">Anniversary</option>
-                  <option value="NIGHT_OUT">Night Out</option>
-                  <option value="OTHER">Other</option>
-                </select>
+                <div className="select-wrapper">
+                  <select
+                    name="eventType"
+                    value={formData.eventType}
+                    onChange={handleChange}
+                    className={validationErrors.eventType ? 'border-red-500' : ''}
+                  >
+                    <option value="">Select Event</option>
+                    <option value="WEDDING">Wedding</option>
+                    <option value="PROM">Prom</option>
+                    <option value="CORPORATE">Corporate Event</option>
+                    <option value="AIRPORT">Airport Transfer</option>
+                    <option value="BIRTHDAY">Birthday</option>
+                    <option value="ANNIVERSARY">Anniversary</option>
+                    <option value="NIGHT_OUT">Night Out</option>
+                    <option value="OTHER">Other</option>
+                  </select>
+                </div>
                 {validationErrors.eventType && (
                   <p className="text-red-400 text-sm mt-1">{validationErrors.eventType}</p>
                 )}
@@ -641,8 +643,8 @@ export default function QuotePage() {
                   onLoad={setPickupAutocomplete}
                   onPlaceChanged={onPickupPlaceChanged}
                   options={{
-                    componentRestrictions: { country: 'ca' }, // Restrict to Canada
-                    types: ['address'], // Only show addresses
+                    componentRestrictions: { country: 'ca' },
+                    types: ['address'],
                   }}
                 >
                   <input
@@ -670,8 +672,8 @@ export default function QuotePage() {
                   onLoad={setDropoffAutocomplete}
                   onPlaceChanged={onDropoffPlaceChanged}
                   options={{
-                    componentRestrictions: { country: 'ca' }, // Restrict to Canada
-                    types: ['address'], // Only show addresses
+                    componentRestrictions: { country: 'ca' },
+                    types: ['address'],
                   }}
                 >
                   <input
@@ -693,23 +695,23 @@ export default function QuotePage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-semibold mb-2">Estimated Duration *</label>
-                  <select
-                    name="duration"
-                    value={formData.duration}
-                    onChange={handleChange}
-                    className={`w-full px-4 py-3 bg-black border rounded-lg focus:border-white/50 transition-all ${
-                      validationErrors.duration ? 'border-red-500' : 'border-white/20'
-                    }`}
-                  >
-                    <option value="">Select Duration</option>
-                    <option value="2">2 hours</option>
-                    <option value="3">3 hours</option>
-                    <option value="4">4 hours</option>
-                    <option value="5">5 hours</option>
-                    <option value="6">6 hours</option>
-                    <option value="8">8 hours</option>
-                    <option value="10+">10+ hours</option>
-                  </select>
+                  <div className="select-wrapper">
+                    <select
+                      name="duration"
+                      value={formData.duration}
+                      onChange={handleChange}
+                      className={validationErrors.duration ? 'border-red-500' : ''}
+                    >
+                      <option value="">Select Duration</option>
+                      <option value="2">2 hours</option>
+                      <option value="3">3 hours</option>
+                      <option value="4">4 hours</option>
+                      <option value="5">5 hours</option>
+                      <option value="6">6 hours</option>
+                      <option value="8">8 hours</option>
+                      <option value="10+">10+ hours</option>
+                    </select>
+                  </div>
                   {validationErrors.duration && (
                     <p className="text-red-400 text-sm mt-1">{validationErrors.duration}</p>
                   )}
@@ -746,27 +748,27 @@ export default function QuotePage() {
             <div>
               <label className="block text-sm font-semibold mb-2">Preferred Vehicle Type</label>
               <div className="select-wrapper">
-                  <select
-                    name="vehicleCategory"
-                    value={formData.vehicleCategory}
-                    onChange={handleChange}
-                  >
-                    <option value="">No Preference</option>
-                    <option value="LIMO">Limousine (Up to 10 passengers)</option>
-                    <option value="PARTY_BUS">Party Bus (Up to 45 passengers)</option>
-                    <option value="LUXURY_BUS">Luxury Bus (Up to 45 passengers)</option>
-                    <option value="SPRINTER_VAN">Sprinter Van (Up to 12 passengers)</option>
-                    <option value="SUV">SUV (Up to 7 passengers)</option>
-                  </select>
+                <select
+                  name="vehicleCategory"
+                  value={formData.vehicleCategory}
+                  onChange={handleChange}
+                >
+                  <option value="">No Preference</option>
+                  <option value="LIMO">Limousine (Up to 10 passengers)</option>
+                  <option value="PARTY_BUS">Party Bus (Up to 45 passengers)</option>
+                  <option value="LUXURY_BUS">Luxury Bus (Up to 45 passengers)</option>
+                  <option value="SPRINTER_VAN">Sprinter Van (Up to 12 passengers)</option>
+                  <option value="SUV">SUV (Up to 7 passengers)</option>
+                </select>
               </div>
-              
             </div>
           </div>
 
-          {/* Special Requests */}
+          {/* Additional Information */}
           <div className="p-8 bg-zinc-900 rounded-lg border border-white/20">
             <h2 className="text-2xl font-bold mb-6">Additional Information</h2>
-            {/* Promo Code Field - ADD THIS */}
+            
+            {/* Promo Code Field */}
             <div className="mb-6">
               <label className="block text-sm font-semibold mb-2">
                 Promotional Code (Optional) 🎁
@@ -783,6 +785,8 @@ export default function QuotePage() {
                 Have a promotional code? Enter it here for special discounts!
               </p>
             </div>
+
+            {/* Special Requests */}
             <div>
               <label className="block text-sm font-semibold mb-2">Special Requests or Notes</label>
               <textarea

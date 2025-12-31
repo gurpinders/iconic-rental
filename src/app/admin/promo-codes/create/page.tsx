@@ -243,7 +243,7 @@ export default function CreatePromoCodePage() {
             <label className="block text-sm font-medium mb-2">Valid From *</label>
             <DatePicker
               selected={formData.validFrom}
-              onChange={(date) => setFormData({ ...formData, validFrom: date })}
+              onChange={(date: Date | null) => setFormData({ ...formData, validFrom: date })}
               dateFormat="MMMM d, yyyy"
               minDate={new Date()}
               placeholderText="Select start date"
@@ -255,7 +255,7 @@ export default function CreatePromoCodePage() {
             <label className="block text-sm font-medium mb-2">Valid Until *</label>
             <DatePicker
               selected={formData.validUntil}
-              onChange={(date) => setFormData({ ...formData, validUntil: date })}
+              onChange={(date: Date | null) => setFormData({ ...formData, validUntil: date })}
               dateFormat="MMMM d, yyyy"
               minDate={formData.validFrom || new Date()}
               placeholderText="Select end date"
